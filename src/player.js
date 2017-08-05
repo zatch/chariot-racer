@@ -30,10 +30,13 @@ define([
 
         // Initialize public properites.
         // Fastest possible movement speeds.
-        this.body.maxVelocity.x = 500;
+        this.body.maxVelocity.x = 100;
         this.body.maxVelocity.y = 10000;
         this.body.drag.x = 1500;
         this.body.drag.y = 0;
+
+        // The horizontal acceleration that is applied when moving.
+        this.moveAccel = 800;
 
         this.maxMoveSpeed = new Phaser.Point(300, 10000);
 
@@ -56,6 +59,8 @@ define([
         // Update sprite.
         //if (this.body.velocity.y === 0) this.frame = 0; // Don't animate when stopped.
         
+        this.moveRight();
+
         Phaser.Sprite.prototype.update.call(this);
     };
     
@@ -79,6 +84,8 @@ define([
 
         // Don't exceed max move speed.
         if(this.body.velocity.x >=  this.maxMoveSpeed.x) this.body.velocity.x = this.maxMoveSpeed.x;
+
+        this.body.acceleration.x = this.moveAccel;
     };
 
     Player.prototype.stopMoving = function () {

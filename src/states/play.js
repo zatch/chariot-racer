@@ -51,13 +51,13 @@ define([
 */
 
             //  The scrolling starfield background
-            dirtTrack = game.add.tileSprite(0, 0, 800, 500, 'dirt-track');
+            dirtTrack = game.add.tileSprite(0, game.height/2, 980, 621, 'dirt-track');
 
             // Insert player here?
             game.add.existing(player);
             player.x = 200;
             player.y = 200;
-
+            player.fixedToCamera = true;
             
 /*
             // Insert enemies
@@ -126,6 +126,8 @@ define([
         update: function () {
             // Direct input to player and do all the map and collision stuff.
             
+            dirtTrack.tilePosition.x -= player.body.velocity.x
+
             // Collide player + enemies.
             game.physics.arcade.overlap(player, enemies, this.onPlayerCollidesEnemy);
 
