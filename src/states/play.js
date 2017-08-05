@@ -10,6 +10,9 @@ define([
     // Shortcuts
     var game, 
         moveKeys, 
+
+        dirtTrack,
+
         player,
         enemies;
 
@@ -47,6 +50,8 @@ define([
             collisionLayer = map.createLayer('foreground-structure');
 */
 
+            //  The scrolling starfield background
+            dirtTrack = game.add.tileSprite(0, 0, 800, 500, 'dirt-track');
 /*
             // Spawn point
             var spawnPoint = ObjectLayerHelper.createObjectByName(game, 'player_spawn', map, 'spawns');
