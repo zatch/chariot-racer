@@ -45,6 +45,8 @@ define([
         preload: function() {
             // Load assets
             this.game.load.image('dirt-track', 'assets/textures/dirt-track.png');
+
+            this.game.load.atlas('chariot', 'assets/sprites/chariot.png', 'assets/sprites/chariot.json');
         },
         
         create: function() {

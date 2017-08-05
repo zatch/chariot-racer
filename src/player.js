@@ -12,12 +12,12 @@ define([
         game = _game;
 
         // Initialize sprite
-        Entity.call(this, game, x, y, 'player');
+        Entity.call(this, game, x, y, 'chariot');
         this.anchor.set(0.5);
 
         // Set up animations.
         this.anims = {};
-        this.anims.walk = this.animations.add('walk', [2,3,4,5,6,7,8,9], 40);
+        this.anims.walk = this.animations.add('walk', [0], 40);
         this.frame = 0;
 
         // Enable physics.
@@ -26,7 +26,7 @@ define([
         this.checkWorldBounds = true;
 
         // Resize player body/hitbox.
-        this.body.setSize(26,29,1,9);
+        this.body.setSize(128,64,0,0);
 
         // Initialize public properites.
         // Fastest possible movement speeds.
