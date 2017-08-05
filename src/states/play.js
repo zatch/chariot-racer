@@ -52,15 +52,12 @@ define([
 
             //  The scrolling starfield background
             dirtTrack = game.add.tileSprite(0, 0, 800, 500, 'dirt-track');
-/*
-            // Spawn point
-            var spawnPoint = ObjectLayerHelper.createObjectByName(game, 'player_spawn', map, 'spawns');
 
             // Insert player here?
             game.add.existing(player);
-            player.x = spawnPoint.x;
-            player.y = spawnPoint.y;
-*/
+            player.x = 200;
+            player.y = 200;
+
             
 /*
             // Insert enemies
