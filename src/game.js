@@ -15,7 +15,7 @@ define([
         constructor: Game,
 
         start: function() {
-            this.game = new Phaser.Game(800, 500, Phaser.AUTO, '', { 
+            this.game = new Phaser.Game(980, 621, Phaser.AUTO, '', { 
                 preload: this.preload, 
                 create: this.create,
                 init: this.init
