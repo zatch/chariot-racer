@@ -15,7 +15,7 @@ define([
         constructor: Game,
 
         start: function() {
-            this.game = new Phaser.Game(980, 621, Phaser.AUTO, '', { 
+            this.game = new Phaser.Game(980, 621, Phaser.AUTO, '', {
                 preload: this.preload, 
                 create: this.create,
                 init: this.init
@@ -61,7 +61,7 @@ define([
             this.game.state.add('GameOver', GameOver);
 
             // Now that everything is loaded, show the menu.
-            this.game.state.start('Menu');
+            this.game.state.start('Play');
         }
     };
     
