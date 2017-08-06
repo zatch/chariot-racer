@@ -16,7 +16,7 @@ define([
 
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, key, frame);
-        this.anchor.set(0.5);
+        this.anchor.set(0);
 
         // Enable physics.
         game.physics.enable(this);

@@ -13,7 +13,7 @@ define([
 
         // Initialize sprite
         Entity.call(this, game, x, y, 'chariot');
-        this.anchor.set(0.5);
+        this.anchor.set(1, .3);
 
         // Set up animations.
         this.anims = {};

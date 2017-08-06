@@ -79,7 +79,7 @@ define([
                 if (sprite) {
                     sprite.x = this.x;
                     // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
-                    sprite.y = (game.height/2)+spawnLanes.pop()*(game.height/2/3)+40;
+                    sprite.y = (game.height/2)+spawnLanes.pop()*(game.height/2/3);
 
                     sprite.revive(); 
                     this.events.onSpawn.dispatch(this, sprite);

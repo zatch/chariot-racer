@@ -43,7 +43,7 @@ define([
             var self = this;
 
             // Player set-up
-            player = new Player(game, 0, game.height/2+40);
+            player = new Player(game, 0, game.height/2);
             player.activeLane = 0;
             player.events.onDeath.add(this.onPlayerDeath);
 
@@ -69,7 +69,7 @@ define([
             // Insert player here?
             game.add.existing(player);
             player.x = 200;
-            player.y = game.height/2+40;
+            player.y = game.height/2;
             player.fixedToCamera = true;
 
             // Insert spawners
@@ -114,6 +114,7 @@ define([
             //game.add.existing(player);
 
             this.swipe = new Swipe(game);
+            this.swipe.dragLength = 25;
             // lanes
 
 
@@ -131,19 +132,23 @@ define([
             var direction = this.swipe.check();
             if(direction!==null){
                 switch(direction.direction){
-                    case this.swipe.DIRECTION_UP:
+                    case this.swipe.DIRECTION_UP: 
+                    case this.swipe.DIRECTION_UP_RIGHT: 
+                    case this.swipe.DIRECTION_UP_LEFT:
                         if(game.player.activeLane>0){
                             game.player.activeLane -=1;
                         }
                         break;
                     case this.swipe.DIRECTION_DOWN:
+                    case this.swipe.DIRECTION_DOWN_RIGHT:
+                    case this.swipe.DIRECTION_DOWN_LEFT:
                         if(game.player.activeLane<2){
                             game.player.activeLane +=1;
                         }
                         break;
                 }
                 // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
-                player.y = (game.height/2)+player.activeLane*(game.height/2/3)+40;
+                player.y = (game.height/2)+player.activeLane*(game.height/2/3);
                 player.cameraOffset.y = player.y;
             }
 
