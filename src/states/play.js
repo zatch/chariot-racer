@@ -1,9 +1,11 @@
 define([
     'phaser',
-    'player'
+    'player',
+    'swipe'
 ], function (
     Phaser,
-    Player) {
+    Player,
+    Swipe) {
 
     'use strict';
     
@@ -14,6 +16,7 @@ define([
         dirtTrack,
 
         player,
+        lanes=[],
         enemies;
 
     return {
@@ -31,7 +34,8 @@ define([
             var self = this;
 
             // Player set-up
-            player = new Player(game, 0, 0);
+            player = new Player(game, 0, game.height/2+40);
+            player.activeLane = 0;
             player.events.onDeath.add(this.onPlayerDeath);
 
             // Make player accessible via game object.
@@ -51,7 +55,7 @@ define([
 */
 
             //  The scrolling starfield background
-            dirtTrack = game.add.tileSprite(0, 0, 800, 500, 'dirt-track');
+            dirtTrack = game.add.tileSprite(0, game.height/2, 800, 500, 'dirt-track');
 /*
             // Spawn point
             var spawnPoint = ObjectLayerHelper.createObjectByName(game, 'player_spawn', map, 'spawns');
@@ -95,32 +99,18 @@ define([
 */           
 
 
-            // Keyboard input set-up
-            moveKeys = game.input.keyboard.createCursorKeys();
-            moveKeys.wasd = {
-                up: game.input.keyboard.addKey(Phaser.Keyboard.W),
-                down: game.input.keyboard.addKey(Phaser.Keyboard.S),
-                left: game.input.keyboard.addKey(Phaser.Keyboard.A),
-                right: game.input.keyboard.addKey(Phaser.Keyboard.D)
-            };
-            moveKeys.wasd.up.onDown.add(function () {
-                
-            });
-            moveKeys.wasd.up.onUp.add(function () {
-                
-            });
-            game.input.keyboard.addKey(Phaser.Keyboard.F).onDown.add(function() {
-                if(game.scale.isFullScreen) {
-                    game.scale.stopFullScreen();
-                } else {
-                    game.scale.startFullScreen();
-                }
-            });
-            
+            // add player
+            game.add.existing(player);
+
+            this.swipe = new Swipe(game);
+            // lanes
+
+
             // Camera
             game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
 
         },
+
 
         render: function () {
             
@@ -128,24 +118,33 @@ define([
 
         update: function () {
             // Direct input to player and do all the map and collision stuff.
-            
+            var direction = this.swipe.check();
+            if(direction!==null){
+                switch(direction.direction){
+                    case this.swipe.DIRECTION_UP:
+                        if(game.player.activeLane>0){
+                            game.player.activeLane -=1;
+                        }
+                        break;
+                    case this.swipe.DIRECTION_DOWN:
+                        if(game.player.activeLane<2){
+                            game.player.activeLane +=1;
+                        }
+                        break;
+                }
+                player.y = (game.height/2)+player.activeLane*(game.height/2/3)+40;
+                console.log(game.player.activeLane);
+            }
             // Collide player + enemies.
             game.physics.arcade.overlap(player, enemies, this.onPlayerCollidesEnemy);
 
-            // Player movement controls
-            if(moveKeys.wasd.left.isDown) {
-                player.moveLeft();
-            } else if (moveKeys.wasd.right.isDown) {
-                player.moveRight();
-            } else {
-                player.stopMoving();
-            }
+
         },
 
         shutdown: function () {
             // This prevents occasional momentary "flashes" during state transitions.
             game.camera.unfollow();
-            pad1.onDownCallback = undefined;
+            pad1.onDownCallback = undefined;s
         },
 /*        
         registerSpawnerEvents: function (spawner) {

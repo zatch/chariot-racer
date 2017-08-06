@@ -49,6 +49,7 @@ define([
         this.stateMachine.setState('normal');
     }
 
+
     Player.prototype = Object.create(Entity.prototype);
     Player.prototype.constructor = Player;
 
