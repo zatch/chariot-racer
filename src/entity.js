@@ -20,7 +20,7 @@ define([
 
         // Enable physics.
         game.physics.enable(this);
-        this.body.collideWorldBounds = true;
+        //this.body.collideWorldBounds = true;
         this.checkWorldBounds = true;
         this.outOfBoundsKill = true;
        
@@ -45,6 +45,7 @@ define([
         
         if (this.alive) {
             if (!this.inCamera) {
+                console.log("gonna die! ", this);
                 // Auto-kill if off camera for too long.
                 this.offCameraKillTimer.add(2000, this.kill, this);
             }

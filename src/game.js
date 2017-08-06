@@ -43,10 +43,15 @@ define([
         },
 
         preload: function() {
-            // Load assets
+            // World textures
             this.game.load.image('dirt-track', 'assets/textures/dirt-track.png');
 
+            // Chariot racers
             this.game.load.atlas('chariot', 'assets/sprites/chariot.png', 'assets/sprites/chariot.json');
+
+            // Obstacles
+            this.game.load.image('skull', 'assets/sprites/skull.png');
+
         },
         
         create: function() {

@@ -1,9 +1,13 @@
 define([
     'phaser',
-    'player'
+    'player',
+    'spawner',
+    'entity'
 ], function (
     Phaser,
-    Player) {
+    Player,
+    Spawner,
+    Entity) {
 
     'use strict';
     
@@ -14,6 +18,8 @@ define([
         dirtTrack,
 
         player,
+        obstacleSpawner,
+        obstacles=[],
         enemies;
 
     return {
@@ -23,6 +29,9 @@ define([
             // Shortcut variables.
             game = this.game;
 
+            game.spriteClassTypes = {
+                'skull': Entity
+            };
         },
         
         // Main
@@ -58,6 +67,11 @@ define([
             player.x = 200;
             player.y = 200;
             player.fixedToCamera = true;
+
+            // Insert spawners
+            obstacleSpawner = this.createObstacleSpawner();
+            game.add.existing(obstacleSpawner);
+            //obstacleSpawner.fixedToCamera = true;
             
 /*
             // Insert enemies
@@ -126,7 +140,10 @@ define([
         update: function () {
             // Direct input to player and do all the map and collision stuff.
             
-            dirtTrack.tilePosition.x -= player.body.velocity.x
+            dirtTrack.tilePosition.x -= player.body.velocity.x;
+            obstacles.forEach(function(obstacle) {
+                obstacle.body.velocity.x = -player.body.velocity.x;
+            }, this);
 
             // Collide player + enemies.
             game.physics.arcade.overlap(player, enemies, this.onPlayerCollidesEnemy);
@@ -146,23 +163,29 @@ define([
             game.camera.unfollow();
             pad1.onDownCallback = undefined;
         },
+
+        createObstacleSpawner: function (spawner) {
+            var oSpawner = new Spawner(game, 
+                                       game.width-32, 
+                                       game.height/2,
+                                       null,
+                                       0,
+                                       {
+                                            key: 'skull'
+                                       });
+
+            oSpawner.sprites.forEach(this.registerObstacle, this);
+            oSpawner.events.onSpawn.add(function(spawner, obstacle) {
+                this.registerObstacle(obstacle);
+            }, this);
+
+            return oSpawner;
+        },
+        
+        registerObstacle: function (obstacle) {
+            obstacles.push(obstacle);
+        },
 /*        
-        registerSpawnerEvents: function (spawner) {
-            spawner.sprites.forEach(this.registerEnemyEvents, this);
-            spawner.events.onSpawn.add(this.onSpawnerSpawn, this);
-        },
-        
-        registerEnemyEvents: function (enemy) {
-            enemies.push(enemy);
-            enemy.events.onDeath.add(this.onEnemyDeath, this);
-            enemy.events.onDrop.add(this.onEnemyDrop, this);
-            if (enemy.events.onSpawnChild) enemy.events.onSpawnChild.add(this.onSpawnerSpawn, this);
-        },
-        
-        onSpawnerSpawn: function(spawner, sprite) {
-            this.registerEnemyEvents(sprite);
-        },
-        
         onPlayerCollidesEnemy: function (player, enemy) {
             if(!enemy.invulnerable && !enemy.dying) {
                 // Enemies don't do lethal damage; just knockback.
