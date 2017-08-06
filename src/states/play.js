@@ -1,10 +1,14 @@
 define([
     'phaser',
     'player',
+    'spawner',
+    'entity',
     'swipe'
 ], function (
     Phaser,
     Player,
+    Spawner,
+    Entity,
     Swipe) {
 
     'use strict';
@@ -17,6 +21,8 @@ define([
 
         player,
         lanes=[],
+        obstacleSpawner,
+        obstacles=[],
         enemies;
 
     return {
@@ -26,6 +32,9 @@ define([
             // Shortcut variables.
             game = this.game;
 
+            game.spriteClassTypes = {
+                'skull': Entity
+            };
         },
         
         // Main
@@ -55,16 +64,17 @@ define([
 */
 
             //  The scrolling starfield background
-            dirtTrack = game.add.tileSprite(0, game.height/2, 800, 500, 'dirt-track');
-/*
-            // Spawn point
-            var spawnPoint = ObjectLayerHelper.createObjectByName(game, 'player_spawn', map, 'spawns');
+            dirtTrack = game.add.tileSprite(0, game.height/2, 980, 621, 'dirt-track');
 
             // Insert player here?
             game.add.existing(player);
-            player.x = spawnPoint.x;
-            player.y = spawnPoint.y;
-*/
+
+            player.fixedToCamera = true;
+
+            // Insert spawners
+            obstacleSpawner = this.createObstacleSpawner();
+            game.add.existing(obstacleSpawner);
+            //obstacleSpawner.fixedToCamera = true;
             
 /*
             // Insert enemies
@@ -111,7 +121,6 @@ define([
 
         },
 
-
         render: function () {
             
         },
@@ -135,6 +144,12 @@ define([
                 player.y = (game.height/2)+player.activeLane*(game.height/2/3)+40;
                 console.log(game.player.activeLane);
             }
+
+            dirtTrack.tilePosition.x -= player.body.velocity.x;
+            obstacles.forEach(function(obstacle) {
+                obstacle.body.velocity.x = -player.body.velocity.x;
+            }, this);
+
             // Collide player + enemies.
             game.physics.arcade.overlap(player, enemies, this.onPlayerCollidesEnemy);
 
@@ -144,25 +159,35 @@ define([
         shutdown: function () {
             // This prevents occasional momentary "flashes" during state transitions.
             game.camera.unfollow();
-            pad1.onDownCallback = undefined;s
+            pad1.onDownCallback = undefined;
         },
-/*        
-        registerSpawnerEvents: function (spawner) {
-            spawner.sprites.forEach(this.registerEnemyEvents, this);
-            spawner.events.onSpawn.add(this.onSpawnerSpawn, this);
+
+        createObstacleSpawner: function (spawner) {
+            var oSpawner = new Spawner(game,
+                                       game.width-32,
+                                       game.height/2,
+                                       null,
+                                       0,
+                                       {
+                                            maxSpawned: 5,
+                                            spawnRate: 1000,
+                                            sprites: {
+                                                key: 'skull'
+                                            }
+                                       });
+
+            oSpawner.sprites.forEach(this.registerObstacle, this);
+            oSpawner.events.onSpawn.add(function(spawner, obstacle) {
+                this.registerObstacle(obstacle);
+            }, this);
+
+            return oSpawner;
         },
         
-        registerEnemyEvents: function (enemy) {
-            enemies.push(enemy);
-            enemy.events.onDeath.add(this.onEnemyDeath, this);
-            enemy.events.onDrop.add(this.onEnemyDrop, this);
-            if (enemy.events.onSpawnChild) enemy.events.onSpawnChild.add(this.onSpawnerSpawn, this);
+        registerObstacle: function (obstacle) {
+            obstacles.push(obstacle);
         },
-        
-        onSpawnerSpawn: function(spawner, sprite) {
-            this.registerEnemyEvents(sprite);
-        },
-        
+/*
         onPlayerCollidesEnemy: function (player, enemy) {
             if(!enemy.invulnerable && !enemy.dying) {
                 // Enemies don't do lethal damage; just knockback.

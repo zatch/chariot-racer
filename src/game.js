@@ -15,7 +15,7 @@ define([
         constructor: Game,
 
         start: function() {
-            this.game = new Phaser.Game(980, 581, Phaser.AUTO, '', {
+            this.game = new Phaser.Game(980, 621, Phaser.AUTO, '', {
                 preload: this.preload, 
                 create: this.create,
                 init: this.init
@@ -39,14 +39,19 @@ define([
             });
 
             // Keep my pixels crisp and crunchy!
-            this.game.stage.smoothed = true;
+            this.game.stage.smoothed = false;
         },
 
         preload: function() {
-            // Load assets
+            // World textures
             this.game.load.image('dirt-track', 'assets/textures/dirt-track.png');
 
+            // Chariot racers
             this.game.load.atlas('chariot', 'assets/sprites/chariot.png', 'assets/sprites/chariot.json');
+
+            // Obstacles
+            this.game.load.image('skull', 'assets/sprites/skull.png');
+
         },
         
         create: function() {
