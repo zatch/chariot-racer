@@ -47,6 +47,7 @@ define([
             // World textures
             this.game.load.image('dirt-track', 'assets/textures/dirt-track.png');
             this.game.load.image('clouds1', 'assets/textures/clouds1.png');
+            this.game.load.image('clouds2', 'assets/textures/clouds2.png');
 
             // Chariot racers
             this.game.load.atlas('chariot', 'assets/sprites/chariot.png', 'assets/sprites/chariot.json');

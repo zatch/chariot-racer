@@ -29,7 +29,8 @@ define([
 
         dirtTrack,
         dirtTrackHeight=laneHeight*laneCount,
-        clouds1;
+        clouds1,
+        clouds2;
 
     return {
         // Intro
@@ -79,6 +80,7 @@ define([
             //  The scrolling track background
             dirtTrack = game.add.tileSprite(0, game.height-dirtTrackHeight, game.width, dirtTrackHeight, 'dirt-track');
             clouds1 = game.add.tileSprite(0, 0, game.width, 70, 'clouds1');
+            clouds2 = game.add.tileSprite(0, 0, game.width, 70, 'clouds2');
 
             // Insert spawners
             obstacleSpawner = this.createObstacleSpawner();
@@ -167,7 +169,8 @@ define([
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             dirtTrack.tilePosition.x -= player.body.velocity.x;
-            clouds1.tilePosition.x -= player.body.velocity.x/60;
+            clouds1.tilePosition.x -= player.body.velocity.x/90;
+            clouds2.tilePosition.x -= player.body.velocity.x/100;
             obstacles.forEach(function(obstacle) {
                 obstacle.body.velocity.x = -player.body.velocity.x*2;
             }, this);
