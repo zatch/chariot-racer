@@ -4,7 +4,10 @@ define([
     'use strict';
 
     // Shortcuts
-    var game, self;
+    var game,
+        self,
+        lanes=[0,1,2],
+        lanesCount=lanes.length;
 
     function Spawner (_game, x, y, key, frame, properties) {
         game = _game;
@@ -47,30 +50,68 @@ define([
     Spawner.prototype.constructor = Spawner;
 
     Spawner.prototype.update = function () {
-        this.spawn();
-
+        if (!this.spawnTimer.duration) {
+            this.spawn();
+        }
         // Call up!
         Phaser.Sprite.prototype.update.call(this);
     };
 
     function onCooldownComplete () {
         // this == sprite
-        this.revive(); 
-        self.events.onSpawn.dispatch(self, this);
     }
 
     Spawner.prototype.spawn = function () {
-        var sprite;
-        if (!this.spawnTimer.duration) {
+            var sprite,
+                // How many to spawn at once, always leaving at least 1 lane open
+                spawnCount = Math.floor(Math.random() * lanesCount),
+                // Shuffled copy of potential lanes to spawn in
+                spawnLanes = this.shuffleArray(lanes.slice());
 
-            sprite = this.sprites.getFirstDead();
-            if (sprite) {
-                sprite.x = this.x;
-                sprite.y = this.y;
-
-                this.spawnTimer.add(this.spawnRate, onCooldownComplete, sprite);
+            // Reduce list of potential spawn lanes based on count
+            while (spawnLanes.length > spawnCount) {
+                spawnLanes.pop();
             }
+
+            // Spawn in predetirmined lanes
+            while (spawnLanes.length > 0) {
+                sprite = this.sprites.getFirstDead();
+                if (sprite) {
+                    sprite.x = this.x;
+                    // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
+                    sprite.y = (game.height/2)+spawnLanes.pop()*(game.height/2/3)+40;
+
+                    sprite.revive(); 
+                    this.events.onSpawn.dispatch(this, sprite);
+
+                    this.spawnTimer.add(this.spawnRate, onCooldownComplete, sprite);
+                }
+                else {
+                    spawnLanes = []; // Exit condition for maximum number spawned.
+                }
+            }
+    };
+
+    // This probably shouldn't live here long term, but is convenient for now.
+    Spawner.prototype.shuffleArray = function(array)
+    {
+        // Fisher-Yates (aka Knuth) shuffle algorithm
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
         }
+
+        return array;
     };
 
     return Spawner;

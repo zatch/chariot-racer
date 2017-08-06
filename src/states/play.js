@@ -142,14 +142,14 @@ define([
                         }
                         break;
                 }
+                // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
                 player.y = (game.height/2)+player.activeLane*(game.height/2/3)+40;
                 player.cameraOffset.y = player.y;
-                console.log(game.player.activeLane,player.y);
             }
 
             dirtTrack.tilePosition.x -= player.body.velocity.x;
             obstacles.forEach(function(obstacle) {
-                obstacle.body.velocity.x = -player.body.velocity.x;
+                obstacle.body.velocity.x = -player.body.velocity.x*2;
             }, this);
 
             // Collide player + enemies.
@@ -171,7 +171,7 @@ define([
                                        null,
                                        0,
                                        {
-                                            maxSpawned: 5,
+                                            maxSpawned: 25,
                                             spawnRate: 1000,
                                             sprites: {
                                                 key: 'skull'
