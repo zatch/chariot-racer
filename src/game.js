@@ -15,7 +15,7 @@ define([
         constructor: Game,
 
         start: function() {
-            this.game = new Phaser.Game(980, 621, Phaser.AUTO, '', {
+            this.game = new Phaser.Game(490, 310, Phaser.AUTO, '', {
                 preload: this.preload, 
                 create: this.create,
                 init: this.init
@@ -40,6 +40,7 @@ define([
 
             // Keep my pixels crisp and crunchy!
             this.game.stage.smoothed = false;
+            this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         },
 
         preload: function() {
