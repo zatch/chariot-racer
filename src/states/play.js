@@ -17,13 +17,18 @@ define([
     var game, 
         moveKeys, 
 
-        dirtTrack,
-
         player,
+        laneHeight=48,
+        laneCount=3,
+        laneOffset=27,
         lanes=[],
+        laneYCoords,
         obstacleSpawner,
         obstacles=[],
-        enemies;
+        enemies,
+
+        dirtTrack,
+        dirtTrackHeight=laneHeight*laneCount;
 
     return {
         // Intro
@@ -43,7 +48,7 @@ define([
             var self = this;
 
             // Player set-up
-            player = new Player(game, 0, game.height/2);
+            player = new Player(game);
             player.activeLane = 0;
             player.events.onDeath.add(this.onPlayerDeath);
 
@@ -62,20 +67,24 @@ define([
             map.createLayer('background-decoration');
             collisionLayer = map.createLayer('foreground-structure');
 */
+            laneYCoords=[
+                game.height-dirtTrackHeight-laneOffset,
+                game.height-dirtTrackHeight+laneHeight-laneOffset,
+                game.height-dirtTrackHeight+laneHeight*2-laneOffset
+            ];
 
-            //  The scrolling starfield background
-            dirtTrack = game.add.tileSprite(0, game.height/2, 980, 621, 'dirt-track');
-
-            // Insert player here?
-            game.add.existing(player);
-            player.x = 200;
-            player.y = game.height/2;
-            player.fixedToCamera = true;
+            //  The scrolling track background
+            dirtTrack = game.add.tileSprite(0, game.height-dirtTrackHeight, game.width, dirtTrackHeight, 'dirt-track');
 
             // Insert spawners
             obstacleSpawner = this.createObstacleSpawner();
             game.add.existing(obstacleSpawner);
-            //obstacleSpawner.fixedToCamera = true;
+
+            // Insert player
+            game.add.existing(player);
+            player.x = 200;
+            player.y = laneYCoords[0];
+            player.fixedToCamera = true;
             
 /*
             // Insert enemies
@@ -148,10 +157,11 @@ define([
                         break;
                 }
                 // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
-                player.y = (game.height/2)+player.activeLane*(game.height/2/3);
+                player.y = laneYCoords[player.activeLane]
                 player.cameraOffset.y = player.y;
             }
 
+            // TO DO: Make dirtTrack and obstacles move at the same speed...not sure wha'ts wrong here.
             dirtTrack.tilePosition.x -= player.body.velocity.x;
             obstacles.forEach(function(obstacle) {
                 obstacle.body.velocity.x = -player.body.velocity.x*2;
@@ -180,7 +190,12 @@ define([
                                             spawnRate: 1000,
                                             sprites: {
                                                 key: 'skull'
-                                            }
+                                            },
+                                            spawnCoords: [
+                                                {x: game.width, y: laneYCoords[0]},
+                                                {x: game.width, y: laneYCoords[1]},
+                                                {x: game.width, y: laneYCoords[2]}
+                                            ]
                                        });
 
             oSpawner.sprites.forEach(this.registerObstacle, this);

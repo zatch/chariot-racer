@@ -7,7 +7,7 @@ define([
     var game,
         self,
         lanes=[0,1,2],
-        lanesCount=lanes.length;
+        laneCount=lanes.length;
 
     function Spawner (_game, x, y, key, frame, properties) {
         game = _game;
@@ -21,6 +21,7 @@ define([
         // Spawn settings
         this.maxSpawned = properties.maxSpawned ? properties.maxSpawned : 1;
         this.spawnRate = properties.spawnRate ? properties.spawnRate : 1000; // Delay to spawn, in ms
+        this.spawnCoords = properties.spawnCoords ? properties.spawnCoords : [{x:0, y:0}];
 
         this.isFresh = true;
         
@@ -64,9 +65,11 @@ define([
     Spawner.prototype.spawn = function () {
             var sprite,
                 // How many to spawn at once, always leaving at least 1 lane open
-                spawnCount = Math.floor(Math.random() * lanesCount),
+                spawnCount = Math.floor(Math.random() * laneCount),
                 // Shuffled copy of potential lanes to spawn in
-                spawnLanes = this.shuffleArray(lanes.slice());
+                spawnLanes = this.shuffleArray(lanes.slice()),
+                // Coords we'll spawn this sprite at
+                spriteCoords;
 
             // Reduce list of potential spawn lanes based on count
             while (spawnLanes.length > spawnCount) {
@@ -77,9 +80,11 @@ define([
             while (spawnLanes.length > 0) {
                 sprite = this.sprites.getFirstDead();
                 if (sprite) {
-                    sprite.x = this.x;
+                    spriteCoords = this.spawnCoords[spawnLanes.pop()];
+                    sprite.x = spriteCoords.x;
                     // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
-                    sprite.y = (game.height/2)+spawnLanes.pop()*(game.height/2/3);
+                    // TO DO: Fix this so we don't need a hard-coded offset (see "+36" ugh...)
+                    sprite.y = spriteCoords.y+36;
 
                     sprite.revive(); 
                     this.events.onSpawn.dispatch(this, sprite);
