@@ -127,10 +127,6 @@ define([
                     game.scale.startFullScreen();
                 }
             });
-            
-            // Camera
-            game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
-
         },
 
         render: function () {
@@ -171,7 +167,11 @@ define([
                                        null,
                                        0,
                                        {
-                                            key: 'skull'
+                                            maxSpawned: 5,
+                                            spawnRate: 1000,
+                                            sprites: {
+                                                key: 'skull'
+                                            }
                                        });
 
             oSpawner.sprites.forEach(this.registerObstacle, this);

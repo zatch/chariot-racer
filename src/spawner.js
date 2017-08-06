@@ -14,18 +14,19 @@ define([
         Phaser.Sprite.call(this, game, x, y, 'spawner');
 
         this.renderable = false;
-        
+
         // Spawn settings
-        this.maxSpawned = 5;
-        this.spawnRate = 1000; // Delay to spawn, in ms
+        this.maxSpawned = properties.maxSpawned ? properties.maxSpawned : 1;
+        this.spawnRate = properties.spawnRate ? properties.spawnRate : 1000; // Delay to spawn, in ms
+
         this.isFresh = true;
         
         // Sprites spawned
         this.sprites = game.add.group();
         this.sprites.x = 0;
         this.sprites.y = 0;
-        this.sprites.classType = game.spriteClassTypes[properties.key];
-        this.sprites.createMultiple(this.maxSpawned, properties.key, 1, true);
+        this.sprites.classType = game.spriteClassTypes[properties.sprites.key];
+        this.sprites.createMultiple(this.maxSpawned, properties.sprites.key, 1, true);
         this.sprites.setAll('x', this.x);
         this.sprites.setAll('y', this.y);
         this.sprites.callAll('kill');
@@ -46,41 +47,28 @@ define([
     Spawner.prototype.constructor = Spawner;
 
     Spawner.prototype.update = function () {
-        if (/*this.inCamera*/1) {
-            // Attempt to spawn when the spawner is within the camera bounds.
-            this.spawn();
-        }
-        else {
-            this.isFresh = true;
-        }
+        this.spawn();
 
         // Call up!
         Phaser.Sprite.prototype.update.call(this);
     };
 
     function onCooldownComplete () {
-        // No action necessary?
+        // this == sprite
+        this.revive(); 
+        self.events.onSpawn.dispatch(self, this);
     }
 
     Spawner.prototype.spawn = function () {
         var sprite;
-        if (!this.spawnTimer.duration && this.isFresh) {
+        if (!this.spawnTimer.duration) {
 
-            console.log("spawning");
-            
             sprite = this.sprites.getFirstDead();
             if (sprite) {
-                sprite.revive();
                 sprite.x = this.x;
                 sprite.y = this.y;
-                this.events.onSpawn.dispatch(this, sprite);
-                if (!this.sprites.getFirstDead()) {
-                    this.isFresh = false; // fresh out!
-                }
-                this.spawnTimer.add(this.spawnRate, onCooldownComplete, this);
-            }
-            else{
-                this.isFresh = false; // fresh out!
+
+                this.spawnTimer.add(this.spawnRate, onCooldownComplete, sprite);
             }
         }
     };
