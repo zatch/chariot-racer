@@ -13,7 +13,7 @@ define([
 
         // Initialize sprite
         Entity.call(this, game, x, y, 'chariot');
-        this.anchor.set(0.95, 0);
+        this.anchor.set(0.5, 0.5);
 
         // Set up animations.
         this.anims = {};
@@ -39,9 +39,6 @@ define([
         this.moveAccel = 800;
 
         this.maxMoveSpeed = new Phaser.Point(300, 10000);
-
-        // Kill player when they fall outside the bounds of the map.
-        this.events.onOutOfBounds.add(this.handleDeath, this);
 
         StateMachine.extend(this);
         this.stateMachine.states = {

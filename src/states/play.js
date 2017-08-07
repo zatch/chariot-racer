@@ -52,7 +52,7 @@ define([
 
             // Player set-up
             player = new Player(game);
-            player.activeLane = 0;
+            player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
 
             // Make player accessible via game object.
@@ -70,19 +70,28 @@ define([
             map.createLayer('background-decoration');
             collisionLayer = map.createLayer('foreground-structure');
 */
+
+            // Set up game background
+
             game.stage.backgroundColor = '#add3ff';
 
-            laneYCoords=[
-                game.height-dirtTrackHeight-laneOffset,
-                game.height-dirtTrackHeight+laneHeight-laneOffset,
-                game.height-dirtTrackHeight+laneHeight*2-laneOffset
-            ];
-
-            //  The scrolling track background
-            dirtTrack = game.add.tileSprite(0, game.height-dirtTrackHeight, game.width, dirtTrackHeight, 'dirt-track');
-            crowd = game.add.tileSprite(0, 70, game.width, 100, 'crowd');
             clouds1 = game.add.tileSprite(0, 0, game.width, 70, 'clouds1');
             clouds2 = game.add.tileSprite(0, 0, game.width, 70, 'clouds2');
+            
+            crowd = game.add.tileSprite(0, 70, game.width, 100, 'crowd');
+
+            laneYCoords=[170,170+36,170+36+48];
+
+            lanes = [
+                game.add.tileSprite(0, laneYCoords[0], game.width, 48, 'dirt-track'),
+                game.add.tileSprite(0, laneYCoords[1], game.width, 48, 'dirt-track'),
+                game.add.tileSprite(0, laneYCoords[2], game.width, 48, 'dirt-track')
+            ];
+
+
+            lanes[0].scale.setTo(1, 0.75);
+            lanes[1].scale.setTo(1, 1);
+            lanes[2].scale.setTo(1, 1.25);
 
             // Insert spawners
             obstacleSpawner = this.createObstacleSpawner();
@@ -90,10 +99,12 @@ define([
 
             // Insert player
             game.add.existing(player);
-            player.x = 200;
-            player.y = laneYCoords[0];
+            player.x = 150;
             player.fixedToCamera = true;
-            
+            player.scale.setTo(1.6);
+            player.y = laneYCoords[player.activeLane];
+            player.y -= 12;
+            player.cameraOffset.y = player.y;
 /*
             // Insert enemies
             enemies = [];
@@ -107,36 +118,16 @@ define([
             // Add "foreground" layers to map.
             map.createLayer('foreground-decoration');
 */
-
-/*
-            // Physics engine set-up
-            game.physics.startSystem(Phaser.Physics.ARCADE);
-            game.physics.arcade.gravity.y = 1000;
-            
-            //  We check bounds collisions against all walls other than the bottom one
-            game.physics.arcade.checkCollision.down = false;
-            // Assign impasasble tiles for collision.
-            map.setCollisionByExclusion([], true, 'foreground-structure');
-*/
             
 /*
             // HUD
             lapCounter = new LapCounter(game, 0, 0);
             game.add.existing(lapCounter);
             lapCounter.updateDisplay(player.currentLap);
-*/           
-
-
-            // add player
-            //game.add.existing(player);
+*/
 
             this.swipe = new Swipe(game);
             this.swipe.dragLength = 25;
-            // lanes
-
-
-            // Camera
-            game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
 
         },
 
@@ -165,17 +156,53 @@ define([
                         break;
                 }
                 // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
-                player.y = laneYCoords[player.activeLane]
+                player.y = laneYCoords[player.activeLane];
+
+                // TO DO: Make it so we don't need  all these hard-coded y-coord offsets.
+                switch(player.activeLane){
+                    case 0: 
+                        player.scale.setTo(1.2);
+                        player.y -= 10;
+                        break;
+                    case 1:
+                        player.scale.setTo(1.6);
+                        player.y -= 12;
+                        break;
+                    case 2:
+                        player.scale.setTo(2);
+                        player.y -= 14;
+                        break;
+                }
+
                 player.cameraOffset.y = player.y;
             }
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
-            dirtTrack.tilePosition.x -= player.body.velocity.x;
+            //dirtTrack.tilePosition.x -= player.body.velocity.x;
+            lanes[0].tilePosition.x -= player.body.velocity.x/40;
+            lanes[1].tilePosition.x -= player.body.velocity.x/35;
+            lanes[2].tilePosition.x -= player.body.velocity.x/30;
             crowd.tilePosition.x -= player.body.velocity.x/50;
             clouds1.tilePosition.x -= player.body.velocity.x/90;
             clouds2.tilePosition.x -= player.body.velocity.x/100;
             obstacles.forEach(function(obstacle) {
                 obstacle.body.velocity.x = -player.body.velocity.x*2;
+
+                switch(obstacle.activeLane){
+                    case 0:
+                        obstacle.body.velocity.x = -player.body.velocity.x*1.5;
+                        obstacle.scale.setTo(0.75);
+                        break;
+                    case 1:
+                        obstacle.body.velocity.x = -player.body.velocity.x*1.75;
+                        obstacle.scale.setTo(1);
+                        break;
+                    case 2:
+                        obstacle.body.velocity.x = -player.body.velocity.x*2;
+                        obstacle.scale.setTo(1.25);
+                        break;
+                }
+
             }, this);
 
             // Collide player + enemies.
