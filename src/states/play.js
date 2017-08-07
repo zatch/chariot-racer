@@ -99,9 +99,9 @@ define([
 
             // Insert player
             game.add.existing(player);
-            player.x = 150;
+            player.x = 260;
             player.fixedToCamera = true;
-            player.scale.setTo(1.6);
+            player.scale.setTo(0.8);
             player.y = laneYCoords[player.activeLane];
             player.y -= 12;
             player.cameraOffset.y = player.y;
@@ -161,15 +161,15 @@ define([
                 // TO DO: Make it so we don't need  all these hard-coded y-coord offsets.
                 switch(player.activeLane){
                     case 0: 
-                        player.scale.setTo(1.2);
+                        player.scale.setTo(0.6);
                         player.y -= 10;
                         break;
                     case 1:
-                        player.scale.setTo(1.6);
+                        player.scale.setTo(0.8);
                         player.y -= 12;
                         break;
                     case 2:
-                        player.scale.setTo(2);
+                        player.scale.setTo(1);
                         player.y -= 14;
                         break;
                 }
@@ -191,22 +191,19 @@ define([
                 switch(obstacle.activeLane){
                     case 0:
                         obstacle.body.velocity.x = -player.body.velocity.x*1.5;
-                        obstacle.scale.setTo(0.75);
                         break;
                     case 1:
                         obstacle.body.velocity.x = -player.body.velocity.x*1.75;
-                        obstacle.scale.setTo(1);
                         break;
                     case 2:
                         obstacle.body.velocity.x = -player.body.velocity.x*2;
-                        obstacle.scale.setTo(1.25);
                         break;
                 }
 
             }, this);
 
             // Collide player + enemies.
-            game.physics.arcade.overlap(player, enemies, this.onPlayerCollidesEnemy);
+            game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle);
 
 
         },
@@ -214,7 +211,6 @@ define([
         shutdown: function () {
             // This prevents occasional momentary "flashes" during state transitions.
             game.camera.unfollow();
-            pad1.onDownCallback = undefined;
         },
 
         createObstacleSpawner: function (spawner) {
@@ -225,7 +221,7 @@ define([
                                        0,
                                        {
                                             maxSpawned: 25,
-                                            spawnRate: 1000,
+                                            spawnRate: 2000,
                                             sprites: {
                                                 key: 'skull'
                                             },
@@ -247,14 +243,11 @@ define([
         registerObstacle: function (obstacle) {
             obstacles.push(obstacle);
         },
-/*
-        onPlayerCollidesEnemy: function (player, enemy) {
-            if(!enemy.invulnerable && !enemy.dying) {
-                // Enemies don't do lethal damage; just knockback.
-                player.damage(0, enemy);
-            }
+
+        onPlayerCollidesObstacle: function (player, enemy) {
+            player.damage();
         },
-*/
+
         onPlayerDeath: function (player) {
             game.camera.unfollow();
             game.stateTransition.to('GameOver', true, false);

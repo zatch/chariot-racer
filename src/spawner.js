@@ -83,8 +83,8 @@ define([
                     sprite.activeLane = spawnLanes.pop();
                     spriteCoords = this.spawnCoords[sprite.activeLane];
 
-                    // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
-                    // TO DO: Fix this so we don't need a hard-coded offset (see "+36" ugh...)
+                    // TO DO: Move lane positioning to a helper function or new class
+                    // TO DO: Fix this so we don't need a hard-coded offset (see "+30" ugh...)
                     switch(sprite.activeLane){
                         case 0:
                             sprite.x = spriteCoords.x;
@@ -92,12 +92,12 @@ define([
                             sprite.scale.setTo(0.75);
                             break;
                         case 1:
-                            sprite.x = spriteCoords.x+25;
+                            sprite.x = spriteCoords.x+30;
                             sprite.y = spriteCoords.y+9;
                             sprite.scale.setTo(1);
                             break;
                         case 2:
-                            sprite.x = spriteCoords.x+50;
+                            sprite.x = spriteCoords.x+60;
                             sprite.y = spriteCoords.y+12;
                             sprite.scale.setTo(1.25);
                             break;

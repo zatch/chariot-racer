@@ -13,12 +13,15 @@ define([
 
         // Initialize sprite
         Entity.call(this, game, x, y, 'chariot');
-        this.anchor.set(0.5, 0.5);
+        this.anchor.set(1, 0.5);
 
         // Set up animations.
         this.anims = {};
-        this.anims.walk = this.animations.add('walk', [0], 40);
+        this.anims.walk = this.animations.add('walk', [0,1,2,3,4,5,6,7,8,9,10], 15);
+        this.anims.dying = this.animations.add('dying', [11,12,13,14,15,16], 15, true);
         this.frame = 0;
+        this.dyingLastFrame = 16; // 16 is a blank frame
+        this.dying = false;
 
         // Enable physics.
         game.physics.enable(this);
@@ -26,13 +29,13 @@ define([
         this.checkWorldBounds = true;
 
         // Resize player body/hitbox.
-        this.body.setSize(128,64,0,0);
+        this.body.setSize(100,40,86,72);
 
         // Initialize public properites.
         // Fastest possible movement speeds.
         this.body.maxVelocity.x = 100;
         this.body.maxVelocity.y = 10000;
-        this.body.drag.x = 1500;
+        this.body.drag.x = 100;
         this.body.drag.y = 0;
 
         // The horizontal acceleration that is applied when moving.
@@ -40,10 +43,16 @@ define([
 
         this.maxMoveSpeed = new Phaser.Point(300, 10000);
 
+        // Signals
+        this.events.onDeath = new Phaser.Signal();
+
         StateMachine.extend(this);
         this.stateMachine.states = {
             'normal': {
                 'update': this.update_normal
+            },
+            'dying': {
+                'update': this.update_dying
             }
         };
         this.stateMachine.setState('normal');
@@ -54,29 +63,6 @@ define([
     Player.prototype.constructor = Player;
 
     Player.prototype.update_normal = function () {
-        // Update sprite.
-        //if (this.body.velocity.y === 0) this.frame = 0; // Don't animate when stopped.
-        
-        this.moveRight();
-
-        Phaser.Sprite.prototype.update.call(this);
-    };
-    
-    // Update children.
-    Player.prototype.update = function () {
-        this.stateMachine.handle('update');
-    };
-
-    Player.prototype.moveLeft = function () {
-        // Play walk animation.
-        if(!this.anims.walk.isPlaying) this.anims.walk.play();
-
-        // Don't exceed max move speed.
-        if(this.body.velocity.x <=  -this.maxMoveSpeed.x) this.body.velocity.x = -this.maxMoveSpeed.x;
-        
-    };
-
-    Player.prototype.moveRight = function () {
         // Play walk animation.
         if(!this.anims.walk.isPlaying) this.anims.walk.play();
 
@@ -84,10 +70,34 @@ define([
         if(this.body.velocity.x >=  this.maxMoveSpeed.x) this.body.velocity.x = this.maxMoveSpeed.x;
 
         this.body.acceleration.x = this.moveAccel;
+
+        Phaser.Sprite.prototype.update.call(this);
+    };
+
+    Player.prototype.update_dying = function () {
+        if(!this.anims.dying.isPlaying && !this.dying) this.anims.dying.play();
+        this.dying = true;
+        this.body.acceleration.x = 0;
+
+        Phaser.Sprite.prototype.update.call(this);
+
+        if(this.frame===this.dyingLastFrame) {
+            this.anims.dying.stop();
+            this.events.onDeath.dispatch(this);
+        }
+    };
+    
+    // Update children.
+    Player.prototype.update = function () {
+        this.stateMachine.handle('update');
     };
 
     Player.prototype.stopMoving = function () {
         this.body.acceleration.x = 0;
+    };
+
+    Player.prototype.damage = function () {
+        this.stateMachine.setState('dying');
     };
     
     return Player;
