@@ -51,7 +51,10 @@ define([
             this.game.load.image('clouds2', 'assets/textures/clouds2.png');
 
             // Chariot racers
-            this.game.load.atlas('chariot', 'assets/sprites/chariot.png', 'assets/sprites/chariot.json');
+            this.game.load.atlas('chariot-blue', 'assets/sprites/chariot-blue.png', 'assets/sprites/chariot-blue.json');
+            this.game.load.atlas('chariot-green', 'assets/sprites/chariot-green.png', 'assets/sprites/chariot-green.json');
+            this.game.load.atlas('chariot-red', 'assets/sprites/chariot-red.png', 'assets/sprites/chariot-red.json');
+            this.game.load.atlas('chariot-white', 'assets/sprites/chariot-white.png', 'assets/sprites/chariot-white.json');
 
             // Obstacles
             this.game.load.image('skull', 'assets/sprites/skull.png');
