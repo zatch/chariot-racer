@@ -155,28 +155,31 @@ define([
                         }
                         break;
                 }
-                // TO DO: Move lane positioning to a helper function or new class (e.g. LaneManager)
-                player.y = laneYCoords[player.activeLane];
-
+                // TO DO: Move lane positioning to a helper function or new class
                 // TO DO: Make it so we don't need  all these hard-coded y-coord offsets.
+                var targetY, 
+                    targetScale, 
+                    tweenDuration=100,
+                    tweenEasing=Phaser.Easing.Cubic.In,
+                    tweenAutoPlay=true;
                 switch(player.activeLane){
                     case 0: 
-                        player.scale.setTo(0.6);
-                        player.y -= 10;
+                        targetY = laneYCoords[0]-10;
+                        targetScale = {x: 0.6, y: 0.6};
                         break;
                     case 1:
-                        player.scale.setTo(0.8);
-                        player.y -= 12;
+                        targetY = laneYCoords[1]-12;
+                        targetScale = {x: 0.8, y: 0.8};
                         break;
                     case 2:
-                        player.scale.setTo(1);
-                        player.y -= 14;
+                        targetY = laneYCoords[2]-14;
+                        targetScale = {x: 1, y: 1};
                         break;
                 }
 
-                player.cameraOffset.y = player.y;
+                game.add.tween(player.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
+                game.add.tween(player.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
             }
-
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             //dirtTrack.tilePosition.x -= player.body.velocity.x;
             lanes[0].tilePosition.x -= player.body.velocity.x/40;
