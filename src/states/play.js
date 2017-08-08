@@ -18,13 +18,13 @@ define([
         moveKeys, 
 
         player,
-        laneHeight=48,
-        laneCount=3,
-        laneOffset=27,
-        lanes=[],
+        laneHeight,
+        laneCount,
+        laneOffset,
+        lanes,
         laneYCoords,
         obstacleSpawner,
-        obstacles=[],
+        obstacles,
         enemies,
 
         dirtTrack,
@@ -49,6 +49,13 @@ define([
         create: function () {
 
             var self = this;
+
+
+            laneHeight=48;
+            laneCount=3;
+            laneOffset=27;
+            lanes=[];
+            obstacles=[];
 
             // Player set-up
             player = new Player(game);
