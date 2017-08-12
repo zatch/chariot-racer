@@ -3,13 +3,15 @@ define([
     'player',
     'spawner',
     'entity',
-    'swipe'
+    'swipe',
+    'distance-display'
 ], function (
     Phaser,
     Player,
     Spawner,
     Entity,
-    Swipe) {
+    Swipe,
+    DistanceDisplay) {
 
     'use strict';
     
@@ -31,7 +33,9 @@ define([
         dirtTrackHeight=laneHeight*laneCount,
         crowd,
         clouds1,
-        clouds2;
+        clouds2,
+
+        distanceDisplay;
 
     return {
         // Intro
@@ -126,8 +130,14 @@ define([
             map.createLayer('foreground-decoration');
 */
             
-/*
+
             // HUD
+            distanceDisplay = new DistanceDisplay(game, 0, 0);
+            game.add.existing(distanceDisplay);
+            distanceDisplay.fixedToCamera = true;
+            distanceDisplay.cameraOffset.x = 4
+            distanceDisplay.cameraOffset.y = 4;
+/*
             lapCounter = new LapCounter(game, 0, 0);
             game.add.existing(lapCounter);
             lapCounter.updateDisplay(player.currentLap);
@@ -187,26 +197,28 @@ define([
                 game.add.tween(player.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
                 game.add.tween(player.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
             }
+
+            distanceDisplay.updateDisplay(distanceDisplay.distance + player.body.velocity.x/50);
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             //dirtTrack.tilePosition.x -= player.body.velocity.x;
-            lanes[0].tilePosition.x -= player.body.velocity.x/40;
-            lanes[1].tilePosition.x -= player.body.velocity.x/35;
-            lanes[2].tilePosition.x -= player.body.velocity.x/30;
-            crowd.tilePosition.x -= player.body.velocity.x/50;
-            clouds1.tilePosition.x -= player.body.velocity.x/90;
-            clouds2.tilePosition.x -= player.body.velocity.x/100;
+            lanes[0].tilePosition.x -= player.body.velocity.x*0.6;
+            lanes[1].tilePosition.x -= player.body.velocity.x*0.8;
+            lanes[2].tilePosition.x -= player.body.velocity.x;
+            crowd.tilePosition.x -= player.body.velocity.x*0.6;
+            clouds1.tilePosition.x -= player.body.velocity.x*0.1;
+            clouds2.tilePosition.x -= player.body.velocity.x*0.09;
             obstacles.forEach(function(obstacle) {
                 obstacle.body.velocity.x = -player.body.velocity.x*2;
 
                 switch(obstacle.activeLane){
                     case 0:
-                        obstacle.body.velocity.x = -player.body.velocity.x*1.5;
+                        obstacle.body.x -= player.body.velocity.x*0.6;
                         break;
                     case 1:
-                        obstacle.body.velocity.x = -player.body.velocity.x*1.75;
+                        obstacle.body.x -= player.body.velocity.x*0.8;
                         break;
                     case 2:
-                        obstacle.body.velocity.x = -player.body.velocity.x*2;
+                        obstacle.body.x -= player.body.velocity.x;
                         break;
                 }
 

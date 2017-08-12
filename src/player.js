@@ -33,15 +33,11 @@ define([
 
         // Initialize public properites.
         // Fastest possible movement speeds.
-        this.body.maxVelocity.x = 100;
-        this.body.maxVelocity.y = 10000;
-        this.body.drag.x = 100;
-        this.body.drag.y = 0;
+        this.body.maxVelocity.x = 4;
+        this.body.drag.x = 10;
 
         // The horizontal acceleration that is applied when moving.
-        this.moveAccel = 800;
-
-        this.maxMoveSpeed = new Phaser.Point(300, 10000);
+        this.moveAccel = 80;
 
         // Signals
         this.events.onDeath = new Phaser.Signal();
@@ -65,9 +61,6 @@ define([
     Player.prototype.update_normal = function () {
         // Play walk animation.
         if(!this.anims.walk.isPlaying) this.anims.walk.play();
-
-        // Don't exceed max move speed.
-        if(this.body.velocity.x >=  this.maxMoveSpeed.x) this.body.velocity.x = this.maxMoveSpeed.x;
 
         this.body.acceleration.x = this.moveAccel;
 
