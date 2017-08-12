@@ -22,7 +22,7 @@ define([
 
     DistanceDisplay.prototype.updateDisplay = function (val) {
         this.distance = val;
-        this.distanceText.setText(Math.floor(this.distance) + " meters");
+        this.distanceText.setText(Math.floor(this.distance) + " meters :: " + Math.floor(game.time.totalElapsedSeconds()*10)/10);
     };
 
     return DistanceDisplay;

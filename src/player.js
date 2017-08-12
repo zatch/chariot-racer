@@ -33,7 +33,7 @@ define([
 
         // Initialize public properites.
         // Fastest possible movement speeds.
-        this.body.maxVelocity.x = 4;
+        this.body.maxVelocity.x = 10;
         this.body.drag.x = 10;
 
         // The horizontal acceleration that is applied when moving.

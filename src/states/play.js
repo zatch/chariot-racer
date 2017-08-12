@@ -29,8 +29,8 @@ define([
 
         pixelsPerMeter=50, // Divisor for Phaser-to-reality physics conversion
         distanceTraveled=0,
-        lastSpawnDistance=1, // Non-zero to delay first spawn
-        spawnRate=5, // # of meters between spawns
+        lastSpawnDistance=5, // Non-zero to delay first spawn
+        spawnRate=15, // # of meters between spawns
 
         obstacleSpawner,
         obstacles,
@@ -236,13 +236,13 @@ define([
             }
 
             distanceTraveled += player.body.velocity.x / pixelsPerMeter;
-            distanceDisplay.updateDisplay(distanceDisplay.distance + player.body.velocity.x/50);
+            distanceDisplay.updateDisplay(distanceTraveled);
             
             this.spawnObstacles();
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
-            lanes[0].tilePosition.x -= player.body.velocity.x*0.6;
-            lanes[1].tilePosition.x -= player.body.velocity.x*0.8;
+            lanes[0].tilePosition.x -= player.body.velocity.x*0.8;
+            lanes[1].tilePosition.x -= player.body.velocity.x*0.9;
             lanes[2].tilePosition.x -= player.body.velocity.x;
             crowd.tilePosition.x -= player.body.velocity.x*0.6;
             clouds1.tilePosition.x -= player.body.velocity.x*0.1;
@@ -250,10 +250,10 @@ define([
             obstacles.forEach(function(obstacle) {
                 switch(obstacle.activeLane){
                     case 0:
-                        obstacle.body.x -= player.body.velocity.x*0.6;
+                        obstacle.body.x -= player.body.velocity.x*0.8;
                         break;
                     case 1:
-                        obstacle.body.x -= player.body.velocity.x*0.8;
+                        obstacle.body.x -= player.body.velocity.x*0.9;
                         break;
                     case 2:
                         obstacle.body.x -= player.body.velocity.x;
@@ -287,7 +287,7 @@ define([
         spawnObstacles: function () {
             if (distanceTraveled >= lastSpawnDistance + spawnRate) {
                 // How many to spawn at once, always leaving at least 1 lane open
-                var spawnCount = Math.floor(Math.random() * lanes.length);
+                var spawnCount = Math.floor(Math.random() * lanes.length - 1) + 1;
                 
                 // Shuffled copy of potential lanes to spawn in
                 var spawnLanes = this.shuffleArray([0,1,2]);
