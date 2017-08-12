@@ -24,6 +24,7 @@ define([
         laneCount,
         laneOffset,
         lanes,
+        laneSpawners,
         laneYCoords,
 
         pixelsPerMeter=50, // Divisor for Phaser-to-reality physics conversion
@@ -50,7 +51,7 @@ define([
             game = this.game;
 
             game.spriteClassTypes = {
-                'skull': Entity
+                'skull': Phaser.Sprite
             };
         },
         
@@ -62,7 +63,6 @@ define([
             laneHeight = 48;
             laneCount = 3;
             laneOffset = 27;
-            lanes = [];
 
             // Player setup
             player = new Player(game);
@@ -96,23 +96,77 @@ define([
             //obstacleSpawner = this.createObstacleSpawner();
             //game.add.existing(obstacleSpawner);
 
-
             // Obstacles group setup
             obstacles = game.add.group();
-            //game.width-32,
-            //game.height/2,
+            obstacles.enableBody = true;
             obstacles.classType = game.spriteClassTypes.skull;
-            //obstacles.createMultiple(2, 'skull', 1, true);
-            //obstacles.callAll('kill');
+
+            laneSpawners = [
+                new Spawner(game,
+                            game.width-32,
+                            laneYCoords[0],
+                            'lane-warning',
+                            0,
+                            obstacles,
+                            {
+                                activeLane: 0,
+                                spriteScale: 0.75,
+                                sprites: {
+                                    key: 'skull'
+                                },
+                                spawnCoords: {
+                                    x: game.width, 
+                                    y: laneYCoords[0]+6
+                                },
+                                warningDuration: 1000
+                            }),
+                new Spawner(game,
+                            game.width-32,
+                            laneYCoords[1],
+                            'lane-warning',
+                            0,
+                            obstacles,
+                            {
+                                activeLane: 1,
+                                spriteScale: 1,
+                                sprites: {
+                                    key: 'skull'
+                                },
+                                spawnCoords: {
+                                    x: game.width+30, 
+                                    y: laneYCoords[1]+9
+                                },
+                                warningDuration: 1000
+                            }),
+                new Spawner(game,
+                            game.width-32,
+                            laneYCoords[2],
+                            'lane-warning',
+                            0,
+                            obstacles,
+                            {
+                                activeLane: 2,
+                                spriteScale: 1.25,
+                                sprites: {
+                                    key: 'skull'
+                                },
+                                spawnCoords: {
+                                    x: game.width+60, 
+                                    y: laneYCoords[2]+12
+                                },
+                                warningDuration: 1000
+                            })
+            ];
+            game.add.existing(laneSpawners[0]);
+            game.add.existing(laneSpawners[1]);
+            game.add.existing(laneSpawners[2]);
 
             // Insert player
             game.add.existing(player);
             player.x = 260;
             player.fixedToCamera = true;
             player.scale.setTo(0.8);
-            player.y = laneYCoords[player.activeLane];
-            player.y -= 12;
-            player.cameraOffset.y = player.y;
+            player.cameraOffset.y = laneYCoords[player.activeLane] - 12;
 
             // HUD
             distanceDisplay = new DistanceDisplay(game, 0, 0);
@@ -193,7 +247,7 @@ define([
             crowd.tilePosition.x -= player.body.velocity.x*0.6;
             clouds1.tilePosition.x -= player.body.velocity.x*0.1;
             clouds2.tilePosition.x -= player.body.velocity.x*0.09;
-            obstacles.forEachAlive(function(obstacle) {
+            obstacles.forEach(function(obstacle) {
                 switch(obstacle.activeLane){
                     case 0:
                         obstacle.body.x -= player.body.velocity.x*0.6;
@@ -205,6 +259,10 @@ define([
                         obstacle.body.x -= player.body.velocity.x;
                         break;
                 }
+
+                // Recycle off-camera obstacles.
+                // Not using killOffCamera because we want to start obstacles off camera.
+                if(!obstacle.inCamera && obstacle.body.x < 0) obstacle.kill();
             }, this);
 
             // Collide player + enemies.
@@ -216,38 +274,7 @@ define([
             // This prevents occasional momentary "flashes" during state transitions.
             game.camera.unfollow();
         },
-/*
-        createObstacleSpawner: function (spawner) {
-            var oSpawner = new Spawner(game,
-                                       game.width-32,
-                                       game.height/2,
-                                       null,
-                                       0,
-                                       {
-                                            maxSpawned: 25,
-                                            spawnRate: 2000,
-                                            sprites: {
-                                                key: 'skull'
-                                            },
-                                            spawnCoords: [
-                                                {x: game.width, y: laneYCoords[0]},
-                                                {x: game.width, y: laneYCoords[1]},
-                                                {x: game.width, y: laneYCoords[2]}
-                                            ]
-                                       });
 
-            oSpawner.sprites.forEach(this.registerObstacle, this);
-            oSpawner.events.onSpawn.add(function(spawner, obstacle) {
-                this.registerObstacle(obstacle);
-            }, this);
-
-            return oSpawner;
-        },
-        
-        registerObstacle: function (obstacle) {
-            obstacles.push(obstacle);
-        },
-*/
         onPlayerCollidesObstacle: function (player, enemy) {
             player.damage();
         },
@@ -259,11 +286,11 @@ define([
 
         spawnObstacles: function () {
             if (distanceTraveled >= lastSpawnDistance + spawnRate) {
-                var sprite,
-                    // How many to spawn at once, always leaving at least 1 lane open
-                    spawnCount = Math.floor(Math.random() * lanes.length),
-                    // Shuffled copy of potential lanes to spawn in
-                    spawnLanes = this.shuffleArray([0,1,2]);
+                // How many to spawn at once, always leaving at least 1 lane open
+                var spawnCount = Math.floor(Math.random() * lanes.length);
+                
+                // Shuffled copy of potential lanes to spawn in
+                var spawnLanes = this.shuffleArray([0,1,2]);
 
                 // Reduce list of potential spawn lanes based on count
                 while (spawnLanes.length > spawnCount) {
@@ -272,31 +299,7 @@ define([
 
                 // Spawn in predetirmined lanes
                 while (spawnLanes.length > 0) {
-                    sprite = obstacles.getFirstDead(true, 0, 0, 'skull', 1);
-                    sprite.activeLane = spawnLanes.pop();
-
-                    // TO DO: Move lane positioning to a helper function or new class
-                    // TO DO: Fix this so we don't need a hard-coded offset (see "+30" ugh...)
-                    switch(sprite.activeLane){
-                        case 0:
-                            sprite.x = game.width;
-                            sprite.y = laneYCoords[sprite.activeLane]+6;
-                            sprite.scale.setTo(0.75);
-                            break;
-                        case 1:
-                            sprite.x = game.width;//+30; removed due to offCameraKill issue
-                            sprite.y = laneYCoords[sprite.activeLane]+9;
-                            sprite.scale.setTo(1);
-                            console.log(sprite);
-                            break;
-                        case 2:
-                            sprite.x = game.width;//+60; removed due to offCameraKill issue
-                            sprite.y = laneYCoords[sprite.activeLane]+12;
-                            sprite.scale.setTo(1.25);
-                            break;
-                    }
-                    console.log(sprite.activeLane);
-                    sprite.revive();
+                    laneSpawners[spawnLanes.pop()].warn();
                 }
 
                 lastSpawnDistance = distanceTraveled;

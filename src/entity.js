@@ -56,6 +56,7 @@ define([
     };
 
     Entity.prototype.kill = function () {
+        console.log('just killed',this);
         this.dying = false;
         Phaser.Sprite.prototype.kill.apply(this, arguments);
     };

@@ -1,0 +1,59 @@
+{ "frames": {
+   "lane-warning 0.ase": {
+    "frame": { "x": 8, "y": 8, "w": 32, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+    "sourceSize": { "w": 32, "h": 48 },
+    "duration": 100
+   },
+   "lane-warning 1.ase": {
+    "frame": { "x": 40, "y": 8, "w": 32, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+    "sourceSize": { "w": 32, "h": 48 },
+    "duration": 100
+   },
+   "lane-warning 2.ase": {
+    "frame": { "x": 72, "y": 8, "w": 32, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+    "sourceSize": { "w": 32, "h": 48 },
+    "duration": 100
+   },
+   "lane-warning 3.ase": {
+    "frame": { "x": 8, "y": 56, "w": 32, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+    "sourceSize": { "w": 32, "h": 48 },
+    "duration": 100
+   },
+   "lane-warning 4.ase": {
+    "frame": { "x": 40, "y": 56, "w": 32, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+    "sourceSize": { "w": 32, "h": 48 },
+    "duration": 100
+   },
+   "lane-warning 5.ase": {
+    "frame": { "x": 72, "y": 56, "w": 32, "h": 48 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 48 },
+    "sourceSize": { "w": 32, "h": 48 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.0.1",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\hud\\lane-warning.png",
+  "format": "RGBA8888",
+  "size": { "w": 128, "h": 128 },
+  "scale": "1"
+ }
+}

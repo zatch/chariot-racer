@@ -5,136 +5,70 @@ define([
 
     // Shortcuts
     var game,
-        self,
-        lanes=[0,1,2],
-        laneCount=lanes.length;
+        self;
 
-    function Spawner (_game, x, y, key, frame, properties) {
+    function Spawner (_game, x, y, key, frame, spawnGroup, properties) {
         game = _game;
         self = this;
 
         // Initialize sprite
-        Phaser.Sprite.call(this, game, x, y, 'spawner');
+        Phaser.Sprite.call(this, game, x, y, key, frame);
 
-        this.renderable = false;
+        // Set up animations.
+        this.anims = {};
+        this.anims.warn = this.animations.add('warn', [1,2,3,4,5], 15, true);
 
         // Spawn settings
-        this.maxSpawned = properties.maxSpawned ? properties.maxSpawned : 1;
-        this.spawnRate = properties.spawnRate ? properties.spawnRate : 1000; // Delay to spawn, in ms
-        this.spawnCoords = properties.spawnCoords ? properties.spawnCoords : [{x:0, y:0}];
+        this.spawnGroup = spawnGroup;
+        this.spawnCoords = properties.spawnCoords ? properties.spawnCoords : {x:0, y:0};
 
-        this.isFresh = true;
-        
+        this.activeLane = properties.activeLane ? properties.activeLane : 0;
+
         // Sprites spawned
-        this.sprites = game.add.group();
-        this.sprites.x = 0;
-        this.sprites.y = 0;
-        this.sprites.classType = game.spriteClassTypes[properties.sprites.key];
-        this.sprites.createMultiple(this.maxSpawned, properties.sprites.key, 1, true);
-        this.sprites.setAll('x', this.x);
-        this.sprites.setAll('y', this.y);
-        this.sprites.callAll('kill');
+        this.spriteScale = properties.spriteScale ? properties.spriteScale : 1;
+        this.spawnKey = properties.sprites.key;
         
         // Spawn timer
         this.spawnTimer = game.time.create(false);
         this.spawnTimer.start(); 
+        this.warningDuration = properties.warningDuration ? properties.warningDuration : 1000;
 
         // Signals
         this.events.onSpawn = new Phaser.Signal();
         
-        game.physics.enable(this);
-        this.body.immovable = true;
-        this.body.allowGravity = false;
     }
 
     Spawner.prototype = Object.create(Phaser.Sprite.prototype);
     Spawner.prototype.constructor = Spawner;
 
     Spawner.prototype.update = function () {
-        if (!this.spawnTimer.duration) {
-            //this.spawn();
-        }
         // Call up!
         Phaser.Sprite.prototype.update.call(this);
     };
 
-    function onCooldownComplete () {
-        // this == sprite
-    }
-
-    Spawner.prototype.spawn = function () {
-            var sprite,
-                // How many to spawn at once, always leaving at least 1 lane open
-                spawnCount = Math.floor(Math.random() * laneCount),
-                // Shuffled copy of potential lanes to spawn in
-                spawnLanes = this.shuffleArray(lanes.slice()),
-                // Coords we'll spawn this sprite at
-                spriteCoords;
-
-            // Reduce list of potential spawn lanes based on count
-            while (spawnLanes.length > spawnCount) {
-                spawnLanes.pop();
-            }
-
-            // Spawn in predetirmined lanes
-            while (spawnLanes.length > 0) {
-                sprite = this.sprites.getFirstDead();
-                if (sprite) {
-                    sprite.activeLane = spawnLanes.pop();
-                    spriteCoords = this.spawnCoords[sprite.activeLane];
-
-                    // TO DO: Move lane positioning to a helper function or new class
-                    // TO DO: Fix this so we don't need a hard-coded offset (see "+30" ugh...)
-                    switch(sprite.activeLane){
-                        case 0:
-                            sprite.x = spriteCoords.x;
-                            sprite.y = spriteCoords.y+6;
-                            sprite.scale.setTo(0.75);
-                            break;
-                        case 1:
-                            sprite.x = spriteCoords.x+30;
-                            sprite.y = spriteCoords.y+9;
-                            sprite.scale.setTo(1);
-                            break;
-                        case 2:
-                            sprite.x = spriteCoords.x+60;
-                            sprite.y = spriteCoords.y+12;
-                            sprite.scale.setTo(1.25);
-                            break;
-                    }
-
-
-                    sprite.revive(); 
-                    this.events.onSpawn.dispatch(this, sprite);
-
-                    this.spawnTimer.add(this.spawnRate, onCooldownComplete, sprite);
-                }
-                else {
-                    spawnLanes = []; // Exit condition for maximum number spawned.
-                }
-            }
+    Spawner.prototype.warn = function () {
+        this.frame = 0;
+        this.anims.warn.play();
+        this.spawnTimer.add(this.warningDuration, function () {
+            this.spawn();
+        }, this);
     };
 
-    // This probably shouldn't live here long term, but is convenient for now.
-    Spawner.prototype.shuffleArray = function(array)
-    {
-        // Fisher-Yates (aka Knuth) shuffle algorithm
-        var currentIndex = array.length, temporaryValue, randomIndex;
+    Spawner.prototype.spawn = function () {
+        this.anims.warn.stop();
+        this.frame = 0;
 
-        // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
-
-            // Pick a remaining element...
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-
-            // And swap it with the current element.
-            temporaryValue = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temporaryValue;
-        }
-
-        return array;
+        var sprite = this.spawnGroup.getFirstDead(true, 
+                                                  this.spawnCoords.x, 
+                                                  this.spawnCoords.y, 
+                                                  this.spawnKey);
+        sprite.revive();
+        sprite.scale.x = this.spriteScale;
+        sprite.scale.y = this.spriteScale;
+        sprite.activeLane = this.activeLane;
+        sprite.x = this.spawnCoords.x;
+        sprite.y = this.spawnCoords.y;
+        //this.events.onSpawn.dispatch(this, sprite);
     };
 
     return Spawner;
