@@ -52,7 +52,7 @@ define([
 
     Spawner.prototype.update = function () {
         if (!this.spawnTimer.duration) {
-            this.spawn();
+            //this.spawn();
         }
         // Call up!
         Phaser.Sprite.prototype.update.call(this);
