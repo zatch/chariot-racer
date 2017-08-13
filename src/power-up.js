@@ -42,6 +42,8 @@ define([
 
         // Signals
         this.events.onTap = new Phaser.Signal();
+
+        game.add.tween(this.scale).to( { x: 0.9, y: 0.9 }, 2000, Phaser.Easing.Cubic.InOut, true, 0, -1, true);
     }
 
     PowerUp.prototype = Object.create(Phaser.Sprite.prototype);
