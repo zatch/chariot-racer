@@ -32,12 +32,6 @@ define([
                 game.input.keyboard.onPressCallback = null;
                 this.game.state.start('Menu', true, false, data);
             };
-            // Gamepad input setup
-            game.input.gamepad.start();
-            game.input.gamepad.pad1.onDownCallback = function (buttonCode, value) {
-                if(timeRemaining) return;
-                this.game.state.start('Menu', true, false, data);
-            };
         }
     };
 });

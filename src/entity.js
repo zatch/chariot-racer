@@ -16,7 +16,7 @@ define([
 
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, key, frame);
-        this.anchor.set(0.5);
+        this.anchor.set(0);
 
         // Enable physics.
         game.physics.enable(this);
@@ -56,8 +56,8 @@ define([
     };
 
     Entity.prototype.kill = function () {
+        console.log('just killed',this);
         this.dying = false;
-        console.log("kill");
         Phaser.Sprite.prototype.kill.apply(this, arguments);
     };
 
