@@ -23,6 +23,14 @@ define([
         this.dyingLastFrame = 16; // 16 is a blank frame
         this.dying = false;
 
+        this.invulnerable = false;
+        this.poweredUpMaxVelocity = 30;
+        this.normalMaxVelocity = 10;
+
+        this.powerupDuration = 5000;
+        this.powerupTimer = game.time.create(false);
+        this.powerupTimer.start();
+
         // Enable physics.
         game.physics.enable(this);
         this.body.collideWorldBounds = true;
@@ -33,7 +41,7 @@ define([
 
         // Initialize public properites.
         // Fastest possible movement speeds.
-        this.body.maxVelocity.x = 10;
+        this.body.maxVelocity.x = this.normalMaxVelocity;
         this.body.drag.x = 10;
 
         // The horizontal acceleration that is applied when moving.
@@ -43,8 +51,12 @@ define([
         this.events.onDeath = new Phaser.Signal();
 
         StateMachine.extend(this);
+        this.stateMachine.onStateChange.add(this.onSelfChangeState, this);
         this.stateMachine.states = {
             'normal': {
+                'update': this.update_normal
+            },
+            'powered-up': {
                 'update': this.update_normal
             },
             'dying': {
@@ -91,6 +103,29 @@ define([
 
     Player.prototype.damage = function () {
         this.stateMachine.setState('dying');
+    };
+
+    Player.prototype.powerUp = function () {
+        this.stateMachine.setState('powered-up');
+    };
+    
+    Player.prototype.onSelfChangeState = function (sm, stateName) {
+        if (stateName === 'normal') {
+            this.invulnerable = false;
+            this.body.maxVelocity.x = this.normalMaxVelocity;
+        }
+        else if (stateName === 'powered-up') {
+            this.invulnerable = true;
+            this.body.maxVelocity.x = this.poweredUpMaxVelocity;
+            this.powerupTimer.removeAll();
+            this.powerupTimer.add(
+                this.powerupDuration,
+                function () {
+                    this.stateMachine.setState('normal');
+                }, 
+                this);
+            console.log('powered up for ',this.powerupTimer.duration);
+        }
     };
     
     return Player;

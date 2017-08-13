@@ -63,6 +63,9 @@ define([
             // Obstacles
             this.game.load.image('skull', 'assets/sprites/skull.png');
 
+            // Power-ups
+            this.game.load.image('power-up', 'assets/sprites/power-up.png');
+
         },
         
         create: function() {
