@@ -2,6 +2,7 @@ define([
     'phaser',
     'player',
     'spawner',
+    'power-up',
     'entity',
     'swipe',
     'distance-display'
@@ -9,6 +10,7 @@ define([
     Phaser,
     Player,
     Spawner,
+    PowerUp,
     Entity,
     Swipe,
     DistanceDisplay) {
@@ -34,7 +36,7 @@ define([
 
         obstacleSpawner,
         obstacles,
-        enemies,
+        powerup,
 
         dirtTrack,
         crowd,
@@ -180,6 +182,14 @@ define([
             lapCounter.updateDisplay(player.currentLap);
 */
 
+            // Insert power-up; starts off dead.
+            powerup = new PowerUp(game, 0, 0);
+            game.add.existing(powerup);
+            powerup.events.onTap.add(function() {
+                player.powerUp();
+            }, this);
+            powerup.kill();
+
             this.swipe = new Swipe(game);
             this.swipe.dragLength = 25;
 
@@ -239,6 +249,7 @@ define([
             distanceDisplay.updateDisplay(distanceTraveled);
             
             this.spawnObstacles();
+            this.spawnPowerUp();
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             lanes[0].tilePosition.x -= player.body.velocity.x*0.8;
@@ -265,8 +276,10 @@ define([
                 if(!obstacle.inCamera && obstacle.body.x < 0) obstacle.kill();
             }, this);
 
-            // Collide player + enemies.
-            game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle);
+            // Collide player + obstacles.
+            if (!player.invulnerable) {
+                game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle);               
+            }
 
         },
 
@@ -303,6 +316,12 @@ define([
                 }
 
                 lastSpawnDistance = distanceTraveled;
+            }
+        },
+
+        spawnPowerUp: function () {
+            if (!powerup.alive) {
+                powerup.reset(Math.random() * game.width, Math.random() * game.height / 2);
             }
         },
 
