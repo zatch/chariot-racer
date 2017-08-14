@@ -31,8 +31,8 @@ define([
 
         pixelsPerMeter=50, // Divisor for Phaser-to-reality physics conversion
         distanceTraveled=0,
-        lastSpawnDistance=5, // Non-zero to delay first spawn
-        spawnRate=15, // # of meters between spawns
+        spawnRate=1250, // # of meters between spawns
+        spawnTimer,
 
         obstacleSpawner,
         obstacles,
@@ -70,6 +70,8 @@ define([
             player = new Player(game);
             player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
+            player.events.onPowerUpStart.add(this.onPowerUpStart, this);
+            player.events.onPowerUpEnd.add(this.onPowerUpEnd, this);
 
             // Make player accessible via game object.
             game.player = player;
@@ -93,6 +95,10 @@ define([
             lanes[0].scale.setTo(1, 0.75);
             lanes[1].scale.setTo(1, 1);
             lanes[2].scale.setTo(1, 1.25);
+
+            spawnTimer = game.time.create(false);
+            spawnTimer.start();
+            spawnTimer.add(spawnRate, this.spawnObstacles, this);
 
             // Insert spawners
             //obstacleSpawner = this.createObstacleSpawner();
@@ -248,7 +254,7 @@ define([
             distanceTraveled += player.body.velocity.x / pixelsPerMeter;
             distanceDisplay.updateDisplay(distanceTraveled);
             
-            this.spawnObstacles();
+            //this.spawnObstacles();
             this.spawnPowerUp();
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
@@ -297,26 +303,33 @@ define([
             game.stateTransition.to('GameOver', true, false);
         },
 
+        onPowerUpStart: function () {
+            console.log(spawnTimer);
+            spawnTimer.removeAll();
+        },
+
+        onPowerUpEnd: function () {
+            spawnTimer.add(spawnRate, this.spawnObstacles, this);
+        },
+
         spawnObstacles: function () {
-            if (distanceTraveled >= lastSpawnDistance + spawnRate) {
-                // How many to spawn at once, always leaving at least 1 lane open
-                var spawnCount = Math.floor(Math.random() * lanes.length - 1) + 1;
-                
-                // Shuffled copy of potential lanes to spawn in
-                var spawnLanes = this.shuffleArray([0,1,2]);
+            // How many to spawn at once, always leaving at least 1 lane open
+            var spawnCount = Math.floor(Math.random() * lanes.length - 1) + 1;
+            
+            // Shuffled copy of potential lanes to spawn in
+            var spawnLanes = this.shuffleArray([0,1,2]);
 
-                // Reduce list of potential spawn lanes based on count
-                while (spawnLanes.length > spawnCount) {
-                    spawnLanes.pop();
-                }
-
-                // Spawn in predetirmined lanes
-                while (spawnLanes.length > 0) {
-                    laneSpawners[spawnLanes.pop()].warn();
-                }
-
-                lastSpawnDistance = distanceTraveled;
+            // Reduce list of potential spawn lanes based on count
+            while (spawnLanes.length > spawnCount) {
+                spawnLanes.pop();
             }
+
+            // Spawn in predetirmined lanes
+            while (spawnLanes.length > 0) {
+                laneSpawners[spawnLanes.pop()].warn();
+            }
+
+            spawnTimer.add(spawnRate, this.spawnObstacles, this);
         },
 
         spawnPowerUp: function () {

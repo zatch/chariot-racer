@@ -27,7 +27,7 @@ define([
         this.poweredUpMaxVelocity = 30;
         this.normalMaxVelocity = 10;
 
-        this.powerupDuration = 5000;
+        this.powerupDuration = 2500;
         this.powerupTimer = game.time.create(false);
         this.powerupTimer.start();
 
@@ -41,14 +41,16 @@ define([
 
         // Initialize public properites.
         // Fastest possible movement speeds.
-        this.body.maxVelocity.x = this.normalMaxVelocity;
-        this.body.drag.x = 10;
+        this.body.velocity.x = this.normalMaxVelocity;
+        this.body.drag.x = 0;
 
         // The horizontal acceleration that is applied when moving.
         this.moveAccel = 80;
 
         // Signals
         this.events.onDeath = new Phaser.Signal();
+        this.events.onPowerUpStart = new Phaser.Signal();
+        this.events.onPowerUpEnd = new Phaser.Signal();
 
         StateMachine.extend(this);
         this.stateMachine.onStateChange.add(this.onSelfChangeState, this);
@@ -74,7 +76,7 @@ define([
         // Play walk animation.
         if(!this.anims.walk.isPlaying) this.anims.walk.play();
 
-        this.body.acceleration.x = this.moveAccel;
+        //this.body.acceleration.x = this.moveAccel;
 
         Phaser.Sprite.prototype.update.call(this);
     };
@@ -112,11 +114,23 @@ define([
     Player.prototype.onSelfChangeState = function (sm, stateName) {
         if (stateName === 'normal') {
             this.invulnerable = false;
-            this.body.maxVelocity.x = this.normalMaxVelocity;
+            //this.body.maxVelocity.x = this.normalMaxVelocity;
+            game.add.tween(this.body.velocity).to(
+                { x: this.normalMaxVelocity }, 
+                500, 
+                Phaser.Easing.Cubic.In, 
+                true);
+            this.events.onPowerUpEnd.dispatch(this);
         }
         else if (stateName === 'powered-up') {
             this.invulnerable = true;
-            this.body.maxVelocity.x = this.poweredUpMaxVelocity;
+            //this.body.maxVelocity.x = this.poweredUpMaxVelocity;
+            game.add.tween(this.body.velocity).to(
+                { x: this.poweredUpMaxVelocity }, 
+                250, 
+                Phaser.Easing.Cubic.In, 
+                true);
+
             this.powerupTimer.removeAll();
             this.powerupTimer.add(
                 this.powerupDuration,
@@ -125,6 +139,7 @@ define([
                 }, 
                 this);
             console.log('powered up for ',this.powerupTimer.duration);
+            this.events.onPowerUpStart.dispatch(this);
         }
     };
     
