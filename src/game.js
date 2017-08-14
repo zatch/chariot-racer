@@ -60,6 +60,12 @@ define([
             this.game.load.atlas('chariot-red', 'assets/sprites/chariot-red.png', 'assets/sprites/chariot-red.json');
             this.game.load.atlas('chariot-white', 'assets/sprites/chariot-white.png', 'assets/sprites/chariot-white.json');
 
+            // warriors
+            this.game.load.image('blue-player', 'assets/textures/blue-warrior.png');
+            this.game.load.image('red-player', 'assets/textures/red-warrior.png');
+            this.game.load.image('white-player', 'assets/textures/white-warrior.png');
+            this.game.load.image('green-player', 'assets/textures/green-warrior.png');
+
             // Obstacles
             this.game.load.image('skull', 'assets/sprites/skull.png');
 
@@ -75,7 +81,7 @@ define([
             this.game.state.add('GameOver', GameOver);
 
             // Now that everything is loaded, show the menu.
-            this.game.state.start('Play');
+            this.game.state.start('Menu');
         }
     };
     

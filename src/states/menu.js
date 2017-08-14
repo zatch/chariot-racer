@@ -4,7 +4,7 @@ define([
     'use strict';
 
     // Shortcuts
-    var game, menuText;
+    var game, selected;
 
     return {
         // Intro
@@ -17,32 +17,29 @@ define([
         },
 
         create: function () {
-            menuText = game.add.text(game.width / 2, game.height / 2, 'Press "F" for fullscreen.\nPress any other key/button to play', {align: 'center', fill: '#fff'});
-            menuText.anchor.set(0.5);
+            var Players = [
+                {key:'white',entity:game.add.sprite(0,0,'white-player')},
+                {key:'green',entity:game.add.sprite(game.width/4,0,'green-player')},
+                {key:'blue',entity:game.add.sprite(game.width/4*2,0,'blue-player')},
+                {key:'red',entity:game.add.sprite(game.width/4*3,0,'red-player')}
+            ];
+            for(var i=0;i<Players.length;i++){
+                Players[i].entity.inputEnabled = true;
+                Players[i].entity.events.onInputDown.add(function(sprite){
+                    selected = 'chariot-'+ sprite.key.split('-')[0];
 
-            game.input.keyboard.onPressCallback = function (key, event) {
-                switch(key) {
-                    // Reserved keys (that won't start the game.)
-                    case 'f':
-                    case 'F':
-                        if(game.scale.isFullScreen) {
-                            game.scale.stopFullScreen();
-                        } else {
-                            game.scale.startFullScreen();
-                        }
-                        break;
+                    console.log(selected);
+                });
+            }
+            var button = game.add.button(game.world.centerX,game.world.centerY,'skull',function(){
+                this.game.state.start('Play',true,false,{color:selected});
+            });
 
-                    // "Any other key" starts the game.
-                    default:
-                        game.input.keyboard.onPressCallback = null;
-                        this.game.state.start('Play');
-                }
-            };
-            // Gamepad input setup
-            game.input.gamepad.start();
-            game.input.gamepad.pad1.onDownCallback = function (buttonCode, value) {
-                this.game.state.start('Play');
-            };
+
+
+        },
+        update:function(){
+
         }
     };
 });

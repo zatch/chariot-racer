@@ -42,7 +42,7 @@ define([
         crowd,
         clouds1,
         clouds2,
-
+        color,
         distanceDisplay;
 
     return {
@@ -51,7 +51,7 @@ define([
 
             // Shortcut variables.
             game = this.game;
-
+            game.chariot_color = data.color;
             game.spriteClassTypes = {
                 'skull': Phaser.Sprite
             };
