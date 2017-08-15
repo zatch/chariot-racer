@@ -262,7 +262,7 @@ define([
             distanceTraveled += player.body.velocity.x / pixelsPerMeter;
             distanceDisplay.updateDisplay(distanceTraveled);
 
-            currentLap = (distanceTraveled / metersPerLap) + 1;
+            currentLap = (distanceTraveled / metersPerLap);
             lapsDisplay.updateDisplay(currentLap);
             
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
