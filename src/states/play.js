@@ -33,6 +33,7 @@ define([
         distanceTraveled=0,
         spawnRate=1250, // # of meters between spawns
         spawnTimer,
+        lanesLastSpawned,
 
         obstacleSpawner,
         obstacles,
@@ -96,6 +97,7 @@ define([
             lanes[1].scale.setTo(1, 1);
             lanes[2].scale.setTo(1, 1.25);
 
+            lanesLastSpawned = [0,1,2];
             spawnTimer = game.time.create(false);
             spawnTimer.start();
             spawnTimer.add(spawnRate, this.spawnObstacles, this);
@@ -313,16 +315,41 @@ define([
         },
 
         spawnObstacles: function () {
-            // How many to spawn at once, always leaving at least 1 lane open
-            var spawnCount = Math.floor(Math.random() * lanes.length - 1) + 1;
-            
-            // Shuffled copy of potential lanes to spawn in
-            var spawnLanes = this.shuffleArray([0,1,2]);
+            var spawnCount = Math.random();
+            // odds of no spawn
+            if (spawnCount < 0.15) { 
+                spawnCount = 0; 
+            }
+            // odds of 1 lane spawning
+            else if (spawnCount < 0.5) {
+                spawnCount = 1;
+            }
+            // odds of 2 lanes spawning
+            else {
+                spawnCount = 2;
+            }
 
+            // Shuffle before drawing exclusions, just for good measure
+            this.shuffleArray(lanesLastSpawned);
+
+            // Shuffled copy of potential lanes to spawn in
+            var spawnLanes = [0,1,2];
+            this.shuffleArray(spawnLanes);
+            
             // Reduce list of potential spawn lanes based on count
             while (spawnLanes.length > spawnCount) {
-                spawnLanes.pop();
+                if (lanesLastSpawned.length) {
+                    // Start by excluing lanes spawned last round
+                    spawnLanes.splice(spawnLanes.indexOf(lanesLastSpawned.pop()), 1);
+                }
+                else {
+                    // Then just pop off anything extra to reduce count
+                    spawnLanes.pop();
+                }
             }
+            
+            // Remember selected lanes for next round
+            lanesLastSpawned = spawnLanes.slice();
 
             // Spawn in predetirmined lanes
             while (spawnLanes.length > 0) {
