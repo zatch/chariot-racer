@@ -29,7 +29,7 @@ define([
         laneSpawners,
         laneYCoords,
 
-        pixelsPerMeter=50, // Divisor for Phaser-to-reality physics conversion
+        pixelsPerMeter=30, // Divisor for Phaser-to-reality physics conversion
         distanceTraveled=0,
         spawnRate=1250, // # of meters between spawns
         spawnTimer,
