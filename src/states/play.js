@@ -5,7 +5,8 @@ define([
     'power-up',
     'entity',
     'swipe',
-    'distance-display'
+    'distance-display',
+    'laps-display'
 ], function (
     Phaser,
     Player,
@@ -13,7 +14,8 @@ define([
     PowerUp,
     Entity,
     Swipe,
-    DistanceDisplay) {
+    DistanceDisplay,
+    LapsDisplay) {
 
     'use strict';
     
@@ -31,7 +33,10 @@ define([
 
         pixelsPerMeter=30, // Divisor for Phaser-to-reality physics conversion
         distanceTraveled=0,
-        spawnRate=1250, // # of meters between spawns
+        metersPerLap=500,
+        currentLap=1,
+        spawnRate=1250, // ms between spawns
+        warningDuration=1000, // ms between warning and spawn
         spawnTimer,
         lanesLastSpawned,
 
@@ -44,7 +49,8 @@ define([
         clouds1,
         clouds2,
 
-        distanceDisplay;
+        distanceDisplay,
+        lapsDisplay;
 
     return {
         // Intro
@@ -128,7 +134,7 @@ define([
                                     x: game.width, 
                                     y: laneYCoords[0]+6
                                 },
-                                warningDuration: 1000
+                                warningDuration: warningDuration
                             }),
                 new Spawner(game,
                             game.width-32,
@@ -146,7 +152,7 @@ define([
                                     x: game.width+30, 
                                     y: laneYCoords[1]+9
                                 },
-                                warningDuration: 1000
+                                warningDuration: warningDuration
                             }),
                 new Spawner(game,
                             game.width-32,
@@ -164,7 +170,7 @@ define([
                                     x: game.width+60, 
                                     y: laneYCoords[2]+12
                                 },
-                                warningDuration: 1000
+                                warningDuration: warningDuration
                             })
             ];
             game.add.existing(laneSpawners[0]);
@@ -184,11 +190,11 @@ define([
             distanceDisplay.fixedToCamera = true;
             distanceDisplay.cameraOffset.x = 4;
             distanceDisplay.cameraOffset.y = 4;
-/*
-            lapCounter = new LapCounter(game, 0, 0);
-            game.add.existing(lapCounter);
-            lapCounter.updateDisplay(player.currentLap);
-*/
+
+            lapsDisplay = new LapsDisplay(game, 0, 0);
+            game.add.existing(lapsDisplay);
+            lapsDisplay.updateDisplay(currentLap);
+
 
             // Insert power-up; starts off dead.
             powerup = new PowerUp(game, 0, 0);
@@ -255,6 +261,9 @@ define([
 
             distanceTraveled += player.body.velocity.x / pixelsPerMeter;
             distanceDisplay.updateDisplay(distanceTraveled);
+
+            currentLap = (distanceTraveled / metersPerLap) + 1;
+            lapsDisplay.updateDisplay(currentLap);
             
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             lanes[0].tilePosition.x -= player.body.velocity.x*0.8;
