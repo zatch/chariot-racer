@@ -100,7 +100,7 @@ define([
             lanesLastSpawned = [0,1,2];
             spawnTimer = game.time.create(false);
             spawnTimer.start();
-            spawnTimer.add(spawnRate, this.spawnObstacles, this);
+            spawnTimer.add(spawnRate, this.spawn, this);
 
             // Insert spawners
             //obstacleSpawner = this.createObstacleSpawner();
@@ -256,9 +256,6 @@ define([
             distanceTraveled += player.body.velocity.x / pixelsPerMeter;
             distanceDisplay.updateDisplay(distanceTraveled);
             
-            //this.spawnObstacles();
-            this.spawnPowerUp();
-
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             lanes[0].tilePosition.x -= player.body.velocity.x*0.8;
             lanes[1].tilePosition.x -= player.body.velocity.x*0.9;
@@ -311,7 +308,14 @@ define([
         },
 
         onPowerUpEnd: function () {
-            spawnTimer.add(spawnRate, this.spawnObstacles, this);
+            spawnTimer.add(spawnRate, this.spawn, this);
+        },
+
+        spawn: function () {
+            this.spawnObstacles();
+            this.spawnPowerUp();
+
+            spawnTimer.add(spawnRate, this.spawn, this);
         },
 
         spawnObstacles: function () {
@@ -355,12 +359,12 @@ define([
             while (spawnLanes.length > 0) {
                 laneSpawners[spawnLanes.pop()].warn();
             }
-
-            spawnTimer.add(spawnRate, this.spawnObstacles, this);
         },
 
         spawnPowerUp: function () {
-            if (!powerup.alive) {
+            // Odds of spawning power-up
+            var willSpawn = (Math.random() < 0.1);
+            if (willSpawn && !powerup.alive) {
                 powerup.reset(Math.random() * game.width, Math.random() * game.height / 2);
             }
         },
