@@ -72,6 +72,10 @@ define([
             // Power-ups
             this.game.load.image('power-up', 'assets/sprites/power-up.png');
             this.game.load.spritesheet('token', 'assets/sprites/coin.png', 16, 16, 18);
+
+            // Blank placeholder (for Sprites without artwork)
+            this.game.load.image('blank', 'assets/blank.png');
+
         },
         
         create: function() {

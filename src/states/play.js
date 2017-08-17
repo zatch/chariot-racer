@@ -26,6 +26,7 @@ define([
         moveKeys, 
 
         player,
+        playerKey,
         laneHeight,
         laneCount,
         laneOffset,
@@ -67,7 +68,7 @@ define([
 
             // Shortcut variables.
             game = this.game;
-            game.chariot_color = data.color;
+            playerKey = data.color;
             game.spriteClassTypes = {
                 'skull': Phaser.Sprite,
                 'token': Phaser.Sprite
@@ -82,16 +83,6 @@ define([
             laneHeight = 48;
             laneCount = 3;
             laneOffset = 27;
-
-            // Player setup
-            player = new Player(game);
-            player.activeLane = 1;
-            player.events.onDeath.add(this.onPlayerDeath);
-            player.events.onPowerUpStart.add(this.onPowerUpStart, this);
-            player.events.onPowerUpEnd.add(this.onPowerUpEnd, this);
-
-            // Make player accessible via game object.
-            game.player = player;
 
             // Set up game background
             game.stage.backgroundColor = '#add3ff';
@@ -256,11 +247,19 @@ define([
             game.add.existing(tokenSpawners[2]);
 
             // Insert player
-            game.add.existing(player);
-            player.x = 260;
+            player = new Player(game, 260 , 0, playerKey);
+            player.activeLane = 1;
+            player.events.onDeath.add(this.onPlayerDeath);
+            player.events.onPowerUpStart.add(this.onPowerUpStart, this);
+            player.events.onPowerUpEnd.add(this.onPowerUpEnd, this);
             player.fixedToCamera = true;
             player.scale.setTo(0.8);
             player.cameraOffset.y = laneYCoords[player.activeLane] - 12;
+
+            // Make player accessible via game object.
+            game.player = player;
+
+            game.add.existing(player);
 
             // HUD
             distanceDisplay = new DistanceDisplay(game, 0, 0);

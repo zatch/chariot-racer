@@ -8,11 +8,11 @@ define([
     // Shortcuts
     var game;
 
-    function Player (_game, x, y) {
+    function Player (_game, x, y, key) {
         game = _game;
 
         // Initialize sprite
-        Entity.call(this, game, x, y, game.chariot_color);
+        Entity.call(this, game, x, y, key);
         this.anchor.set(1, 0.5);
 
         // Set up animations.
