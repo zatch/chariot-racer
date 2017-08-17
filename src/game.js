@@ -66,6 +66,9 @@ define([
             // Power-ups
             this.game.load.image('power-up', 'assets/sprites/power-up.png');
 
+            // Blank placeholder (for Sprites without artwork)
+            this.game.load.image('blank', 'assets/blank.png');
+
         },
         
         create: function() {
