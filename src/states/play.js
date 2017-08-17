@@ -5,7 +5,8 @@ define([
     'power-up',
     'entity',
     'swipe',
-    'distance-display'
+    'distance-display',
+    'laps-display'
 ], function (
     Phaser,
     Player,
@@ -13,7 +14,8 @@ define([
     PowerUp,
     Entity,
     Swipe,
-    DistanceDisplay) {
+    DistanceDisplay,
+    LapsDisplay) {
 
     'use strict';
     
@@ -29,10 +31,14 @@ define([
         laneSpawners,
         laneYCoords,
 
-        pixelsPerMeter=50, // Divisor for Phaser-to-reality physics conversion
+        pixelsPerMeter=30, // Divisor for Phaser-to-reality physics conversion
         distanceTraveled=0,
-        lastSpawnDistance=5, // Non-zero to delay first spawn
-        spawnRate=15, // # of meters between spawns
+        metersPerLap=500,
+        currentLap=1,
+        spawnRate=1250, // ms between spawns
+        warningDuration=1000, // ms between warning and spawn
+        spawnTimer,
+        lanesLastSpawned,
 
         obstacleSpawner,
         obstacles,
@@ -70,6 +76,8 @@ define([
             player = new Player(game);
             player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
+            player.events.onPowerUpStart.add(this.onPowerUpStart, this);
+            player.events.onPowerUpEnd.add(this.onPowerUpEnd, this);
 
             // Make player accessible via game object.
             game.player = player;
@@ -93,6 +101,11 @@ define([
             lanes[0].scale.setTo(1, 0.75);
             lanes[1].scale.setTo(1, 1);
             lanes[2].scale.setTo(1, 1.25);
+
+            lanesLastSpawned = [0,1,2];
+            spawnTimer = game.time.create(false);
+            spawnTimer.start();
+            spawnTimer.add(spawnRate, this.spawn, this);
 
             // Insert spawners
             //obstacleSpawner = this.createObstacleSpawner();
@@ -120,7 +133,7 @@ define([
                                     x: game.width, 
                                     y: laneYCoords[0]+6
                                 },
-                                warningDuration: 1000
+                                warningDuration: warningDuration
                             }),
                 new Spawner(game,
                             game.width-32,
@@ -138,7 +151,7 @@ define([
                                     x: game.width+30, 
                                     y: laneYCoords[1]+9
                                 },
-                                warningDuration: 1000
+                                warningDuration: warningDuration
                             }),
                 new Spawner(game,
                             game.width-32,
@@ -156,7 +169,7 @@ define([
                                     x: game.width+60, 
                                     y: laneYCoords[2]+12
                                 },
-                                warningDuration: 1000
+                                warningDuration: warningDuration
                             })
             ];
             game.add.existing(laneSpawners[0]);
@@ -176,11 +189,11 @@ define([
             distanceDisplay.fixedToCamera = true;
             distanceDisplay.cameraOffset.x = 4;
             distanceDisplay.cameraOffset.y = 4;
-/*
-            lapCounter = new LapCounter(game, 0, 0);
-            game.add.existing(lapCounter);
-            lapCounter.updateDisplay(player.currentLap);
-*/
+
+            lapsDisplay = new LapsDisplay(game, 0, 0);
+            game.add.existing(lapsDisplay);
+            lapsDisplay.updateDisplay(currentLap);
+
 
             // Insert power-up; starts off dead.
             powerup = new PowerUp(game, 0, 0);
@@ -247,9 +260,9 @@ define([
 
             distanceTraveled += player.body.velocity.x / pixelsPerMeter;
             distanceDisplay.updateDisplay(distanceTraveled);
-            
-            this.spawnObstacles();
-            this.spawnPowerUp();
+
+            currentLap = (distanceTraveled / metersPerLap);
+            lapsDisplay.updateDisplay(currentLap);
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             lanes[0].tilePosition.x -= player.body.velocity.x*0.8;
@@ -297,30 +310,69 @@ define([
             game.stateTransition.to('GameOver', true, false);
         },
 
-        spawnObstacles: function () {
-            if (distanceTraveled >= lastSpawnDistance + spawnRate) {
-                // How many to spawn at once, always leaving at least 1 lane open
-                var spawnCount = Math.floor(Math.random() * lanes.length - 1) + 1;
-                
-                // Shuffled copy of potential lanes to spawn in
-                var spawnLanes = this.shuffleArray([0,1,2]);
+        onPowerUpStart: function () {
+            console.log(spawnTimer);
+            spawnTimer.removeAll();
+        },
 
-                // Reduce list of potential spawn lanes based on count
-                while (spawnLanes.length > spawnCount) {
+        onPowerUpEnd: function () {
+            spawnTimer.add(spawnRate, this.spawn, this);
+        },
+
+        spawn: function () {
+            this.spawnObstacles();
+            this.spawnPowerUp();
+
+            spawnTimer.add(spawnRate, this.spawn, this);
+        },
+
+        spawnObstacles: function () {
+            var spawnCount = Math.random();
+            // odds of no spawn
+            if (spawnCount < 0.15) {
+                spawnCount = 0;
+            }
+            // odds of 1 lane spawning
+            else if (spawnCount < 0.5) {
+                spawnCount = 1;
+            }
+            // odds of 2 lanes spawning
+            else {
+                spawnCount = 2;
+            }
+
+            // Shuffle before drawing exclusions, just for good measure
+            this.shuffleArray(lanesLastSpawned);
+
+            // Shuffled copy of potential lanes to spawn in
+            var spawnLanes = [0,1,2];
+            this.shuffleArray(spawnLanes);
+
+            // Reduce list of potential spawn lanes based on count
+            while (spawnLanes.length > spawnCount) {
+                if (lanesLastSpawned.length) {
+                    // Start by excluing lanes spawned last round
+                    spawnLanes.splice(spawnLanes.indexOf(lanesLastSpawned.pop()), 1);
+                }
+                else {
+                    // Then just pop off anything extra to reduce count
                     spawnLanes.pop();
                 }
+            }
 
-                // Spawn in predetirmined lanes
-                while (spawnLanes.length > 0) {
-                    laneSpawners[spawnLanes.pop()].warn();
-                }
+            // Remember selected lanes for next round
+            lanesLastSpawned = spawnLanes.slice();
 
-                lastSpawnDistance = distanceTraveled;
+            // Spawn in predetirmined lanes
+            while (spawnLanes.length > 0) {
+                laneSpawners[spawnLanes.pop()].warn();
             }
         },
 
         spawnPowerUp: function () {
-            if (!powerup.alive) {
+            // Odds of spawning power-up
+            var willSpawn = (Math.random() < 0.1);
+            if (willSpawn && !powerup.alive) {
                 powerup.reset(Math.random() * game.width, Math.random() * game.height / 2);
             }
         },
