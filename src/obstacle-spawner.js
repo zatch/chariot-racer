@@ -7,7 +7,7 @@ define([
     var game,
         self;
 
-    function Spawner (_game, x, y, key, frame, spawnGroup, properties) {
+    function ObstacleSpawner (_game, x, y, key, frame, spawnGroup, properties) {
         game = _game;
         self = this;
 
@@ -38,15 +38,15 @@ define([
         
     }
 
-    Spawner.prototype = Object.create(Phaser.Sprite.prototype);
-    Spawner.prototype.constructor = Spawner;
+    ObstacleSpawner.prototype = Object.create(Phaser.Sprite.prototype);
+    ObstacleSpawner.prototype.constructor = ObstacleSpawner;
 
-    Spawner.prototype.update = function () {
+    ObstacleSpawner.prototype.update = function () {
         // Call up!
         Phaser.Sprite.prototype.update.call(this);
     };
 
-    Spawner.prototype.warn = function () {
+    ObstacleSpawner.prototype.warn = function () {
         this.frame = 0;
         this.anims.warn.play();
         this.spawnTimer.add(this.warningDuration, function () {
@@ -54,7 +54,7 @@ define([
         }, this);
     };
 
-    Spawner.prototype.spawn = function () {
+    ObstacleSpawner.prototype.spawn = function () {
         this.anims.warn.stop();
         this.frame = 0;
 
@@ -71,6 +71,6 @@ define([
         //this.events.onSpawn.dispatch(this, sprite);
     };
 
-    return Spawner;
+    return ObstacleSpawner;
 
 });
