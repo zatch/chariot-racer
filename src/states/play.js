@@ -1,7 +1,8 @@
 define([
     'phaser',
     'player',
-    'spawner',
+    'obstacle-spawner',
+    'token-spawner',
     'power-up',
     'entity',
     'swipe',
@@ -10,7 +11,8 @@ define([
 ], function (
     Phaser,
     Player,
-    Spawner,
+    ObstacleSpawner,
+    TokenSpawner,
     PowerUp,
     Entity,
     Swipe,
@@ -28,20 +30,27 @@ define([
         laneCount,
         laneOffset,
         lanes,
-        laneSpawners,
         laneYCoords,
 
         pixelsPerMeter=30, // Divisor for Phaser-to-reality physics conversion
         distanceTraveled=0,
         metersPerLap=500,
         currentLap=1,
-        spawnRate=1250, // ms between spawns
-        warningDuration=1000, // ms between warning and spawn
-        spawnTimer,
-        lanesLastSpawned,
 
-        obstacleSpawner,
+        obstacleSpawners,
         obstacles,
+        obstacleSpawnRate=1250, // ms between spawns
+        warningDuration=1000, // ms between warning and spawn
+        obstacleSpawnTimer,
+        obstacleLanesLastSpawned,
+
+        tokenSpawners,
+        tokens,
+        tokenSpawnRate=1750, // ms between 
+        tokenSpawnCount=10,
+        tokenSpawnDelay=50,
+        tokenSpawnTimer,
+
         powerup,
 
         dirtTrack,
@@ -60,7 +69,8 @@ define([
             game = this.game;
             game.chariot_color = data.color;
             game.spriteClassTypes = {
-                'skull': Phaser.Sprite
+                'skull': Phaser.Sprite,
+                'token': Phaser.Sprite
             };
         },
         
@@ -103,22 +113,18 @@ define([
             lanes[1].scale.setTo(1, 1);
             lanes[2].scale.setTo(1, 1.25);
 
-            lanesLastSpawned = [0,1,2];
-            spawnTimer = game.time.create(false);
-            spawnTimer.start();
-            spawnTimer.add(spawnRate, this.spawn, this);
-
-            // Insert spawners
-            //obstacleSpawner = this.createObstacleSpawner();
-            //game.add.existing(obstacleSpawner);
+            obstacleLanesLastSpawned = [0,1,2];
+            obstacleSpawnTimer = game.time.create(false);
+            obstacleSpawnTimer.start();
+            obstacleSpawnTimer.add(obstacleSpawnRate, this.spawnObstacles, this);
 
             // Obstacles group setup
             obstacles = game.add.group();
             obstacles.enableBody = true;
             obstacles.classType = game.spriteClassTypes.skull;
 
-            laneSpawners = [
-                new Spawner(game,
+            obstacleSpawners = [
+                new ObstacleSpawner(game,
                             game.width-32,
                             laneYCoords[0],
                             'lane-warning',
@@ -136,7 +142,7 @@ define([
                                 },
                                 warningDuration: warningDuration
                             }),
-                new Spawner(game,
+                new ObstacleSpawner(game,
                             game.width-32,
                             laneYCoords[1],
                             'lane-warning',
@@ -154,7 +160,7 @@ define([
                                 },
                                 warningDuration: warningDuration
                             }),
-                new Spawner(game,
+                new ObstacleSpawner(game,
                             game.width-32,
                             laneYCoords[2],
                             'lane-warning',
@@ -173,9 +179,81 @@ define([
                                 warningDuration: warningDuration
                             })
             ];
-            game.add.existing(laneSpawners[0]);
-            game.add.existing(laneSpawners[1]);
-            game.add.existing(laneSpawners[2]);
+            game.add.existing(obstacleSpawners[0]);
+            game.add.existing(obstacleSpawners[1]);
+            game.add.existing(obstacleSpawners[2]);
+
+            // Tokens spawners
+            tokenSpawnTimer = game.time.create(false);
+            tokenSpawnTimer.start();
+            tokenSpawnTimer.add(tokenSpawnRate, this.spawnTokens, this);
+
+            tokens = game.add.group();
+            tokens.enableBody = true;
+            tokens.classType = game.spriteClassTypes.token;
+
+            tokenSpawners = [
+                new TokenSpawner(game,
+                            game.width-32,
+                            laneYCoords[0],
+                            null,
+                            0,
+                            tokens,
+                            {
+                                activeLane: 0,
+                                spriteScale: 0.75,
+                                sprites: {
+                                    key: 'token'
+                                },
+                                spawnCoords: {
+                                    x: game.width, 
+                                    y: laneYCoords[0]+6
+                                },
+                                spawnCount: tokenSpawnCount,
+                                spawnDelay: tokenSpawnDelay
+                            }),
+                new TokenSpawner(game,
+                            game.width-32,
+                            laneYCoords[1],
+                            null,
+                            0,
+                            tokens,
+                            {
+                                activeLane: 1,
+                                spriteScale: 1,
+                                sprites: {
+                                    key: 'token'
+                                },
+                                spawnCoords: {
+                                    x: game.width+30, 
+                                    y: laneYCoords[1]+9
+                                },
+                                spawnCount: tokenSpawnCount,
+                                spawnDelay: tokenSpawnDelay
+                            }),
+                new TokenSpawner(game,
+                            game.width-32,
+                            laneYCoords[2],
+                            null,
+                            0,
+                            tokens,
+                            {
+                                activeLane: 2,
+                                spriteScale: 1.25,
+                                sprites: {
+                                    key: 'token'
+                                },
+                                spawnCoords: {
+                                    x: game.width+60, 
+                                    y: laneYCoords[2]+12
+                                },
+                                spawnCount: tokenSpawnCount,
+                                spawnDelay: tokenSpawnDelay
+                            })
+            ];
+            game.add.existing(tokenSpawners[0]);
+            game.add.existing(tokenSpawners[1]);
+            game.add.existing(tokenSpawners[2]);
 
             // Insert player
             game.add.existing(player);
@@ -290,6 +368,25 @@ define([
                 if(!obstacle.inCamera && obstacle.body.x < 0) obstacle.kill();
             }, this);
 
+            tokens.forEach(function(token) {
+                switch(token.activeLane){
+                    case 0:
+                        token.body.x -= player.body.velocity.x*0.8;
+                        break;
+                    case 1:
+                        token.body.x -= player.body.velocity.x*0.9;
+                        break;
+                    case 2:
+                        token.body.x -= player.body.velocity.x;
+                        break;
+                }
+
+                // Recycle off-camera obstacles.
+                // Not using killOffCamera because we want to start obstacles off camera.
+                if(!token.inCamera && token.body.x < 0) token.kill();
+            }, this);
+
+
             // Collide player + obstacles.
             if (!player.invulnerable) {
                 game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle);               
@@ -312,19 +409,12 @@ define([
         },
 
         onPowerUpStart: function () {
-            console.log(spawnTimer);
-            spawnTimer.removeAll();
+            console.log(obstacleSpawnTimer);
+            obstacleSpawnTimer.removeAll();
         },
 
         onPowerUpEnd: function () {
-            spawnTimer.add(spawnRate, this.spawn, this);
-        },
-
-        spawn: function () {
-            this.spawnObstacles();
-            this.spawnPowerUp();
-
-            spawnTimer.add(spawnRate, this.spawn, this);
+            obstacleSpawnTimer.add(obstacleSpawnRate, this.spawnObstacles, this);
         },
 
         spawnObstacles: function () {
@@ -343,7 +433,7 @@ define([
             }
 
             // Shuffle before drawing exclusions, just for good measure
-            this.shuffleArray(lanesLastSpawned);
+            this.shuffleArray(obstacleLanesLastSpawned);
 
             // Shuffled copy of potential lanes to spawn in
             var spawnLanes = [0,1,2];
@@ -351,9 +441,9 @@ define([
 
             // Reduce list of potential spawn lanes based on count
             while (spawnLanes.length > spawnCount) {
-                if (lanesLastSpawned.length) {
+                if (obstacleLanesLastSpawned.length) {
                     // Start by excluing lanes spawned last round
-                    spawnLanes.splice(spawnLanes.indexOf(lanesLastSpawned.pop()), 1);
+                    spawnLanes.splice(spawnLanes.indexOf(obstacleLanesLastSpawned.pop()), 1);
                 }
                 else {
                     // Then just pop off anything extra to reduce count
@@ -362,12 +452,21 @@ define([
             }
 
             // Remember selected lanes for next round
-            lanesLastSpawned = spawnLanes.slice();
+            obstacleLanesLastSpawned = spawnLanes.slice();
 
             // Spawn in predetirmined lanes
             while (spawnLanes.length > 0) {
-                laneSpawners[spawnLanes.pop()].warn();
+                obstacleSpawners[spawnLanes.pop()].warn();
             }
+
+            obstacleSpawnTimer.add(obstacleSpawnRate, this.spawnObstacles, this);
+        },
+
+        spawnTokens: function () {
+            // Randomly select which lane to spawn
+            var spawnLane = Math.floor(Math.random() * lanes.length);
+            tokenSpawners[spawnLane].queue();
+            tokenSpawnTimer.add(tokenSpawnRate, this.spawnTokens, this);
         },
 
         spawnPowerUp: function () {
