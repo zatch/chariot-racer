@@ -49,6 +49,7 @@ define([
         clouds1,
         clouds2,
         color,
+        lapsDisplay,
         distanceDisplay;
 
     return {
