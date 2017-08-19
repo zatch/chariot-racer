@@ -289,8 +289,8 @@ define([
         onPlayerCollidesToken: function (player, token) {
             // TO DO: Animate tokens into HUD before killing them.
             token.kill();
-            currentPatternTokenCount++;
-            if (currentPatternTokenCount >= currentPatternTokenCount) {
+            currentTokensCollected++;
+            if (currentTokensCollected >= currentPatternTokenCount) {
                 player.powerUp();
             }
         },
@@ -309,6 +309,7 @@ define([
         },
 
         spawnPattern: function () {
+            // TO DO: Select pattern from larger collection based on current difficulty.
             var patternMatrix = [
                 [0,0,0,0,0,2,0,0,0,0],
                 [1,1,1,1,1,1,1,1,1,1],
