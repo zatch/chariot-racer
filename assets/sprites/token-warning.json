@@ -1,0 +1,27 @@
+{ "frames": {
+   "token-warning 0.ase": {
+    "frame": { "x": 8, "y": 8, "w": 30, "h": 34 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 34 },
+    "sourceSize": { "w": 30, "h": 34 },
+    "duration": 100
+   },
+   "token-warning 1.ase": {
+    "frame": { "x": 38, "y": 8, "w": 30, "h": 34 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 30, "h": 34 },
+    "sourceSize": { "w": 30, "h": 34 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.0.1",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\sprites\\token-warning.png",
+  "format": "RGBA8888",
+  "size": { "w": 76, "h": 50 },
+  "scale": "1"
+ }
+}

@@ -52,7 +52,8 @@ define([
 
             // HUD
             //this.game.load.image('distance-display', 'assets/hud/distance-display.png');
-            this.game.load.atlas('lane-warning', 'assets/hud/lane-warning.png', 'assets/hud/lane-warning.json');
+            this.game.load.atlas('skull-warning', 'assets/sprites/obstacle-warning.png', 'assets/sprites/obstacle-warning.json');
+            this.game.load.atlas('token-warning', 'assets/sprites/token-warning.png', 'assets/sprites/token-warning.json');
 
             // Chariot racers
             this.game.load.atlas('chariot-blue', 'assets/sprites/chariot-blue.png', 'assets/sprites/chariot-blue.json');

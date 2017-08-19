@@ -17,6 +17,8 @@ define([
         Phaser.Utils.extend(true, this, {
             spread: 10, // px between indices in spawn pattern arrays
             warningDuration: 1000,
+            warningSpread: 10,
+            //warningGroup: group,
             spawnableObjects: {
                 /*
                 'sprite key': {
@@ -53,39 +55,71 @@ define([
         Phaser.Sprite.prototype.update.call(this);
     };
 
-    Spawner.prototype.queue = function (aObjectData) {
-        // TO DO: Add warning sprites
+    Spawner.prototype.queue = function (patternMatrix) {
+        var lane,
+            key,
+            group = this.warningGroup,
+            sprite;
+
+        var ln,
+            i;
+        for (ln = 0; ln < patternMatrix.length; ln++) {
+            lane = this.lanes[ln];
+            for (i = patternMatrix[ln].length-1; i >= 0; i--) {
+                key = patternMatrix[ln][i];
+                if (key !== 0) {
+                    key += '-warning';
+                    sprite = group.getFirstDead(true, 
+                                                game.width - 80 + (this.warningSpread * i), 
+                                                lane.y, 
+                                                key);
+
+                    sprite.revive();
+                    sprite.frame = 0; // big
+                    if (i > 0 && patternMatrix[ln][i] === patternMatrix[ln][i-1]) {
+                        sprite.frame = 1; // little
+                    }
+                    //sprite.scale.x = lane.spriteScale;
+                    //sprite.scale.y = lane.spriteScale;
+                    sprite.activeLane = ln;
+                }
+            }
+        }
 
         // 
         this.spawnTimer.add(this.warningDuration, function () {
-            // TO DO: Get rid of warning sprites
-
-            this.spawn(aObjectData);
+            this.warningGroup.callAll('kill');
+            this.spawn(patternMatrix);
         }, this);
     };
 
-    Spawner.prototype.spawn = function (aObjectData) {
+    Spawner.prototype.spawn = function (patternMatrix) {
         var lane,
+            key,
             group,
             sprite;
 
-        aObjectData.forEach(function (oData) {
-            lane = this.lanes[oData.lane];
+        var ln,
+            i;
+        for (ln = 0; ln < patternMatrix.length; ln++) {
+            lane = this.lanes[ln];
+            for (i = 0; i < patternMatrix[ln].length; i++) {
+                key = patternMatrix[ln][i];
+                if (key !== 0) {
+                    group = this.spawnableObjects[key].group;
 
-            group = this.spawnableObjects[oData.key].group;
+                    sprite = group.getFirstDead(true, 
+                                                lane.x + (this.spread * i), 
+                                                lane.y, 
+                                                key);
 
-            sprite = group.getFirstDead(true, 
-                                       lane.x + (this.spread * oData.index), 
-                                       lane.y, 
-                                       oData.key);
-
-            sprite.revive();
-            sprite.scale.x = lane.spriteScale;
-            sprite.scale.y = lane.spriteScale;
-            sprite.activeLane = oData.lane;
-            sprite.x = lane.x + (this.spread * oData.index);
-            sprite.y = lane.y;
-        }, this);
+                    sprite.revive();
+                    sprite.scale.x = lane.spriteScale;
+                    sprite.scale.y = lane.spriteScale;
+                    sprite.activeLane = ln;
+                }
+            }
+        }
     };
 
     return Spawner;

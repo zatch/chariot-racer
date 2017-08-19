@@ -39,6 +39,7 @@ define([
         spawner,
         obstacles,
         tokens,
+        warnings,
         currentPatternTokenCount,
         currentTokensCollected,
         restDuration=2500, // ms between spawns
@@ -106,11 +107,16 @@ define([
             tokens = game.add.group();
             tokens.enableBody = true;
 
+            // Warnings
+            warnings = game.add.group();
+
             // Spawner
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
             {
                 spread: 30, // px between indices in spawn pattern arrays
                 warningDuration: 1000,
+                warningSpread: 5,
+                warningGroup: warnings,
                 spawnableObjects: {
                     'skull': {
                         group: obstacles
@@ -311,19 +317,19 @@ define([
         spawnPattern: function () {
             // TO DO: Select pattern from larger collection based on current difficulty.
             var patternMatrix = [
-                [0,0,0,0,0,2,0,0,0,0],
+                [0,2,2,2,0,2,0,0,0,0],
                 [1,1,1,1,1,1,1,1,1,1],
-                [0,0,0,0,0,2,0,0,0,0]
+                [0,0,0,2,2,0,0,2,0,2]
             ];
-
-            var patternObjectData = [];
 
             // Reset power-up counters.
             currentPatternTokenCount = 0;
             currentTokensCollected = 0;
 
-            for (var ln = 0; ln < patternMatrix.length; ln++) {
-                for (var i = 0; i < patternMatrix[ln].length; i++) {
+            var ln,
+                i;
+            for (ln = 0; ln < patternMatrix.length; ln++) {
+                for (i = 0; i < patternMatrix[ln].length; i++) {
                     // Translate pattern numeric values to keys for spawner.
                     // This is the key to the pattern authoring data structure.
                     switch (patternMatrix[ln][i]) {
@@ -338,19 +344,10 @@ define([
                             patternMatrix[ln][i] = 'skull';
                             break;
                     }
-
-                    if (patternMatrix[ln][i] !== 0) {
-                        patternObjectData.push({
-                            key: patternMatrix[ln][i],
-                            lane: ln,
-                            index: i
-                        });
-                    }
-
                 }
             }
 
-            spawner.queue(patternObjectData);
+            spawner.queue(patternMatrix);
 
             // TO DO: Don't reset spawnTimer until previous pattern is off screen.
             spawnTimer.add(restDuration, this.spawnPattern, this);
