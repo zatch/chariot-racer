@@ -316,11 +316,20 @@ define([
 
         spawnPattern: function () {
             // TO DO: Select pattern from larger collection based on current difficulty.
-            var patternMatrix = [
-                [0,2,2,2,0,2,0,0,0,0],
-                [1,1,1,1,1,1,1,1,1,1],
-                [0,0,0,2,2,0,0,2,0,2]
+            var matricies = [
+                [
+                    [0,2,2,2,0,0,0,0,0,0],
+                    [1,1,1,1,1,1,1,1,1,1],
+                    [0,0,0,2,2,0,0,2,2,2]
+                ],
+                [
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [1,1,1,0,0,0,2,2,0,0,0,1,1,1],
+                    [0,0,0,0,0,1,1,1,1,0,0,0,0,0]
+                ]
             ];
+
+            var patternMatrix = matricies[Math.floor(Math.random() * matricies.length)];
 
             // Reset power-up counters.
             currentPatternTokenCount = 0;
