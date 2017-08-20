@@ -27,7 +27,7 @@ define([
         this.poweredUpMaxVelocity = 30;
         this.normalMaxVelocity = 10;
 
-        this.powerupDuration = 2500;
+        this.powerupDuration = 3700;
         this.powerupTimer = game.time.create(false);
         this.powerupTimer.start();
 
@@ -113,6 +113,7 @@ define([
     
     Player.prototype.onSelfChangeState = function (sm, stateName) {
         if (stateName === 'normal') {
+            this.anims.walk.speed = 15;
             this.invulnerable = false;
             //this.body.maxVelocity.x = this.normalMaxVelocity;
             game.add.tween(this.body.velocity).to(
@@ -123,6 +124,7 @@ define([
             this.events.onPowerUpEnd.dispatch(this);
         }
         else if (stateName === 'powered-up') {
+            this.anims.walk.speed = 30;
             this.invulnerable = true;
             //this.body.maxVelocity.x = this.poweredUpMaxVelocity;
             game.add.tween(this.body.velocity).to(
@@ -140,6 +142,9 @@ define([
                 this);
             console.log('powered up for ',this.powerupTimer.duration);
             this.events.onPowerUpStart.dispatch(this);
+        }
+        else if (stateName === 'dying') {
+            this.invulnerable = true;
         }
     };
     

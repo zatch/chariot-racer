@@ -4,7 +4,9 @@ define([
     'use strict';
 
     // Shortcuts
-    var game, selected;
+    var game, 
+        selected,
+        music;
 
     return {
         // Intro
@@ -32,10 +34,16 @@ define([
                 });
             }
             var button = game.add.button(game.world.centerX,game.world.centerY,'skull',function(){
-                this.game.state.start('Play',true,false,{color:selected});
+                music.onFadeComplete.addOnce(function() {
+                    music.stop();
+                    this.game.state.start('Play',true,false,{color:selected});
+                }, this);
+                music.fadeOut(1000);
             });
 
-
+            // Music
+            music = game.add.audio('menu-music', 0.5, true);
+            music.play();
 
         },
         update:function(){

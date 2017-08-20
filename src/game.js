@@ -77,6 +77,15 @@ define([
             // Blank placeholder (for Sprites without artwork)
             this.game.load.image('blank', 'assets/blank.png');
 
+            // Music
+            this.load.audio('menu-music', 'assets/music/Preparing_for_War.mp3');
+            this.load.audio('race-music', 'assets/music/SuperHero_original_no_Intro.mp3');
+
+            // SFX
+            this.load.audio('token-collect', 'assets/sfx/coin10.mp3');
+            this.load.audio('power-up', 'assets/sfx/power-up-amped-and-crushed.mp3');
+            this.load.audio('crash', 'assets/sfx/atari_boom.wav');
+
         },
         
         create: function() {

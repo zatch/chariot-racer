@@ -51,7 +51,10 @@ define([
         clouds2,
         color,
         lapsDisplay,
-        distanceDisplay;
+        distanceDisplay,
+
+        sfx={},
+        music;
 
     return {
         // Intro
@@ -174,6 +177,14 @@ define([
             this.swipe = new Swipe(game);
             this.swipe.dragLength = 25;
 
+            // SFX
+            sfx.tokenCollect = game.add.audio('token-collect');
+            sfx.powerUp = game.add.audio('power-up');
+            sfx.crash = game.add.audio('crash');
+
+            // Music
+            music = game.add.audio('race-music', 0.25);
+            music.fadeIn(2500, true);
         },
 
         render: function () {
@@ -280,7 +291,9 @@ define([
                 game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle);               
             }
             // Collide player + tokens.
-            game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken);
+            if (!player.dying) {
+                game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken);
+            }
         },
 
         shutdown: function () {
@@ -289,11 +302,13 @@ define([
         },
 
         onPlayerCollidesObstacle: function (player, enemy) {
+            sfx.crash.play();
             player.damage();
         },
 
         onPlayerCollidesToken: function (player, token) {
             // TO DO: Animate tokens into HUD before killing them.
+            sfx.tokenCollect.play();
             token.kill();
             currentTokensCollected++;
             if (currentTokensCollected >= currentPatternTokenCount) {
@@ -304,9 +319,12 @@ define([
         onPlayerDeath: function (player) {
             game.camera.unfollow();
             game.stateTransition.to('GameOver', true, false);
+
+            music.fadeOut(2500);
         },
 
         onPowerUpStart: function () {
+            sfx.powerUp.play();
             spawnTimer.removeAll();
         },
 
