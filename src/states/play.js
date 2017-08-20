@@ -1,6 +1,7 @@
 define([
     'phaser',
     'player',
+    'spawn-patterns',
     'spawner',
     'power-up',
     'entity',
@@ -10,6 +11,7 @@ define([
 ], function (
     Phaser,
     Player,
+    spawnPatterns,
     Spawner,
     PowerUp,
     Entity,
@@ -42,7 +44,7 @@ define([
         warnings,
         currentPatternTokenCount,
         currentTokensCollected,
-        restDuration=2500, // ms between spawns
+        restDuration=5000, // ms between spawns
         warningDuration=1000, // ms between warning and spawn
         spawnTimer,
 
@@ -116,7 +118,7 @@ define([
             // Spawner
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
             {
-                spread: 30, // px between indices in spawn pattern arrays
+                spread: 100, // px between indices in spawn pattern arrays
                 warningDuration: 1000,
                 warningSpread: 5,
                 warningGroup: warnings,
@@ -325,34 +327,25 @@ define([
 
         onPowerUpStart: function () {
             sfx.powerUp.play();
-            spawnTimer.removeAll();
+            spawnTimer.pause();
         },
 
         onPowerUpEnd: function () {
-            spawnTimer.add(restDuration, this.spawnPattern, this);
+            spawnTimer.resume();
         },
 
         spawnPattern: function () {
-            // TO DO: Select pattern from larger collection based on current difficulty.
-            var matricies = [
-                [
-                    [0,2,2,2,0,0,0,0,0,0],
-                    [1,1,1,1,1,1,1,1,1,1],
-                    [0,0,0,2,2,0,0,2,2,2]
-                ],
-                [
-                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                    [1,1,1,0,0,0,2,2,0,0,0,1,1,1],
-                    [0,0,0,0,0,1,1,1,1,0,0,0,0,0]
-                ]
+            var patternIndex = Math.floor(Math.random() * spawnPatterns.length);
+            var patternMatrix = [
+                spawnPatterns[patternIndex][0].slice(),
+                spawnPatterns[patternIndex][1].slice(),
+                spawnPatterns[patternIndex][2].slice()
             ];
-
-            var patternMatrix = matricies[Math.floor(Math.random() * matricies.length)];
 
             // Reset power-up counters.
             currentPatternTokenCount = 0;
             currentTokensCollected = 0;
-
+            
             var ln,
                 i;
             for (ln = 0; ln < patternMatrix.length; ln++) {
