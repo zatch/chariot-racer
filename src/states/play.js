@@ -48,6 +48,8 @@ define([
         warningDuration=1000, // ms between warning and spawn
         spawnTimer,
 
+        currentLevel,
+
         crowd,
         clouds1,
         clouds2,
@@ -187,6 +189,9 @@ define([
             // Music
             music = game.add.audio('race-music', 0.25);
             music.fadeIn(2500, true);
+
+
+            currentLevel = 0;
         },
 
         render: function () {
@@ -315,6 +320,9 @@ define([
             currentTokensCollected++;
             if (currentTokensCollected >= currentPatternTokenCount) {
                 player.powerUp();
+
+                // TO DO: Just...change the way leveling up works...
+                currentLevel++;
             }
         },
 
@@ -335,11 +343,12 @@ define([
         },
 
         spawnPattern: function () {
-            var patternIndex = Math.floor(Math.random() * spawnPatterns.length);
+            if (currentLevel >= spawnPatterns.length) currentLevel = spawnPatterns.length - 1;
+            var patternIndex = Math.floor(Math.random() * spawnPatterns[currentLevel].length);
             var patternMatrix = [
-                spawnPatterns[patternIndex][0].slice(),
-                spawnPatterns[patternIndex][1].slice(),
-                spawnPatterns[patternIndex][2].slice()
+                spawnPatterns[currentLevel][patternIndex][0].slice(),
+                spawnPatterns[currentLevel][patternIndex][1].slice(),
+                spawnPatterns[currentLevel][patternIndex][2].slice()
             ];
 
             // Reset power-up counters.
