@@ -13,7 +13,7 @@ define([
         Phaser.Sprite.call(this, game, x, y, 'blank');
 
         this.lap = 0;
-        this.lapsText = new Phaser.Text(game, game.width - 100, 0, this.distanceString, { font: "bold 16px Arial", fill: "#000", boundsAlignH: "center", boundsAlignV: "middle" });
+        this.lapsText = new Phaser.Text(game, game.width - 100, 0, '', { font: "bold 16px Arial", fill: "#000", boundsAlignH: "center", boundsAlignV: "middle" });
         this.addChild(this.lapsText);
     }
 

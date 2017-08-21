@@ -1,6 +1,7 @@
 define([
-    'phaser'
-], function (Phaser) { 
+    'phaser',
+    'spawn-patterns'
+], function (Phaser,spawnPatterns) {
     'use strict';
 
     // Shortcuts
@@ -54,8 +55,32 @@ define([
         // Call up!
         Phaser.Sprite.prototype.update.call(this);
     };
+    Spawner.prototype.find = function(level){
+        var i,
+            j,
+            patternMatrix,
+            pattern = [];
+        if (level >= spawnPatterns.length) level = spawnPatterns.length - 1;
+        for(i=0;i<spawnPatterns.length;i++){
+            if(spawnPatterns[i].level<=level){
+                pattern.push(spawnPatterns[i]);
+            }
+        }
+        for (i = pattern.length; i; i--) {
+            j = Math.floor(Math.random() * i);
+            [pattern[i - 1], pattern[j]] = [pattern[j], pattern[i - 1]];
+        }
+        patternMatrix = pattern[0].pattern;
+        if(pattern[0].combine){
+            for (i = 0; i < patternMatrix.length; i++) {
 
+                patternMatrix[i].concat(pattern[1].pattern[i]);
+            }
+        }
+        return patternMatrix;
+    };
     Spawner.prototype.queue = function (patternMatrix) {
+        console.log(patternMatrix);
         var lane,
             key,
             group = this.warningGroup,
@@ -75,12 +100,13 @@ define([
                                                 key);
 
                     sprite.revive();
-                    sprite.frame = 0; // big
+                    // big
+                    sprite.frame = 0;
                     if (i > 0 && patternMatrix[ln][i] === patternMatrix[ln][i-1]) {
                         sprite.frame = 1; // little
                     }
-                    //sprite.scale.x = lane.spriteScale;
-                    //sprite.scale.y = lane.spriteScale;
+                    // sprite.scale.x = lane.spriteScale;
+                    // sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
                 }
             }

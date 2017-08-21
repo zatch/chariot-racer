@@ -5,9 +5,10 @@ define([
     'spawner',
     'power-up',
     'entity',
-    'swipe',
+    'laps-display',
     'distance-display',
-    'laps-display'
+    'level-display',
+    'swipe'
 ], function (
     Phaser,
     Player,
@@ -15,9 +16,10 @@ define([
     Spawner,
     PowerUp,
     Entity,
-    Swipe,
+    LapsDisplay,
     DistanceDisplay,
-    LapsDisplay) {
+    LevelDisplay,
+    Swipe) {
 
     'use strict';
     
@@ -43,7 +45,7 @@ define([
         tokens,
         warnings,
         currentPatternTokenCount,
-        currentTokensCollected,
+        currentTokensCollected=0,
         restDuration=5000, // ms between spawns
         warningDuration=1000, // ms between warning and spawn
         spawnTimer,
@@ -53,10 +55,9 @@ define([
         crowd,
         clouds1,
         clouds2,
-        color,
         lapsDisplay,
         distanceDisplay,
-
+        levelDisplay,
         sfx={},
         music;
 
@@ -168,6 +169,7 @@ define([
             game.add.existing(player);
 
             // HUD
+
             distanceDisplay = new DistanceDisplay(game, 0, 0);
             game.add.existing(distanceDisplay);
             distanceDisplay.fixedToCamera = true;
@@ -177,6 +179,9 @@ define([
             lapsDisplay = new LapsDisplay(game, 0, 0);
             game.add.existing(lapsDisplay);
             lapsDisplay.updateDisplay(currentLap);
+            levelDisplay = new LevelDisplay(game);
+            game.add.existing(levelDisplay);
+            levelDisplay.updateDisplay(currentLevel,currentTokensCollected);
 
             this.swipe = new Swipe(game);
             this.swipe.dragLength = 25;
@@ -187,8 +192,8 @@ define([
             sfx.crash = game.add.audio('crash');
 
             // Music
-            music = game.add.audio('race-music', 0.25);
-            music.fadeIn(2500, true);
+            // music = game.add.audio('race-music', 0.25);
+            // music.fadeIn(2500, true);
 
 
             currentLevel = 0;
@@ -299,7 +304,9 @@ define([
             }
             // Collide player + tokens.
             if (!player.dying) {
+                console.log(currentTokensCollected);
                 game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken);
+                levelDisplay.updateDisplay(currentLevel,currentTokensCollected);
             }
         },
 
@@ -318,11 +325,10 @@ define([
             sfx.tokenCollect.play();
             token.kill();
             currentTokensCollected++;
-            if (currentTokensCollected >= currentPatternTokenCount) {
+            if (currentTokensCollected >= 8) {
                 player.powerUp();
-
-                // TO DO: Just...change the way leveling up works...
                 currentLevel++;
+                currentTokensCollected = 0;
             }
         },
 
@@ -343,7 +349,13 @@ define([
         },
 
         spawnPattern: function () {
-            if (currentLevel >= spawnPatterns.length) currentLevel = spawnPatterns.length - 1;
+
+
+            spawner.queue(spawner.find(currentLevel));
+            if(currentLevel===0){
+                currentLevel++;
+            }
+            /*
             var patternIndex = Math.floor(Math.random() * spawnPatterns[currentLevel].length);
             var patternMatrix = [
                 spawnPatterns[currentLevel][patternIndex][0].slice(),
@@ -375,9 +387,8 @@ define([
                     }
                 }
             }
-
             spawner.queue(patternMatrix);
-
+            */
             // TO DO: Don't reset spawnTimer until previous pattern is off screen.
             spawnTimer.add(restDuration, this.spawnPattern, this);
         }

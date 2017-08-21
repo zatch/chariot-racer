@@ -13,7 +13,7 @@ define([
         Phaser.Sprite.call(this, game, x, y, 'blank');
 
         this.distance = 0;
-        this.distanceText = new Phaser.Text(game, 0, 0, this.distanceString, { font: "bold 16px Arial", fill: "#000", boundsAlignH: "center", boundsAlignV: "middle" });
+        this.distanceText = new Phaser.Text(game, 0, 0, '', { font: "bold 16px Arial", fill: "#000", boundsAlignH: "center", boundsAlignV: "middle" });
         this.addChild(this.distanceText);
     }
 
@@ -22,7 +22,7 @@ define([
 
     DistanceDisplay.prototype.updateDisplay = function (val) {
         this.distance = val;
-        this.distanceText.setText(Math.floor(this.distance) + " meters :: " + Math.floor(game.time.totalElapsedSeconds()*10)/10);
+        this.distanceText.setText(Math.floor(this.distance) + " meters" );
     };
 
     return DistanceDisplay;
