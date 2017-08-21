@@ -79,7 +79,7 @@ define([
         create: function () {
 
             var self = this;
-
+            game.score =0;
             laneHeight = 48;
             laneCount = 3;
             laneOffset = 27;
@@ -339,9 +339,11 @@ define([
         onPlayerDeath: function (player) {
             game.camera.unfollow();
             game.score = currentLevel*.7*metersTraveled;
+            currentLevel = 1;
+            metersTraveled = 0;
             game.stateTransition.to('GameOver', true, false);
             if(soundOn){
-                music.fadeOut(2500);
+                music.stop();
             }
 
         },

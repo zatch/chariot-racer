@@ -59,10 +59,13 @@ define([
         var i,
             j,
             patternMatrix,
+            minimum=0,
             pattern = [];
-        if (level >= spawnPatterns.length) level = spawnPatterns.length - 1;
+        if(level>1){
+            minimum = level-2
+        }
         for(i=0;i<spawnPatterns.length;i++){
-            if(spawnPatterns[i].level<=level){
+            if(spawnPatterns[i].level<=level&&spawnPatterns[i].level>=minimum){
                 pattern.push(spawnPatterns[i]);
             }
         }
@@ -92,7 +95,7 @@ define([
             lane = this.lanes[ln];
             for (i = patternMatrix[ln].length-1; i >= 0; i--) {
                 key = patternMatrix[ln][i];
-                if (key !== 0) {
+                if (key === 'token') {
                     key += '-warning';
                     sprite = group.getFirstDead(true, 
                                                 game.width - 80 + (this.warningSpread * i), 
