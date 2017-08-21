@@ -5,7 +5,7 @@ define([
 
     // Shortcuts
     var game, 
-        selected,
+        selected='chariot-white',
         music;
 
     return {
@@ -19,6 +19,7 @@ define([
         },
 
         create: function () {
+            game.stage.backgroundColor = "#616161";
             var Players = [
                 {key:'white',entity:game.add.sprite(0,0,'white-player')},
                 {key:'green',entity:game.add.sprite(game.width/4,0,'green-player')},
@@ -33,7 +34,7 @@ define([
                     console.log(selected);
                 });
             }
-            var button = game.add.button(game.world.centerX,game.world.centerY,'skull',function(){
+            var button = game.add.button(game.world.centerX,game.world.centerY,'play-button',function(){
                 music.onFadeComplete.addOnce(function() {
                     music.stop();
                     this.game.state.start('Play',true,false,{color:selected});

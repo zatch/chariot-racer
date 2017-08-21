@@ -59,6 +59,7 @@ define([
         distanceDisplay,
         levelDisplay,
         sfx={},
+        soundOn=true,
         music;
 
     return {
@@ -192,8 +193,11 @@ define([
             sfx.crash = game.add.audio('crash');
 
             // Music
-            // music = game.add.audio('race-music', 0.25);
-            // music.fadeIn(2500, true);
+            if(soundOn){
+                music = game.add.audio('race-music', 0.25);
+                music.fadeIn(2500, true);
+            }
+
 
 
             currentLevel = 0;
@@ -334,9 +338,12 @@ define([
 
         onPlayerDeath: function (player) {
             game.camera.unfollow();
+            game.score = currentLevel*.7*metersTraveled;
             game.stateTransition.to('GameOver', true, false);
+            if(soundOn){
+                music.fadeOut(2500);
+            }
 
-            music.fadeOut(2500);
         },
 
         onPowerUpStart: function () {
@@ -349,47 +356,10 @@ define([
         },
 
         spawnPattern: function () {
-
-
             spawner.queue(spawner.find(currentLevel));
             if(currentLevel===0){
                 currentLevel++;
             }
-            /*
-            var patternIndex = Math.floor(Math.random() * spawnPatterns[currentLevel].length);
-            var patternMatrix = [
-                spawnPatterns[currentLevel][patternIndex][0].slice(),
-                spawnPatterns[currentLevel][patternIndex][1].slice(),
-                spawnPatterns[currentLevel][patternIndex][2].slice()
-            ];
-
-            // Reset power-up counters.
-            currentPatternTokenCount = 0;
-            currentTokensCollected = 0;
-            
-            var ln,
-                i;
-            for (ln = 0; ln < patternMatrix.length; ln++) {
-                for (i = 0; i < patternMatrix[ln].length; i++) {
-                    // Translate pattern numeric values to keys for spawner.
-                    // This is the key to the pattern authoring data structure.
-                    switch (patternMatrix[ln][i]) {
-                        case 0:
-                            // Ignore 0 values
-                            break;
-                        case 1:
-                            patternMatrix[ln][i] = 'token';
-                            currentPatternTokenCount++;
-                            break;
-                        case 2:
-                            patternMatrix[ln][i] = 'skull';
-                            break;
-                    }
-                }
-            }
-            spawner.queue(patternMatrix);
-            */
-            // TO DO: Don't reset spawnTimer until previous pattern is off screen.
             spawnTimer.add(restDuration, this.spawnPattern, this);
         }
     };

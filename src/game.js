@@ -85,7 +85,8 @@ define([
             this.load.audio('token-collect', 'assets/sfx/coin10.mp3');
             this.load.audio('power-up', 'assets/sfx/power-up-amped-and-crushed.mp3');
             this.load.audio('crash', 'assets/sfx/atari_boom.wav');
-
+            // Buttons
+            this.game.load.image('play-button','assets/textures/play-button.png')
         },
         
         create: function() {
