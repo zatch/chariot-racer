@@ -44,7 +44,7 @@ define([
         warnings,
         currentPatternTokenCount,
         currentTokensCollected,
-        restDuration=5000, // ms between spawns
+        restDuration=2000, // ms between spawns
         warningDuration=1000, // ms between warning and spawn
         spawnTimer,
 
@@ -105,7 +105,7 @@ define([
 
             spawnTimer = game.time.create(false);
             spawnTimer.start();
-            spawnTimer.add(restDuration, this.spawnPattern, this);
+            this.setSpawnTimer();
 
             // Obstacles
             obstacles = game.add.group();
@@ -121,7 +121,7 @@ define([
             // Spawner
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
             {
-                spread: 100, // px between indices in spawn pattern arrays
+                spread: 24, // px between indices in spawn pattern arrays
                 warningDuration: 1000,
                 warningSpread: 5,
                 warningGroup: warnings,
@@ -258,29 +258,50 @@ define([
             crowd.tilePosition.x -= player.body.velocity.x*0.6;
             clouds1.tilePosition.x -= player.body.velocity.x*0.1;
             clouds2.tilePosition.x -= player.body.velocity.x*0.09;
+
+            // Clean up off-screen obstacles.
             obstacles.forEachAlive(function(obstacle) {
                 obstacle.body.x -= player.body.velocity.x;
 
-                // Recycle off-camera obstacles.
-                // Not using killOffCamera because we want to start obstacles off camera.
-                if(!obstacle.inCamera && obstacle.body.x < 0) obstacle.kill();
+                if(!obstacle.inCamera && obstacle.body.x < 0) {
+                    // Recycle off-camera obstacles.
+                    // Not using killOffCamera because we want to start obstacles off camera.
+                    obstacle.kill();
+
+                    // Check for and handle pattern completion.
+                    this.checkPatternCompletion();
+                }
             }, this);
 
+            // Clean up off-screen tokens.
             tokens.forEachAlive(function(token) {
                 token.body.x -= player.body.velocity.x;
 
-                // Recycle off-camera obstacles.
-                // Not using killOffCamera because we want to start obstacles off camera.
-                if(!token.inCamera && token.body.x < 0) token.kill();
+                if(!token.inCamera && token.body.x < 0) {
+                    // Recycle off-camera tokens.
+                    // Not using killOffCamera because we want to start tokens off camera.
+                    token.kill();
+
+                    // Check for and handle pattern completion.
+                    this.checkPatternCompletion();
+                }
             }, this);
 
             // Collide player + obstacles.
             if (!player.invulnerable) {
-                game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle);               
+                game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle, null, this);
             }
             // Collide player + tokens.
             if (!player.dying) {
-                game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken);
+                game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken, null, this);
+            }
+        },
+
+        checkPatternCompletion: function () {
+            // Pattern is complete if all obstacles and tokens are dead.
+            if (obstacles.countLiving() === 0 && tokens.countLiving() ===0) {
+                // Start new spawn timer.
+                this.setSpawnTimer();
             }
         },
 
@@ -292,6 +313,9 @@ define([
         onPlayerCollidesObstacle: function (player, enemy) {
             sfx.crash.play();
             player.damage();
+
+            // Check for and handle pattern completion.
+            this.checkPatternCompletion();
         },
 
         onPlayerCollidesToken: function (player, token) {
@@ -302,6 +326,9 @@ define([
             if (currentTokensCollected >= currentPatternTokenCount) {
                 player.powerUp();
             }
+            
+            // Check for and handle pattern completion.
+            this.checkPatternCompletion();
         },
 
         onPlayerDeath: function (player) {
@@ -318,6 +345,14 @@ define([
 
         onPowerUpEnd: function () {
             spawnTimer.resume();
+        },
+
+        setSpawnTimer: function () {
+            spawnTimer.add(restDuration, this.spawnPattern, this);
+        },
+
+        clearSpawnTimer: function () {
+            spawnTimer.removeAll();
         },
 
         spawnPattern: function () {
@@ -347,9 +382,6 @@ define([
 
             // Increment spawn count for this level.
             currentLevelSpawnCount++;
-
-            // TO DO: Don't reset spawnTimer until previous pattern is off screen.
-            spawnTimer.add(restDuration, this.spawnPattern, this);
         }
     };
 });
