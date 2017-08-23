@@ -330,11 +330,7 @@ define([
                 levelData = spawnPatterns[currentLevel];
             }
             var patternIndex = Math.floor(Math.random() * spawnPatterns[currentLevel].patterns.length);
-            var patternMatrix = [
-                spawnPatterns[currentLevel].patterns[patternIndex][0].slice(),
-                spawnPatterns[currentLevel].patterns[patternIndex][1].slice(),
-                spawnPatterns[currentLevel].patterns[patternIndex][2].slice()
-            ];
+            var patternMatrix = spawnPatterns[currentLevel].patterns[patternIndex];
 
             // Increment spawn count for this level.
             currentLevelSpawnCount++;
@@ -347,19 +343,8 @@ define([
                 i;
             for (ln = 0; ln < patternMatrix.length; ln++) {
                 for (i = 0; i < patternMatrix[ln].length; i++) {
-                    // Translate pattern numeric values to keys for spawner.
-                    // This is the key to the pattern authoring data structure.
-                    switch (patternMatrix[ln][i]) {
-                        case 0:
-                            // Ignore 0 values
-                            break;
-                        case 1:
-                            patternMatrix[ln][i] = 'token';
-                            currentPatternTokenCount++;
-                            break;
-                        case 2:
-                            patternMatrix[ln][i] = 'skull';
-                            break;
+                    if (patternMatrix[ln][i] === 'token') {
+                        currentPatternTokenCount++;
                     }
                 }
             }
