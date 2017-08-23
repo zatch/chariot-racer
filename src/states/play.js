@@ -321,35 +321,32 @@ define([
         },
 
         spawnPattern: function () {
-            if (currentLevel >= spawnPatterns.length) currentLevel = spawnPatterns.length - 1;
-
             var levelData = spawnPatterns[currentLevel];
-            if (currentLevelSpawnCount >= levelData.maxSpawns) {
+
+            // Advance level, if:
+            //      - Level has reached its max spawn count
+            //      - We aren't already at max level
+            if (currentLevelSpawnCount >= levelData.maxSpawns &&
+                currentLevel < spawnPatterns.length - 1) {
                 currentLevel++;
                 currentLevelSpawnCount = 0;
                 levelData = spawnPatterns[currentLevel];
             }
+
+            // Pick a pattern from the level.
             var patternIndex = Math.floor(Math.random() * spawnPatterns[currentLevel].patterns.length);
-            var patternMatrix = spawnPatterns[currentLevel].patterns[patternIndex];
+            var pattern = spawnPatterns[currentLevel].patterns[patternIndex];
+            
+            // Send the pattern's lanes to the spawn queue.
+            var lanes = pattern.lanes;
+            spawner.queue(lanes);
+
+            // Reset power-up counters.
+            currentTokensCollected = 0;
+            currentPatternTokenCount = pattern.tokenCount;
 
             // Increment spawn count for this level.
             currentLevelSpawnCount++;
-
-            // Reset power-up counters.
-            currentPatternTokenCount = 0;
-            currentTokensCollected = 0;
-            
-            var ln,
-                i;
-            for (ln = 0; ln < patternMatrix.length; ln++) {
-                for (i = 0; i < patternMatrix[ln].length; i++) {
-                    if (patternMatrix[ln][i] === 'token') {
-                        currentPatternTokenCount++;
-                    }
-                }
-            }
-
-            spawner.queue(patternMatrix);
 
             // TO DO: Don't reset spawnTimer until previous pattern is off screen.
             spawnTimer.add(restDuration, this.spawnPattern, this);
