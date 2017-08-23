@@ -49,6 +49,7 @@ define([
         spawnTimer,
 
         currentLevel,
+        currentLevelSpawnCount=0,
 
         crowd,
         clouds1,
@@ -300,9 +301,6 @@ define([
             currentTokensCollected++;
             if (currentTokensCollected >= currentPatternTokenCount) {
                 player.powerUp();
-
-                // TO DO: Just...change the way leveling up works...
-                currentLevel++;
             }
         },
 
@@ -324,12 +322,22 @@ define([
 
         spawnPattern: function () {
             if (currentLevel >= spawnPatterns.length) currentLevel = spawnPatterns.length - 1;
-            var patternIndex = Math.floor(Math.random() * spawnPatterns[currentLevel].length);
+
+            var levelData = spawnPatterns[currentLevel];
+            if (currentLevelSpawnCount >= levelData.maxSpawns) {
+                currentLevel++;
+                currentLevelSpawnCount = 0;
+                levelData = spawnPatterns[currentLevel];
+            }
+            var patternIndex = Math.floor(Math.random() * spawnPatterns[currentLevel].patterns.length);
             var patternMatrix = [
-                spawnPatterns[currentLevel][patternIndex][0].slice(),
-                spawnPatterns[currentLevel][patternIndex][1].slice(),
-                spawnPatterns[currentLevel][patternIndex][2].slice()
+                spawnPatterns[currentLevel].patterns[patternIndex][0].slice(),
+                spawnPatterns[currentLevel].patterns[patternIndex][1].slice(),
+                spawnPatterns[currentLevel].patterns[patternIndex][2].slice()
             ];
+
+            // Increment spawn count for this level.
+            currentLevelSpawnCount++;
 
             // Reset power-up counters.
             currentPatternTokenCount = 0;
