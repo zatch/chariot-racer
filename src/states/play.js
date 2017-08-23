@@ -135,25 +135,25 @@ define([
                 lanes: [
                     {
                         x: game.width,
-                        y: laneYCoords[0]+6,
-                        spriteScale: 0.75
+                        y: laneYCoords[0]+9,
+                        spriteScale: 0.9
                     },
                     {
-                        x: game.width+30,
-                        y: laneYCoords[1]+9,
+                        x: game.width,
+                        y: laneYCoords[1]+12,
                         spriteScale: 1
                     },
                     {
-                        x: game.width+60,
-                        y: laneYCoords[2]+12,
-                        spriteScale: 1.25
+                        x: game.width,
+                        y: laneYCoords[2]+18,
+                        spriteScale: 1.1
                     }
                 ]
             });
             game.add.existing(spawner);
 
             // Insert player
-            player = new Player(game, 260 , 0, playerKey);
+            player = new Player(game, 220 , 0, playerKey);
             player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
             player.events.onPowerUpStart.add(this.onPowerUpStart, this);
@@ -227,16 +227,16 @@ define([
                     tweenAutoPlay=true;
                 switch(player.activeLane){
                     case 0: 
-                        targetY = laneYCoords[0]-10;
-                        targetScale = {x: 0.6, y: 0.6};
+                        targetY = laneYCoords[0]-15;
+                        targetScale = {x: 0.7, y: 0.7};
                         break;
                     case 1:
                         targetY = laneYCoords[1]-12;
                         targetScale = {x: 0.8, y: 0.8};
                         break;
                     case 2:
-                        targetY = laneYCoords[2]-14;
-                        targetScale = {x: 1, y: 1};
+                        targetY = laneYCoords[2]-9;
+                        targetScale = {x: 0.9, y: 0.9};
                         break;
                 }
 
@@ -251,42 +251,22 @@ define([
             lapsDisplay.updateDisplay(currentLap);
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
-            lanes[0].tilePosition.x -= player.body.velocity.x*0.8;
-            lanes[1].tilePosition.x -= player.body.velocity.x*0.9;
+            lanes[0].tilePosition.x -= player.body.velocity.x;
+            lanes[1].tilePosition.x -= player.body.velocity.x;
             lanes[2].tilePosition.x -= player.body.velocity.x;
             crowd.tilePosition.x -= player.body.velocity.x*0.6;
             clouds1.tilePosition.x -= player.body.velocity.x*0.1;
             clouds2.tilePosition.x -= player.body.velocity.x*0.09;
-            obstacles.forEach(function(obstacle) {
-                switch(obstacle.activeLane){
-                    case 0:
-                        obstacle.body.x -= player.body.velocity.x*0.8;
-                        break;
-                    case 1:
-                        obstacle.body.x -= player.body.velocity.x*0.9;
-                        break;
-                    case 2:
-                        obstacle.body.x -= player.body.velocity.x;
-                        break;
-                }
+            obstacles.forEachAlive(function(obstacle) {
+                obstacle.body.x -= player.body.velocity.x;
 
                 // Recycle off-camera obstacles.
                 // Not using killOffCamera because we want to start obstacles off camera.
                 if(!obstacle.inCamera && obstacle.body.x < 0) obstacle.kill();
             }, this);
 
-            tokens.forEach(function(token) {
-                switch(token.activeLane){
-                    case 0:
-                        token.body.x -= player.body.velocity.x*0.8;
-                        break;
-                    case 1:
-                        token.body.x -= player.body.velocity.x*0.9;
-                        break;
-                    case 2:
-                        token.body.x -= player.body.velocity.x;
-                        break;
-                }
+            tokens.forEachAlive(function(token) {
+                token.body.x -= player.body.velocity.x;
 
                 // Recycle off-camera obstacles.
                 // Not using killOffCamera because we want to start obstacles off camera.
