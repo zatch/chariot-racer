@@ -62,7 +62,7 @@ define([
             minimum=0,
             pattern = [];
         if(level>1){
-            minimum = level-2
+            minimum = (level>spawnPatterns[spawnPatterns.length-1].level?spawnPatterns[spawnPatterns.length-2].level:level-2);
         }
         for(i=0;i<spawnPatterns.length;i++){
             if(spawnPatterns[i].level<=level&&spawnPatterns[i].level>=minimum){
@@ -74,39 +74,52 @@ define([
             [pattern[i - 1], pattern[j]] = [pattern[j], pattern[i - 1]];
         }
         patternMatrix = pattern[0].pattern;
-        if(pattern[0].combine){
-            for (i = 0; i < patternMatrix.length; i++) {
 
-                patternMatrix[i].concat(pattern[1].pattern[i]);
-            }
-        }
         return patternMatrix;
     };
     Spawner.prototype.queue = function (patternMatrix) {
-        console.log(patternMatrix);
         var lane,
             key,
-            group = this.warningGroup,
+            indicatorLane,
+            iSprite,
             sprite;
 
         var ln,
             i;
         for (ln = 0; ln < patternMatrix.length; ln++) {
             lane = this.lanes[ln];
+            indicatorLane = this.indicatorLanes[ln];
             for (i = patternMatrix[ln].length-1; i >= 0; i--) {
                 key = patternMatrix[ln][i];
+                // original
+                if(key!==0){
+
+                    // group = this.spawnableObjects[key].group;
+
+                    iSprite = this.spawnableObjects[key].group.getFirstDead(true,
+                        lane.x + (this.spread * i),
+                        lane.y,
+                        key);
+
+                    iSprite.revive();
+                    iSprite.scale.x = lane.spriteScale;
+                    iSprite.scale.y = lane.spriteScale;
+                    iSprite.activeLane = ln;
+                }
+                // indicator
                 if (key === 'token') {
-                    key += '-warning';
-                    sprite = group.getFirstDead(true, 
-                                                game.width - 80 + (this.warningSpread * i), 
-                                                lane.y, 
+
+                    key += '-coin';
+                    sprite = this.indicatorGroup.getFirstDead(true,
+                                                game.width + (this.warningSpread * i),
+                                                indicatorLane.y,
                                                 key);
 
                     sprite.revive();
                     // big
-                    sprite.frame = 0;
+                    sprite.frameName = 'empty';
                     if (i > 0 && patternMatrix[ln][i] === patternMatrix[ln][i-1]) {
-                        sprite.frame = 1; // little
+                        //sprite.frame = 1; // little
                     }
                     // sprite.scale.x = lane.spriteScale;
                     // sprite.scale.y = lane.spriteScale;
@@ -114,12 +127,12 @@ define([
                 }
             }
         }
-
-        // 
+        /*
         this.spawnTimer.add(this.warningDuration, function () {
             this.warningGroup.callAll('kill');
-            this.spawn(patternMatrix);
+            // this.spawn(patternMatrix);
         }, this);
+        */
     };
 
     Spawner.prototype.spawn = function (patternMatrix) {

@@ -3,7 +3,7 @@ define([
 ], function (Phaser) {
     'use strict';
 
-    var game;
+    var game,progress;
 
     function LevelDisplay (_game, x, y) {
 
@@ -12,8 +12,9 @@ define([
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, 'blank');
         this.level = 0;
-        this.levelText = new Phaser.Text(game, game.width/2-100, 0, '', { font: "bold 16px Arial", fill: "#000", boundsAlignH: "center", boundsAlignV: "middle" });
-        this.addChild(this.levelText);
+        this.progressBar = game.add.sprite(game.width/2-100,5,'progress','0_8');
+
+
     }
 
     LevelDisplay.prototype = Object.create(Phaser.Sprite.prototype);
@@ -21,7 +22,11 @@ define([
 
     LevelDisplay.prototype.updateDisplay = function (level,tokens) {
         this.level = level;
-        this.levelText.setText("Level " + level + " (" + tokens/8*100 + "%)");
+        //this.width = 300*(tokens/8);
+        this.progressBar.frameName = tokens+'_8';
+        //this.progressBar.clear();
+        //this.progressBar.drawRoundedRect(1,1,this.width,18,6);
+        // this.levelText.setText("Level " + level + " (" + tokens/8*100 + "%)");
     };
     return LevelDisplay;
 });

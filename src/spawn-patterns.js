@@ -5,16 +5,16 @@ define([], function () {
     return [
         {
             level:0,
-            combine:false,
+            boost:8,
             pattern:[
                 [t,t,t,t,t,t,t,t],
-                [0,x,x,x,x,x,x,x,x],
+                [0,0,x,x,x,x,x,x,x],
                 []
             ]
         },
         {
             level:1,
-            combine:true,
+            boost:6,
             pattern:[
                 [x,x,x,x,x,x,x,x,x,x],
                 [0,t,t,0,0,0,x],
@@ -22,7 +22,7 @@ define([], function () {
             ]
         },{
             level:1,
-            combine:true,
+            boost:9,
             pattern:[
                 [t,t,t,t,0,0,t],
                 [x,0,0,t,t,t,t],
@@ -30,15 +30,15 @@ define([], function () {
             ]
         },{
             level:2,
-            combine:false,
+            boost:8,
             pattern:[
-                [0,0,0,0,0,0,0,0,0,t,t,t,t,t],
-                [x,x,x,0,0,0,t,t,0,0,0,0,x,x],
-                [0,0,0,0,t,0,0,0,x,0,0,0,0,0]
+                [0,0,0,0,0,0,t,t,t,t,t],
+                [0,x,0,t,t,0,0,0,0,x,x],
+                [0,t,0,0,0,0,0,x,0,0,0]
             ]
         },{
             level:2,
-            combine:false,
+            boost:11,
             pattern:[
                 [0,0,t,t,t,t,0,x,0,t,t,t,t,0],
                 [0,x,x,0,0,0,t,t,t,0,0,0,x,x],
@@ -46,7 +46,7 @@ define([], function () {
             ]
         },{
             level:3,
-            combine:true,
+            boost:7,
             pattern:[
                 [t,t,t],
                 [x,x,0,0,0,0,t,t,0,0,0,x,x,x],
@@ -54,7 +54,7 @@ define([], function () {
             ]
         },{
             level:3,
-            combine:true,
+            boost:8,
             pattern:[
                 [0,0,t,t,t,0,0,0,x,x,x],
                 [x,x,x,0,0,0,0,0,0,0,0,0,x],
@@ -62,11 +62,59 @@ define([], function () {
             ]
         },{
             level:3,
-            combine:true,
+            boost:8,
             pattern:[
                 [0,0,0,0,0,0,0,0,x,x,0,0,0,t],
                 [t,0,0,x,0,0,0,x,0,0,0,0,0,0],
                 [0,0,0,0,t,t,t,t,t,t,0,0,x,x]
+            ]
+        },{
+            level:3,
+            boost:8,
+            pattern:[
+                [x,x,0,0,0,0],
+                [t,0,0,x,0,0,0,x,0,0,0,0,t,0],
+                [0,0,0,0,t,t,t,t,t,t,0,0,0,x]
+            ]
+        },{
+            level:6,
+            boost:8,
+            pattern:[
+                [x,x,0,0,0,0],
+                [t,0,x,x,0,0,0,0,0,t],
+                [0,0,t,t,t,t,t,t,0,0,0,x]
+            ]
+        },{
+            level:8,
+            boost:6,
+            pattern:[
+                [t,t,0,0,0,0,0,x],
+                [0,x,x,x,t,t],
+                [0,0,0,0,0,x,0,t,t]
+            ]
+        },{
+            level:8,
+            boost:4,
+            pattern:[
+                [x,x],
+                [0,x,x,x,t,t],
+                [t,0,0,0,0,0,x,t,t]
+            ]
+        },{
+            level:12,
+            boost:6,
+            pattern:[
+                [x,x],
+                [0,t,t,0,x,t,t],
+                [x,0,0,t,t,0,0,x]
+            ]
+        },{
+            level:25,
+            boost:4,
+            pattern:[
+                [x,x,0,0,0,0,t],
+                [0,t,x,0,0,0,x],
+                [x,0,0,t,t,x]
             ]
         }
 

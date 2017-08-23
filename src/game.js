@@ -54,6 +54,10 @@ define([
             //this.game.load.image('distance-display', 'assets/hud/distance-display.png');
             this.game.load.atlas('skull-warning', 'assets/sprites/obstacle-warning.png', 'assets/sprites/obstacle-warning.json');
             this.game.load.atlas('token-warning', 'assets/sprites/token-warning.png', 'assets/sprites/token-warning.json');
+            this.game.load.atlas('progress', 'assets/sprites/progress.png', 'assets/sprites/progress.json');
+            this.game.load.atlas('token-coin', 'assets/hud/iCoin.png', 'assets/hud/iCoin.json');
+            this.game.load.image('hud-tracks', 'assets/hud/indicator-track.png');
+            this.game.load.image('hud-position', 'assets/hud/hud-position.png');
 
             // Chariot racers
             this.game.load.atlas('chariot-blue', 'assets/sprites/chariot-blue.png', 'assets/sprites/chariot-blue.json');
@@ -72,7 +76,7 @@ define([
 
             // Power-ups
             this.game.load.image('power-up', 'assets/sprites/power-up.png');
-            this.game.load.spritesheet('token', 'assets/sprites/coin.png', 16, 16, 18);
+            this.game.load.spritesheet('token', 'assets/sprites/coin.png', 16, 16);
 
             // Blank placeholder (for Sprites without artwork)
             this.game.load.image('blank', 'assets/blank.png');
@@ -86,7 +90,9 @@ define([
             this.load.audio('power-up', 'assets/sfx/power-up-amped-and-crushed.mp3');
             this.load.audio('crash', 'assets/sfx/atari_boom.wav');
             // Buttons
-            this.game.load.image('play-button','assets/textures/play-button.png')
+            this.game.load.image('play-button','assets/textures/play-button.png');
+            // Fonts
+            this.game.load.bitmapFont('carrier', 'assets/font/carrier_command.png', 'assets/font/carrier_command.xml');
         },
         
         create: function() {
