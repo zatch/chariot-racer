@@ -128,7 +128,7 @@ define([
             {
                 spread: 100, // px between indices in spawn pattern arrays
                 warningDuration: 1000,
-                warningSpread: 25,
+                warningSpread: 5,
                 warningGroup: warnings,
                 indicatorGroup: indicators,
                 spawnableObjects: {
@@ -158,17 +158,17 @@ define([
                 ],
                 lanes: [
                     {
-                        x: game.width*1.3+780,
+                        x: game.width,
                         y: laneYCoords[0]+6,
                         spriteScale: 0.75
                     },
                     {
-                        x: game.width*1.3+780,
+                        x: game.width,
                         y: laneYCoords[1]+9,
                         spriteScale: 1
                     },
                     {
-                        x: game.width*1.3+780,
+                        x: game.width,
                         y: laneYCoords[2]+12,
                         spriteScale: 1.25
                     }
@@ -185,6 +185,10 @@ define([
             player.fixedToCamera = true;
             player.scale.setTo(0.8);
             player.cameraOffset.y = laneYCoords[player.activeLane] - 12;
+
+            // setup input
+            lanes[player.activeLane].frame =1;
+            game.input.y = laneYCoords[player.activeLane];
 
             // Make player accessible via game object.
             game.player = player;
@@ -219,33 +223,33 @@ define([
 
         update: function () {
             // Direct input to player and do all the map and collision stuff.
-            var direction = this.swipe.check();
-            if(direction!==null){
-                switch(direction.direction){
-                    case this.swipe.DIRECTION_UP: 
-                    case this.swipe.DIRECTION_UP_RIGHT: 
-                    case this.swipe.DIRECTION_UP_LEFT:
-                        if(game.player.activeLane>0){
-                            game.player.activeLane -=1;
-                        }
-                        break;
-                    case this.swipe.DIRECTION_DOWN:
-                    case this.swipe.DIRECTION_DOWN_RIGHT:
-                    case this.swipe.DIRECTION_DOWN_LEFT:
-                        if(game.player.activeLane<2){
-                            game.player.activeLane +=1;
-                        }
-                        break;
+            var newLane=player.activeLane;
+            if(game.input.activePointer.isDown){
+                if (game.input.y < laneYCoords[1]) {
+                    newLane = 0;
                 }
-                // TO DO: Move lane positioning to a helper function or new class
-                // TO DO: Make it so we don't need  all these hard-coded y-coord offsets.
-                var targetY, 
-                    targetScale, 
+                else if (game.input.y > laneYCoords[2]) {
+                    newLane = 2;
+                }
+                else {
+                    newLane = 1;
+                }
+            }
+
+
+            if(newLane!==player.activeLane){
+                player.activeLane = newLane;
+                lanes[0].frame = 0;
+                lanes[1].frame = 0;
+                lanes[2].frame = 0;
+                lanes[player.activeLane].frame = 1;
+                var targetY,
+                    targetScale,
                     tweenDuration=100,
                     tweenEasing=Phaser.Easing.Cubic.In,
                     tweenAutoPlay=true;
                 switch(player.activeLane){
-                    case 0: 
+                    case 0:
                         targetY = laneYCoords[0]-10;
                         targetScale = {x: 0.6, y: 0.6};
                         break;

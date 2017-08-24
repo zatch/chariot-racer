@@ -45,7 +45,8 @@ define([
 
         preload: function() {
             // World textures
-            this.game.load.image('dirt-track', 'assets/textures/dirt-track.png');
+            //this.game.load.image('dirt-track', 'assets/textures/dirt-track.png');
+            this.game.load.atlas('dirt-track', 'assets/textures/dirt-track.png', 'assets/textures/dirt-track.json');
             this.game.load.image('crowd', 'assets/textures/crowd.png');
             this.game.load.image('clouds1', 'assets/textures/clouds1.png');
             this.game.load.image('clouds2', 'assets/textures/clouds2.png');

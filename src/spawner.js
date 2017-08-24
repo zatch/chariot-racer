@@ -82,16 +82,18 @@ define([
             key,
             indicatorLane,
             iSprite,
+            group=this.warningGroup,
             sprite;
 
         var ln,
             i;
         for (ln = 0; ln < patternMatrix.length; ln++) {
             lane = this.lanes[ln];
-            indicatorLane = this.indicatorLanes[ln];
+            //indicatorLane = this.indicatorLanes[ln];
             for (i = patternMatrix[ln].length-1; i >= 0; i--) {
                 key = patternMatrix[ln][i];
                 // original
+                /*
                 if(key!==0){
 
                     // group = this.spawnableObjects[key].group;
@@ -107,32 +109,34 @@ define([
                     iSprite.activeLane = ln;
                 }
                 // indicator
+                */
                 if (key === 'token') {
 
-                    key += '-coin';
-                    sprite = this.indicatorGroup.getFirstDead(true,
-                                                game.width + (this.warningSpread * i),
-                                                indicatorLane.y,
+                    key += '-warning';
+                    sprite = group.getFirstDead(true,
+                                                game.width-80 + (this.warningSpread * i),
+                                                lane.y,
                                                 key);
 
                     sprite.revive();
                     // big
-                    sprite.frameName = 'empty';
+                    sprite.frame = 0;
                     if (i > 0 && patternMatrix[ln][i] === patternMatrix[ln][i-1]) {
-                        //sprite.frame = 1; // little
+                        sprite.frame = 1; // little
                     }
-                    // sprite.scale.x = lane.spriteScale;
-                    // sprite.scale.y = lane.spriteScale;
+                    //sprite.scale.x = lane.spriteScale;
+                    //sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
                 }
+
             }
         }
-        /*
+
         this.spawnTimer.add(this.warningDuration, function () {
             this.warningGroup.callAll('kill');
-            // this.spawn(patternMatrix);
+            this.spawn(patternMatrix);
         }, this);
-        */
+
     };
 
     Spawner.prototype.spawn = function (patternMatrix) {
