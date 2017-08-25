@@ -13,7 +13,7 @@ define([
 
         // Initialize sprite
         Entity.call(this, game, x, y, key);
-        this.anchor.set(1, 0.5);
+        this.anchor.set(1, 1);
 
         // Set up animations.
         this.anims = {};
@@ -24,8 +24,8 @@ define([
         this.dying = false;
 
         this.invulnerable = false;
-        this.poweredUpMaxVelocity = 30;
-        this.normalMaxVelocity = 10;
+        this.poweredUpMaxVelocity = 25;
+        this.normalMaxVelocity = 7;
 
         this.powerupDuration = 3700;
         this.powerupTimer = game.time.create(false);
@@ -37,7 +37,7 @@ define([
         this.checkWorldBounds = true;
 
         // Resize player body/hitbox.
-        this.body.setSize(100,40,86,72);
+        this.body.setSize(122,20,0,92);
 
         // Initialize public properites.
         // Fastest possible movement speeds.

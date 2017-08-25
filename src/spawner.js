@@ -1,7 +1,6 @@
 define([
-    'phaser',
-    'spawn-patterns'
-], function (Phaser,spawnPatterns) {
+    'phaser'
+], function (Phaser) {
     'use strict';
 
     // Shortcuts
@@ -55,88 +54,43 @@ define([
         // Call up!
         Phaser.Sprite.prototype.update.call(this);
     };
-    Spawner.prototype.find = function(level){
-        var i,
-            j,
-            patternMatrix,
-            minimum=0,
-            pattern = [];
-        if(level>1){
-            minimum = (level>spawnPatterns[spawnPatterns.length-1].level?spawnPatterns[spawnPatterns.length-2].level:level-2);
-        }
-        for(i=0;i<spawnPatterns.length;i++){
-            if(spawnPatterns[i].level<=level&&spawnPatterns[i].level>=minimum){
-                pattern.push(spawnPatterns[i]);
-            }
-        }
-        for (i = pattern.length; i; i--) {
-            j = Math.floor(Math.random() * i);
-            [pattern[i - 1], pattern[j]] = [pattern[j], pattern[i - 1]];
-        }
-        patternMatrix = pattern[0].pattern;
 
-        return patternMatrix;
-    };
     Spawner.prototype.queue = function (patternMatrix) {
         var lane,
             key,
-            indicatorLane,
-            iSprite,
-            group=this.warningGroup,
+            group = this.warningGroup,
             sprite;
 
         var ln,
             i;
         for (ln = 0; ln < patternMatrix.length; ln++) {
             lane = this.lanes[ln];
-            //indicatorLane = this.indicatorLanes[ln];
             for (i = patternMatrix[ln].length-1; i >= 0; i--) {
                 key = patternMatrix[ln][i];
-                // original
-                /*
-                if(key!==0){
-
-                    // group = this.spawnableObjects[key].group;
-
-                    iSprite = this.spawnableObjects[key].group.getFirstDead(true,
-                        lane.x + (this.spread * i),
-                        lane.y,
-                        key);
-
-                    iSprite.revive();
-                    iSprite.scale.x = lane.spriteScale;
-                    iSprite.scale.y = lane.spriteScale;
-                    iSprite.activeLane = ln;
-                }
-                // indicator
-                */
-                if (key === 'token') {
-
+                if (key !== 0) {
                     key += '-warning';
-                    sprite = group.getFirstDead(true,
-                                                game.width-80 + (this.warningSpread * i),
-                                                lane.y,
+                    sprite = group.getFirstDead(true, 
+                                                game.width - 80 + (this.warningSpread * i), 
+                                                lane.y+ln*2, 
                                                 key);
-
+                    sprite.anchor.set(1);
                     sprite.revive();
-                    // big
-                    sprite.frame = 0;
-                    if (i > 0 && patternMatrix[ln][i] === patternMatrix[ln][i-1]) {
+                    sprite.frame = 1; // big - no, little...
+                    /*if (i > 0 && patternMatrix[ln][i] === patternMatrix[ln][i-1]) {
                         sprite.frame = 1; // little
-                    }
+                    }*/
                     //sprite.scale.x = lane.spriteScale;
                     //sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
                 }
-
             }
         }
 
+        // 
         this.spawnTimer.add(this.warningDuration, function () {
             this.warningGroup.callAll('kill');
             this.spawn(patternMatrix);
         }, this);
-
     };
 
     Spawner.prototype.spawn = function (patternMatrix) {
@@ -160,6 +114,7 @@ define([
                                                 key);
 
                     sprite.revive();
+                    sprite.anchor.set(0.5);
                     sprite.scale.x = lane.spriteScale;
                     sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;

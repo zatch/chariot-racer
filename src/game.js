@@ -45,7 +45,6 @@ define([
 
         preload: function() {
             // World textures
-            //this.game.load.image('dirt-track', 'assets/textures/dirt-track.png');
             this.game.load.atlas('dirt-track', 'assets/textures/dirt-track.png', 'assets/textures/dirt-track.json');
             this.game.load.image('crowd', 'assets/textures/crowd.png');
             this.game.load.image('clouds1', 'assets/textures/clouds1.png');
@@ -56,9 +55,6 @@ define([
             this.game.load.atlas('skull-warning', 'assets/sprites/obstacle-warning.png', 'assets/sprites/obstacle-warning.json');
             this.game.load.atlas('token-warning', 'assets/sprites/token-warning.png', 'assets/sprites/token-warning.json');
             this.game.load.atlas('progress', 'assets/sprites/progress.png', 'assets/sprites/progress.json');
-            this.game.load.atlas('token-coin', 'assets/hud/iCoin.png', 'assets/hud/iCoin.json');
-            this.game.load.image('hud-tracks', 'assets/hud/indicator-track.png');
-            this.game.load.image('hud-position', 'assets/hud/hud-position.png');
 
             // Chariot racers
             this.game.load.atlas('chariot-blue', 'assets/sprites/chariot-blue.png', 'assets/sprites/chariot-blue.json');
@@ -104,6 +100,8 @@ define([
 
             // Now that everything is loaded, show the menu.
             this.game.state.start('Menu');
+            // Debug: Skip Menu and go straight to Play (for dev testing)
+            // this.game.state.start('Play',true,false,{color:'chariot-white'});
         }
     };
     

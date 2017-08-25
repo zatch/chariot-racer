@@ -7,25 +7,20 @@ define([
     var level,
         distanceDisplay,
         levelDisplay;
-    function Hud(game){
+    function HUD(game){
         distanceDisplay = new DistanceDisplay(game, 0, 0);
         game.add.existing(distanceDisplay);
         distanceDisplay.fixedToCamera = true;
         distanceDisplay.cameraOffset.x = 4;
         distanceDisplay.cameraOffset.y = 4;
-
-        //levelDisplay = new LevelDisplay(game);
-        //game.add.existing(levelDisplay);
-        //levelDisplay.updateDisplay(0,0);
     }
-    Hud.prototype = Object.create(Phaser.Sprite.prototype);
-    Hud.prototype.constructor = Hud;
+    HUD.prototype = Object.create(Phaser.Sprite.prototype);
+    HUD.prototype.constructor = HUD;
 
-    Hud.prototype.updateDisplay = function (currentLevel,currentTokensCollected,currentLap,meters) {
-        //levelDisplay.updateDisplay(currentLevel,currentTokensCollected);
+    HUD.prototype.updateDisplay = function (currentLevel,currentTokensCollected,meters) {
         distanceDisplay.updateDisplay(meters);
     };
 
-    return Hud;
+    return HUD;
 
 });

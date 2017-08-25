@@ -1,147 +1,147 @@
 { "frames": {
-   "chariot-red 0.ase": {
-    "frame": { "x": 8, "y": 8, "w": 256, "h": 128 },
+   "chariot-from-comp 0.ase": {
+    "frame": { "x": 8, "y": 8, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 1.ase": {
-    "frame": { "x": 264, "y": 8, "w": 256, "h": 128 },
+   "chariot-from-comp 1.ase": {
+    "frame": { "x": 168, "y": 8, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 2.ase": {
-    "frame": { "x": 520, "y": 8, "w": 256, "h": 128 },
+   "chariot-from-comp 2.ase": {
+    "frame": { "x": 328, "y": 8, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 3.ase": {
-    "frame": { "x": 776, "y": 8, "w": 256, "h": 128 },
+   "chariot-from-comp 3.ase": {
+    "frame": { "x": 488, "y": 8, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 4.ase": {
-    "frame": { "x": 1032, "y": 8, "w": 256, "h": 128 },
+   "chariot-from-comp 4.ase": {
+    "frame": { "x": 648, "y": 8, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 5.ase": {
-    "frame": { "x": 1288, "y": 8, "w": 256, "h": 128 },
+   "chariot-from-comp 5.ase": {
+    "frame": { "x": 808, "y": 8, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 6.ase": {
-    "frame": { "x": 1544, "y": 8, "w": 256, "h": 128 },
+   "chariot-from-comp 6.ase": {
+    "frame": { "x": 8, "y": 120, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 7.ase": {
-    "frame": { "x": 8, "y": 136, "w": 256, "h": 128 },
+   "chariot-from-comp 7.ase": {
+    "frame": { "x": 168, "y": 120, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 8.ase": {
-    "frame": { "x": 264, "y": 136, "w": 256, "h": 128 },
+   "chariot-from-comp 8.ase": {
+    "frame": { "x": 328, "y": 120, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 9.ase": {
-    "frame": { "x": 520, "y": 136, "w": 256, "h": 128 },
+   "chariot-from-comp 9.ase": {
+    "frame": { "x": 488, "y": 120, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 10.ase": {
-    "frame": { "x": 776, "y": 136, "w": 256, "h": 128 },
+   "chariot-from-comp 10.ase": {
+    "frame": { "x": 648, "y": 120, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 11.ase": {
-    "frame": { "x": 1032, "y": 136, "w": 256, "h": 128 },
+   "chariot-from-comp 11.ase": {
+    "frame": { "x": 808, "y": 120, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 12.ase": {
-    "frame": { "x": 1288, "y": 136, "w": 256, "h": 128 },
+   "chariot-from-comp 12.ase": {
+    "frame": { "x": 8, "y": 232, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 13.ase": {
-    "frame": { "x": 1544, "y": 136, "w": 256, "h": 128 },
+   "chariot-from-comp 13.ase": {
+    "frame": { "x": 168, "y": 232, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 14.ase": {
-    "frame": { "x": 8, "y": 264, "w": 256, "h": 128 },
+   "chariot-from-comp 14.ase": {
+    "frame": { "x": 328, "y": 232, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 15.ase": {
-    "frame": { "x": 264, "y": 264, "w": 256, "h": 128 },
+   "chariot-from-comp 15.ase": {
+    "frame": { "x": 488, "y": 232, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    },
-   "chariot-red 16.ase": {
-    "frame": { "x": 520, "y": 264, "w": 256, "h": 128 },
+   "chariot-from-comp 16.ase": {
+    "frame": { "x": 648, "y": 232, "w": 160, "h": 112 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
-    "sourceSize": { "w": 256, "h": 128 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 160, "h": 112 },
+    "sourceSize": { "w": 160, "h": 112 },
     "duration": 100
    }
  },
  "meta": {
   "app": "http://www.aseprite.org/",
   "version": "1.1.0.1",
-  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\sprites\\chariot-red.png",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\sprites\\chariot-from-comp.png",
   "format": "RGBA8888",
-  "size": { "w": 2048, "h": 512 },
+  "size": { "w": 1024, "h": 512 },
   "scale": "1"
  }
 }

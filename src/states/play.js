@@ -1,23 +1,19 @@
 define([
     'phaser',
     'player',
-    'spawn-patterns',
     'spawner',
-    'power-up',
     'entity',
-
     'hud',
-    'swipe'
+
+    'level-data'
 ], function (
     Phaser,
     Player,
-    spawnPatterns,
     Spawner,
-    PowerUp,
     Entity,
+    HUD,
 
-    Hud,
-    Swipe) {
+    levelData) {
 
     'use strict';
     
@@ -35,8 +31,6 @@ define([
 
         pixelsPerMeter=30, // Divisor for Phaser-to-reality physics conversion
         metersTraveled=0,
-        metersPerLap=1000,
-        currentLap=1,
 
         spawner,
         obstacles,
@@ -45,20 +39,19 @@ define([
         warnings,
         currentPatternTokenCount,
         currentTokensCollected=0,
-        restDuration=5000, // ms between spawns
+        restDuration=2000, // ms between spawns
         warningDuration=1000, // ms between warning and spawn
         spawnTimer,
 
         currentLevel,
+        currentLevelSpawnCount,
 
         crowd,
         clouds1,
         clouds2,
-        hudVelocity,
         sfx={},
         soundOn=false,
         hud,
-        hudTrack,
         music;
 
     return {
@@ -78,7 +71,6 @@ define([
         create: function () {
 
             var self = this;
-            game.score =0;
             laneHeight = 48;
             laneCount = 3;
             laneOffset = 27;
@@ -86,13 +78,11 @@ define([
             // Set up game background
             game.stage.backgroundColor = '#add3ff';
 
-            hudTrack = game.add.tileSprite(0,20,game.width,65,'hud-tracks');
-
             clouds1 = game.add.tileSprite(0, 0, game.width, 70, 'clouds1');
             clouds2 = game.add.tileSprite(0, 0, game.width, 70, 'clouds2');
             crowd = game.add.tileSprite(0, 41, game.width, 129, 'crowd');
 
-            laneYCoords=[170,170+36,170+36+48];
+            laneYCoords=[170,170+48*0.5,170+48*0.5+48*0.6];
 
             lanes = [
                 game.add.tileSprite(0, laneYCoords[0], game.width, 48, 'dirt-track'),
@@ -100,13 +90,13 @@ define([
                 game.add.tileSprite(0, laneYCoords[2], game.width, 48, 'dirt-track')
             ];
 
-            lanes[0].scale.setTo(1, 0.75);
-            lanes[1].scale.setTo(1, 1);
-            lanes[2].scale.setTo(1, 1.25);
+            lanes[0].scale.setTo(1, 0.5);
+            lanes[1].scale.setTo(1, 0.6);
+            lanes[2].scale.setTo(1, 0.7);
 
             spawnTimer = game.time.create(false);
             spawnTimer.start();
-            spawnTimer.add(restDuration, this.spawnPattern, this);
+            this.setSpawnTimer();
 
             // Obstacles
             obstacles = game.add.group();
@@ -116,21 +106,16 @@ define([
             tokens = game.add.group();
             tokens.enableBody = true;
 
-            // Hud Group
-            indicators = game.add.group();
-            indicators.enableBody = true;
             // Warnings
             warnings = game.add.group();
 
             // Spawner
-            hudVelocity = 0.25;
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
             {
-                spread: 100, // px between indices in spawn pattern arrays
+                spread: 24, // px between indices in spawn pattern arrays
                 warningDuration: 1000,
                 warningSpread: 5,
                 warningGroup: warnings,
-                indicatorGroup: indicators,
                 spawnableObjects: {
                     'skull': {
                         group: obstacles
@@ -139,52 +124,35 @@ define([
                         group: tokens
                     }
                 },
-                indicatorLanes:[
-                    {
-                        x: game.width,
-                        y: 20,
-                        spriteScale: 1
-                    },
-                    {
-                        x: game.width,
-                        y: 40,
-                        spriteScale: 1
-                    },
-                    {
-                        x: game.width,
-                        y: 60,
-                        spriteScale: 1
-                    }
-                ],
                 lanes: [
                     {
                         x: game.width,
-                        y: laneYCoords[0]+6,
-                        spriteScale: 0.75
+                        y: laneYCoords[0]+12,
+                        spriteScale: 0.7
                     },
                     {
                         x: game.width,
-                        y: laneYCoords[1]+9,
-                        spriteScale: 1
+                        y: laneYCoords[1]+14,
+                        spriteScale: 0.8
                     },
                     {
                         x: game.width,
-                        y: laneYCoords[2]+12,
-                        spriteScale: 1.25
+                        y: laneYCoords[2]+16,
+                        spriteScale: 0.9
                     }
                 ]
             });
             game.add.existing(spawner);
 
             // Insert player
-            player = new Player(game, 260 , 0, playerKey);
+            player = new Player(game, 130 , 0, playerKey);
             player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
             player.events.onPowerUpStart.add(this.onPowerUpStart, this);
             player.events.onPowerUpEnd.add(this.onPowerUpEnd, this);
             player.fixedToCamera = true;
-            player.scale.setTo(0.8);
-            player.cameraOffset.y = laneYCoords[player.activeLane] - 12;
+            player.scale.setTo(0.6);
+            player.cameraOffset.y = laneYCoords[player.activeLane] + 22;
 
             // setup input
             lanes[player.activeLane].frame =1;
@@ -196,10 +164,7 @@ define([
             game.add.existing(player);
 
             // HUD
-            hud = new Hud(game);
-
-            this.swipe = new Swipe(game);
-            this.swipe.dragLength = 25;
+            hud = new HUD(game);
 
             // SFX
             sfx.tokenCollect = game.sound.add('token-collect');
@@ -212,9 +177,8 @@ define([
                 music.fadeIn(2500, true);
             }
 
-
-
             currentLevel = 0;
+            currentLevelSpawnCount = 0;
         },
 
         render: function () {
@@ -236,7 +200,6 @@ define([
                 }
             }
 
-
             if(newLane!==player.activeLane){
                 player.activeLane = newLane;
                 lanes[0].frame = 0;
@@ -249,17 +212,17 @@ define([
                     tweenEasing=Phaser.Easing.Cubic.In,
                     tweenAutoPlay=true;
                 switch(player.activeLane){
-                    case 0:
-                        targetY = laneYCoords[0]-10;
-                        targetScale = {x: 0.6, y: 0.6};
+                    case 0: 
+                        targetY = laneYCoords[0]+18;
+                        targetScale = {x: 0.55, y: 0.55};
                         break;
                     case 1:
-                        targetY = laneYCoords[1]-12;
-                        targetScale = {x: 0.8, y: 0.8};
+                        targetY = laneYCoords[1]+22;
+                        targetScale = {x: 0.6, y: 0.6};
                         break;
                     case 2:
-                        targetY = laneYCoords[2]-14;
-                        targetScale = {x: 1, y: 1};
+                        targetY = laneYCoords[2]+26;
+                        targetScale = {x: 0.65, y: 0.65};
                         break;
                 }
 
@@ -269,71 +232,61 @@ define([
 
             metersTraveled += player.body.velocity.x / pixelsPerMeter;
 
-            currentLap = (metersTraveled / metersPerLap);
-
-            hud.updateDisplay(currentLevel,currentTokensCollected,currentLap,metersTraveled);
+            hud.updateDisplay(currentLevel,currentTokensCollected,metersTraveled);
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             lanes[0].tilePosition.x -= player.body.velocity.x;
             lanes[1].tilePosition.x -= player.body.velocity.x;
             lanes[2].tilePosition.x -= player.body.velocity.x;
-            crowd.tilePosition.x -= player.body.velocity.x*0.6;
+            crowd.tilePosition.x -= player.body.velocity.x;
             clouds1.tilePosition.x -= player.body.velocity.x*0.1;
             clouds2.tilePosition.x -= player.body.velocity.x*0.09;
-            obstacles.forEach(function(obstacle) {
 
-                switch(obstacle.activeLane){
-                    case 0:
-                        obstacle.body.x -= player.body.velocity.x;
-                        break;
-                    case 1:
-                        obstacle.body.x -= player.body.velocity.x;
-                        break;
-                    case 2:
-                        obstacle.body.x -= player.body.velocity.x;
-                        break;
-                }
+            // Clean up off-screen obstacles.
+            obstacles.forEachAlive(function(obstacle) {
+                obstacle.body.x -= player.body.velocity.x;
 
                 // Recycle off-camera obstacles.
                 // Not using killOffCamera because we want to start obstacles off camera.
-                if(!obstacle.inCamera && obstacle.body.x < 0) obstacle.kill();
+                if(!obstacle.inCamera && obstacle.body.x < 0) {
+                    // Recycle off-camera obstacles.
+                    // Not using killOffCamera because we want to start obstacles off camera.
+                    obstacle.kill();
+
+                    // Check for and handle pattern completion.
+                    this.checkPatternCompletion();
+                }
             }, this);
 
+            // Clean up off-screen tokens.
+            tokens.forEachAlive(function(token) {
+                token.body.x -= player.body.velocity.x;
 
-            tokens.forEach(function(token) {
-                switch(token.activeLane){
-                    case 0:
-                        token.body.x -= player.body.velocity.x;
-                        break;
-                    case 1:
-                        token.body.x -= player.body.velocity.x;
-                        break;
-                    case 2:
-                        token.body.x -= player.body.velocity.x;
-                        break;
+                if(!token.inCamera && token.body.x < 0) {
+                    // Recycle off-camera tokens.
+                    // Not using killOffCamera because we want to start tokens off camera.
+                    token.kill();
+
+                    // Check for and handle pattern completion.
+                    this.checkPatternCompletion();
                 }
-
-                // Recycle off-camera obstacles.
-                // Not using killOffCamera because we want to start obstacles off camera.
-                if(!token.inCamera && token.body.x < 0) token.kill();
-            }, this);
-            indicators.forEach(function(indicator) {
-                indicator.body.x -= player.body.velocity.x*hudVelocity;
-
-
-                // Recycle off-camera obstacles.
-                // Not using killOffCamera because we want to start obstacles off camera.
-                if(!indicator.inCamera && indicator.body.x < 0) indicator.kill();
             }, this);
 
             // Collide player + obstacles.
             if (!player.invulnerable) {
-                game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle);               
+                game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle, null, this);               
             }
             // Collide player + tokens.
             if (!player.dying) {
-                game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken);
-                hud.updateDisplay(currentLevel,currentTokensCollected,currentLap,metersTraveled);
+                game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken, null, this);
+            }
+        },
+
+        checkPatternCompletion: function () {
+            // Pattern is complete if all obstacles and tokens are dead.
+            if (obstacles.countLiving() === 0 && tokens.countLiving() ===0) {
+                // Start new spawn timer.
+                this.setSpawnTimer();
             }
         },
 
@@ -345,6 +298,9 @@ define([
         onPlayerCollidesObstacle: function (player, enemy) {
             sfx.crash.play();
             player.damage();
+
+            // Check for and handle pattern completion.
+            this.checkPatternCompletion();
         },
 
         onPlayerCollidesToken: function (player, token) {
@@ -352,24 +308,20 @@ define([
             sfx.tokenCollect.play();
             token.kill();
             currentTokensCollected++;
-            if (currentTokensCollected >= 8) {
+            if (currentTokensCollected >= currentPatternTokenCount) {
                 player.powerUp();
-                currentLevel++;
-                window.setTimeout(function(){
-                    currentTokensCollected = 0;
-                },1000);
-
             }
+            
+            // Check for and handle pattern completion.
+            this.checkPatternCompletion();
         },
 
         onPlayerDeath: function (player) {
             game.camera.unfollow();
-            game.score = currentLevel*.7*metersTraveled;
-            currentLevel = 1;
             metersTraveled = 0;
             game.stateTransition.to('GameOver', true, false);
             if(soundOn){
-                music.stop();
+                music.fadeOut(2500);
             }
 
         },
@@ -383,12 +335,41 @@ define([
             spawnTimer.resume();
         },
 
-        spawnPattern: function () {
-            spawner.queue(spawner.find(currentLevel));
-            if(currentLevel===0){
-                currentLevel++;
-            }
+        setSpawnTimer: function () {
             spawnTimer.add(restDuration, this.spawnPattern, this);
+        },
+
+        clearSpawnTimer: function () {
+            spawnTimer.removeAll();
+        },
+
+        spawnPattern: function () {
+            var currentLevelData = levelData[currentLevel];
+
+            // Advance level, if:
+            //      - Level has reached its max spawn count
+            //      - We aren't already at max level
+            if (currentLevelSpawnCount >= currentLevelData.maxSpawns &&
+                currentLevel < levelData.length - 1) {
+                currentLevel++;
+                currentLevelSpawnCount = 0;
+                currentLevelData = levelData[currentLevel];
+            }
+
+            // Pick a pattern from the level.
+            var patternIndex = Math.floor(Math.random() * currentLevelData.patterns.length);
+            var pattern = currentLevelData.patterns[patternIndex];
+            
+            // Send the pattern's lanes to the spawn queue.
+            var lanes = pattern.lanes;
+            spawner.queue(lanes);
+
+            // Reset power-up counters.
+            currentTokensCollected = 0;
+            currentPatternTokenCount = pattern.tokenCount;
+
+            // Increment spawn count for this level.
+            currentLevelSpawnCount++;
         }
     };
 });
