@@ -75,12 +75,6 @@ define([
                                                 key);
                     sprite.anchor.set(1);
                     sprite.revive();
-                    sprite.frame = 1; // big - no, little...
-                    /*if (i > 0 && patternMatrix[ln][i] === patternMatrix[ln][i-1]) {
-                        sprite.frame = 1; // little
-                    }*/
-                    //sprite.scale.x = lane.spriteScale;
-                    //sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
                 }
             }
