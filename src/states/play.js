@@ -4,7 +4,7 @@ define([
     'spawner',
     'entity',
     'hud',
-
+    'level-display',
     'level-data'
 ], function (
     Phaser,
@@ -12,7 +12,7 @@ define([
     Spawner,
     Entity,
     HUD,
-
+    LevelDisplay,
     levelData) {
 
     'use strict';
@@ -37,7 +37,7 @@ define([
         tokens,
         indicators,
         warnings,
-        currentPatternTokenCount,
+        currentPatternTokenCount=0,
         currentTokensCollected=0,
         restDuration=2000, // ms between spawns
         warningDuration=1000, // ms between warning and spawn
@@ -45,7 +45,7 @@ define([
 
         currentLevel,
         currentLevelSpawnCount,
-
+        levelDisplay,
         crowd,
         clouds1,
         clouds2,
@@ -165,6 +165,10 @@ define([
 
             // HUD
             hud = new HUD(game);
+            // mockup level
+            levelDisplay = new LevelDisplay(game,0,0);
+            game.add.existing(levelDisplay);
+            levelDisplay.fixedToCamera = true;
 
             // SFX
             sfx.tokenCollect = game.sound.add('token-collect');
@@ -232,7 +236,8 @@ define([
 
             metersTraveled += player.body.velocity.x / pixelsPerMeter;
 
-            hud.updateDisplay(currentLevel,currentTokensCollected,metersTraveled);
+
+            hud.updateDisplay(currentLevel,0,metersTraveled);
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
             lanes[0].tilePosition.x -= player.body.velocity.x;
@@ -283,8 +288,29 @@ define([
         },
 
         checkPatternCompletion: function () {
+            // Mockup
+            var eighth = 0;
+            if(currentPatternTokenCount>0){
+                eighth =  Math.floor(currentTokensCollected/currentPatternTokenCount*8);
+            }
+            levelDisplay.updateDisplay(currentLevel,eighth);
+
             // Pattern is complete if all obstacles and tokens are dead.
             if (obstacles.countLiving() === 0 && tokens.countLiving() ===0) {
+                // boost
+                player.powerUp(currentTokensCollected/currentPatternTokenCount);
+                // Mockup
+                var pseudoDeplete = player.powerupDuration/8;
+
+                var stop = setInterval(function(){
+                    if(eighth<1){
+                        clearInterval(stop);
+                    }
+                    levelDisplay.updateDisplay(currentLevel,eighth);
+                    eighth=eighth-1;
+                    console.log(eighth);
+                },pseudoDeplete);
+
                 // Start new spawn timer.
                 this.setSpawnTimer();
             }
@@ -308,9 +334,9 @@ define([
             sfx.tokenCollect.play();
             token.kill();
             currentTokensCollected++;
-            if (currentTokensCollected >= currentPatternTokenCount) {
-                player.powerUp();
-            }
+
+
+
             
             // Check for and handle pattern completion.
             this.checkPatternCompletion();

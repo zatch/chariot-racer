@@ -13,12 +13,14 @@ define([
         distanceDisplay.fixedToCamera = true;
         distanceDisplay.cameraOffset.x = 4;
         distanceDisplay.cameraOffset.y = 4;
+
     }
     HUD.prototype = Object.create(Phaser.Sprite.prototype);
     HUD.prototype.constructor = HUD;
 
     HUD.prototype.updateDisplay = function (currentLevel,currentTokensCollected,meters) {
         distanceDisplay.updateDisplay(meters);
+        //levelDisplay.updateDisplay(0,currentTokensCollected);
     };
 
     return HUD;

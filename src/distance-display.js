@@ -12,18 +12,27 @@ define([
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, 'blank');
 
-        this.distance = 0;
-        game.add.tileSprite(game.width/3+20, 21, 10,60, 'hud-position');
-        this.distanceText = game.add.bitmapText(game.width/3, 1, 'carrier', '', 14);
+        this.distance = '0';
+        game.add.tileSprite(game.width/4, 0, 200,20, 'hud-bg');
+        var positioning = this.positioning(this.distance);
+
+        this.distanceText = game.add.bitmapText( positioning, 1, 'carrier', '0m', 12);
         this.addChild(this.distanceText);
     }
 
+
     DistanceDisplay.prototype = Object.create(Phaser.Sprite.prototype);
+    DistanceDisplay.prototype.positioning = function(val){
+        val = Math.floor(val).toString().length;
+        var pos = (game.width/3)-( (val-1)*7);
+        return pos;
+    };
     DistanceDisplay.prototype.constructor = DistanceDisplay;
 
     DistanceDisplay.prototype.updateDisplay = function (val) {
         this.distance = val;
-        this.distanceText.text =Math.floor(this.distance) + " meters";
+        this.distanceText.position.x = this.positioning(val);
+        this.distanceText.text =Math.floor(this.distance) + "m";
     };
 
     return DistanceDisplay;

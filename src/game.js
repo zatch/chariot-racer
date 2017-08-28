@@ -55,6 +55,7 @@ define([
             this.game.load.atlas('skull-warning', 'assets/sprites/obstacle-warning.png', 'assets/sprites/obstacle-warning.json');
             this.game.load.atlas('token-warning', 'assets/sprites/token-warning.png', 'assets/sprites/token-warning.json');
             this.game.load.atlas('progress', 'assets/sprites/progress.png', 'assets/sprites/progress.json');
+            this.game.load.image('hud-bg', 'assets/textures/hud-bg.png');
 
             // Chariot racers
             this.game.load.atlas('chariot-blue', 'assets/sprites/chariot-blue.png', 'assets/sprites/chariot-blue.json');

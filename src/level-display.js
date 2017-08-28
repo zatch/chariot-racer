@@ -12,7 +12,7 @@ define([
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, 'blank');
         this.level = 0;
-        this.progressBar = game.add.sprite(game.width/2-100,5,'progress','0_8');
+        this.progressBar = game.add.sprite(game.width/2,1,'progress','0_8');
 
 
     }

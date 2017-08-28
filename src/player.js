@@ -107,8 +107,26 @@ define([
         this.stateMachine.setState('dying');
     };
 
-    Player.prototype.powerUp = function () {
+    Player.prototype.powerUp = function (percentage) {
+        var doneText = game.add.bitmapText( 200, 60, 'carrier', '', 14);
+        if(percentage>.99){
+            doneText.text = 'PERFECT';
+            this.powerupDuration = 3700;
+        } else if(percentage>.8){
+            doneText.text = 'Nice Job!';
+            this.powerupDuration = 3000;
+        } else if(percentage>.5){
+            doneText.text = 'OK';
+            this.powerupDuration = 2000;
+        } else {
+            doneText.text = 'Poor';
+            this.powerupDuration = 400;
+        }
+
         this.stateMachine.setState('powered-up');
+        window.setTimeout(function(){
+            doneText.text = '';
+        },this.powerupDuration);
     };
     
     Player.prototype.onSelfChangeState = function (sm, stateName) {
