@@ -345,11 +345,12 @@ define([
         onPlayerDeath: function (player) {
             game.camera.unfollow();
             metersTraveled = 0;
-            game.stateTransition.to('GameOver', true, false);
-            if(soundOn){
-                music.fadeOut(2500);
-            }
-
+            game.time.events.add(Phaser.Timer.SECOND * 2, function () {
+                game.stateTransition.to('GameOver', true, false);
+                if(soundOn){
+                    music.fadeOut(2500);
+                }
+            }, this);
         },
 
         onPowerUpStart: function () {

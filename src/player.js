@@ -85,6 +85,7 @@ define([
         if(!this.anims.dying.isPlaying && !this.dying) this.anims.dying.play();
         this.dying = true;
         this.body.acceleration.x = 0;
+        this.body.drag.x = 30;
 
         Phaser.Sprite.prototype.update.call(this);
 
