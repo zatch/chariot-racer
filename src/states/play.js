@@ -145,7 +145,7 @@ define([
             game.add.existing(spawner);
 
             // Insert player
-            player = new Player(game, 130 , 0, playerKey);
+            player = new Player(game, 160 , 0, playerKey);
             player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
             player.events.onPowerUpStart.add(this.onPowerUpStart, this);

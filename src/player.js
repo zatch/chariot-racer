@@ -17,8 +17,8 @@ define([
 
         // Set up animations.
         this.anims = {};
-        this.anims.walk = this.animations.add('walk', [0,1,2,3,4,5,6,7,8,9,10], 15);
-        this.anims.dying = this.animations.add('dying', [11,12,13,14,15,16], 15, true);
+        this.anims.walk = this.animations.add('walk', [0,1,2,3,4,5,6,7,8], 15);
+        this.anims.dying = this.animations.add('dying', [9,10,11,12,13,14,15,16,17,18], 15, true);
         this.frame = 0;
         this.dyingLastFrame = 16; // 16 is a blank frame
         this.dying = false;
@@ -37,7 +37,7 @@ define([
         this.checkWorldBounds = true;
 
         // Resize player body/hitbox.
-        this.body.setSize(122,20,0,92);
+        this.body.setSize(122,20,30,92);
 
         // Initialize public properites.
         // Fastest possible movement speeds.
