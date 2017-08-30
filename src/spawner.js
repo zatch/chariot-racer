@@ -69,7 +69,12 @@ define([
             for (i = patternMatrix[ln].length-1; i >= 0; i--) {
                 key = patternMatrix[ln][i];
                 if (key !== 0) {
-                    key += '-warning';
+                    if (key === 'scaffolding' || key === 'wheel' || key === 'rock') {
+                        key = 'obstacle-warning';
+                    }
+                    else {
+                        key = 'token-warning';
+                    }
                     sprite = group.getFirstDead(true, 
                                                 game.width - 80 + (this.warningSpread * i), 
                                                 lane.y+ln*2, 
@@ -112,6 +117,9 @@ define([
                     sprite.scale.x = lane.spriteScale;
                     sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
+                    if (key === 'scaffolding' || key === 'wheel' || key === 'rock') {
+                        sprite.setObstacleFrame(key);
+                    }
                 }
                 if (i > longest) longest++;
             }

@@ -4,7 +4,7 @@ define([
     'spawner',
     'finish-line',
     'token',
-    'obstacle-wheel',
+    'obstacle',
     'hud',
     'level-display',
     'level-data'
@@ -14,7 +14,7 @@ define([
     Spawner,
     FinishLine,
     Token,
-    ObstacleWheel,
+    Obstacle,
     HUD,
     LevelDisplay,
     levelData) {
@@ -53,6 +53,7 @@ define([
         currentLevelSpawnCount,
         levelDisplay,
         crowd,
+        sky,
         clouds1,
         clouds2,
         sfx={},
@@ -84,11 +85,12 @@ define([
             // Set up game background
             game.stage.backgroundColor = '#add3ff';
 
-            clouds1 = game.add.tileSprite(0, 0, game.width, 70, 'clouds1');
-            clouds2 = game.add.tileSprite(0, 0, game.width, 70, 'clouds2');
-            crowd = game.add.tileSprite(0, 41, game.width, 129, 'crowd');
+            sky = game.add.tileSprite(0, 0, game.width, 76, 'sky');
+            clouds1 = game.add.tileSprite(0, 0, game.width, 66, 'clouds1');
+            clouds2 = game.add.tileSprite(0, 0, game.width, 78, 'clouds2');
+            crowd = game.add.tileSprite(0, 47, game.width, 129, 'crowd');
 
-            laneYCoords=[170,170+48*0.5,170+48*0.5+48*0.6];
+            laneYCoords=[176,176+48*0.5,176+48*0.5+48*0.6];
 
             lanes = [
                 game.add.tileSprite(0, laneYCoords[0], game.width, 48, 'dirt-track'),
@@ -106,19 +108,17 @@ define([
 
             // Obstacles
             obstacles = game.add.group();
-            obstacles.classType = ObstacleWheel;
-            obstacles.enableBody = true;
+            obstacles.classType = Obstacle;
 
             // Tokens
             tokens = game.add.group();
             tokens.classType = Token;
-            tokens.enableBody = true;
 
             // Warnings
             warnings = game.add.group();
 
             // Finish line
-            finishLine = new FinishLine(game, -100, 170);
+            finishLine = new FinishLine(game, -100, 176);
             game.add.existing(finishLine);
 
             // Spawner
@@ -130,7 +130,13 @@ define([
                 warningGroup: warnings,
                 finishLine: finishLine,
                 spawnableObjects: {
-                    'skull': {
+                    'scaffolding': {
+                        group: obstacles
+                    },
+                    'wheel': {
+                        group: obstacles
+                    },
+                    'rock': {
                         group: obstacles
                     },
                     'token': {

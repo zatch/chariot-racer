@@ -2,7 +2,9 @@ define([], function () {
     'use strict';
 
     var t = 'token',
-        s = 'skull';
+        s = 'scaffolding',
+        w = 'wheel',
+        r = 'rock';
 
     var levels = [
         // L0
@@ -11,7 +13,7 @@ define([], function () {
             patterns: [
                 {
                     lanes: [
-                        [],
+                        [s,0,0,w,0,0,r],
                         [t,t,t,t,t,0,0,0,0,0,0,t,t,t,t,t,0,0,0,0,0,0,t,t,t,t,t,t,t,t,t,t],
                         []
                     ]

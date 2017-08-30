@@ -1,0 +1,35 @@
+{ "frames": {
+   "obstacle 0.ase": {
+    "frame": { "x": 8, "y": 8, "w": 38, "h": 51 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 38, "h": 51 },
+    "sourceSize": { "w": 38, "h": 51 },
+    "duration": 100
+   },
+   "obstacle 1.ase": {
+    "frame": { "x": 46, "y": 8, "w": 38, "h": 51 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 38, "h": 51 },
+    "sourceSize": { "w": 38, "h": 51 },
+    "duration": 100
+   },
+   "obstacle 2.ase": {
+    "frame": { "x": 8, "y": 59, "w": 38, "h": 51 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 38, "h": 51 },
+    "sourceSize": { "w": 38, "h": 51 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.0.1",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\sprites\\obstacle.png",
+  "format": "RGBA8888",
+  "size": { "w": 128, "h": 128 },
+  "scale": "1"
+ }
+}
