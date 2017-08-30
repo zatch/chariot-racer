@@ -19,6 +19,7 @@ define([
             warningDuration: 1000,
             warningSpread: 10,
             //warningGroup: group,
+            //finishLine: finishLine,
             spawnableObjects: {
                 /*
                 'sprite key': {
@@ -94,7 +95,8 @@ define([
             sprite;
 
         var ln,
-            i;
+            i,
+            longest=0;
         for (ln = 0; ln < patternMatrix.length; ln++) {
             lane = this.lanes[ln];
             for (i = 0; i < patternMatrix[ln].length; i++) {
@@ -111,8 +113,14 @@ define([
                     sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
                 }
+                if (i > longest) longest++;
             }
         }
+
+        this.finishLine.x = this.lanes[0].x + this.spread * longest + 192;
+
+        // Dispatch onSpawn event.
+        this.events.onSpawn.dispatch(this);
     };
 
     return Spawner;

@@ -2,6 +2,7 @@ define([
     'phaser',
     'player',
     'spawner',
+    'finish-line',
     'token',
     'obstacle-wheel',
     'hud',
@@ -11,6 +12,7 @@ define([
     Phaser,
     Player,
     Spawner,
+    FinishLine,
     Token,
     ObstacleWheel,
     HUD,
@@ -35,6 +37,7 @@ define([
         metersTraveled=0,
 
         spawner,
+        finishLine,
         obstacles,
         tokens,
         indicators,
@@ -45,6 +48,7 @@ define([
         warningDuration=1000, // ms between warning and spawn
         spawnTimer,
 
+        inPattern=false,
         currentLevel,
         currentLevelSpawnCount,
         levelDisplay,
@@ -113,6 +117,10 @@ define([
             // Warnings
             warnings = game.add.group();
 
+            // Finish line
+            finishLine = new FinishLine(game, -100, 170);
+            game.add.existing(finishLine);
+
             // Spawner
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
             {
@@ -120,6 +128,7 @@ define([
                 warningDuration: 1000,
                 warningSpread: 5,
                 warningGroup: warnings,
+                finishLine: finishLine,
                 spawnableObjects: {
                     'skull': {
                         group: obstacles
@@ -146,6 +155,7 @@ define([
                     }
                 ]
             });
+            spawner.events.onSpawn.add(this.onSpawnerSpawn, this);
             game.add.existing(spawner);
 
             // Insert player
@@ -251,6 +261,8 @@ define([
             clouds1.tilePosition.x -= player.body.velocity.x*0.1;
             clouds2.tilePosition.x -= player.body.velocity.x*0.09;
 
+            finishLine.body.x -= player.body.velocity.x;
+
             // Clean up off-screen obstacles.
             obstacles.forEachAlive(function(obstacle) {
                 obstacle.body.x -= player.body.velocity.x;
@@ -261,9 +273,6 @@ define([
                     // Recycle off-camera obstacles.
                     // Not using killOffCamera because we want to start obstacles off camera.
                     obstacle.kill();
-
-                    // Check for and handle pattern completion.
-                    this.checkPatternCompletion();
                 }
             }, this);
 
@@ -275,9 +284,6 @@ define([
                     // Recycle off-camera tokens.
                     // Not using killOffCamera because we want to start tokens off camera.
                     token.kill();
-
-                    // Check for and handle pattern completion.
-                    this.checkPatternCompletion();
                 }
             }, this);
 
@@ -288,35 +294,7 @@ define([
             // Collide player + tokens.
             if (!player.dying) {
                 game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken, null, this);
-            }
-        },
-
-        checkPatternCompletion: function () {
-            // Mockup
-            var eighth = 0;
-            if(currentPatternTokenCount>0){
-                eighth =  Math.floor(currentTokensCollected/currentPatternTokenCount*8);
-            }
-            levelDisplay.updateDisplay(currentLevel,eighth);
-
-            // Pattern is complete if all obstacles and tokens are dead.
-            if (obstacles.countLiving() === 0 && tokens.countLiving() ===0) {
-                // boost
-                player.powerUp(currentTokensCollected/currentPatternTokenCount);
-                // Mockup
-                var pseudoDeplete = player.powerupDuration/8;
-
-                var stop = setInterval(function(){
-                    if(eighth<1){
-                        clearInterval(stop);
-                    }
-                    levelDisplay.updateDisplay(currentLevel,eighth);
-                    eighth=eighth-1;
-                    console.log(eighth);
-                },pseudoDeplete);
-
-                // Start new spawn timer.
-                this.setSpawnTimer();
+                game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
             }
         },
 
@@ -328,9 +306,6 @@ define([
         onPlayerCollidesObstacle: function (player, enemy) {
             sfx.crash.play();
             player.damage();
-
-            // Check for and handle pattern completion.
-            this.checkPatternCompletion();
         },
 
         onPlayerCollidesToken: function (player, token) {
@@ -339,11 +314,41 @@ define([
             token.kill();
             currentTokensCollected++;
 
+            // Mockup
+            var eighth = 0;
+            if(currentPatternTokenCount>0){
+                eighth =  Math.floor(currentTokensCollected/currentPatternTokenCount*8);
+            }
+            levelDisplay.updateDisplay(currentLevel,eighth);
+        },
 
+        onPlayerCollidesFinishLine: function (player, fLine) {
+            if (inPattern) {
+                // Clear flag.
+                inPattern = false;
 
-            
-            // Check for and handle pattern completion.
-            this.checkPatternCompletion();
+                // Mockup
+                var eighth = 0;
+                if(currentPatternTokenCount>0){
+                    eighth =  Math.floor(currentTokensCollected/currentPatternTokenCount*8);
+                }
+                levelDisplay.updateDisplay(currentLevel,eighth);
+
+                // boost
+                player.powerUp(currentTokensCollected/currentPatternTokenCount);
+                // Mockup
+                var pseudoDeplete = player.powerupDuration/8;
+                var self = this;
+                var stop = setInterval(function(){
+                    if(eighth<1){
+                        clearInterval(stop);
+                        self.setSpawnTimer();
+                    }
+                    levelDisplay.updateDisplay(currentLevel,eighth);
+                    eighth=eighth-1;
+                    console.log(eighth);
+                },pseudoDeplete);
+            }
         },
 
         onPlayerDeath: function (player) {
@@ -355,6 +360,11 @@ define([
                     music.fadeOut(2500);
                 }
             }, this);
+        },
+
+        onSpawnerSpawn: function () {
+            // Set flag.
+            inPattern = true;
         },
 
         onPowerUpStart: function () {

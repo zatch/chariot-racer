@@ -72,8 +72,9 @@ define([
             // Obstacles
             this.game.load.image('skull', 'assets/sprites/skull.png');
 
+            this.game.load.image('finish-line', 'assets/sprites/finish-line.png');
+
             // Power-ups
-            this.game.load.image('power-up', 'assets/sprites/power-up.png');
             this.game.load.spritesheet('token', 'assets/sprites/coin.png', 16, 16);
 
             // Blank placeholder (for Sprites without artwork)
