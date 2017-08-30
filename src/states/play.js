@@ -2,7 +2,8 @@ define([
     'phaser',
     'player',
     'spawner',
-    'entity',
+    'token',
+    'obstacle-wheel',
     'hud',
     'level-display',
     'level-data'
@@ -10,7 +11,8 @@ define([
     Phaser,
     Player,
     Spawner,
-    Entity,
+    Token,
+    ObstacleWheel,
     HUD,
     LevelDisplay,
     levelData) {
@@ -100,10 +102,12 @@ define([
 
             // Obstacles
             obstacles = game.add.group();
+            obstacles.classType = ObstacleWheel;
             obstacles.enableBody = true;
 
             // Tokens
             tokens = game.add.group();
+            tokens.classType = Token;
             tokens.enableBody = true;
 
             // Warnings

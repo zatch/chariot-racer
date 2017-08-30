@@ -104,11 +104,9 @@ define([
 
                     sprite = group.getFirstDead(true, 
                                                 lane.x + (this.spread * i), 
-                                                lane.y, 
-                                                key);
+                                                lane.y);
 
                     sprite.revive();
-                    sprite.anchor.set(0.5);
                     sprite.scale.x = lane.spriteScale;
                     sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
