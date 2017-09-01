@@ -33,7 +33,7 @@ define([
         lanes,
         laneYCoords,
 
-        pixelsPerMeter=30, // Divisor for Phaser-to-reality physics conversion
+        pixelsPerMeter=60, // Divisor for Phaser-to-reality physics conversion
         metersTraveled=0,
 
         spawner,
@@ -114,7 +114,7 @@ define([
             // Tokens
             tokens = game.add.group();
             tokens.classType = Token;
-            
+
             // Obstacles
             obstacles = game.add.group();
             obstacles.classType = Obstacle;
