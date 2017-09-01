@@ -95,7 +95,7 @@ define([
             // Buttons
             this.game.load.image('play-button','assets/textures/play-button.png');
             // Fonts
-            this.game.load.bitmapFont('carrier', 'assets/font/carrier_command.png', 'assets/font/carrier_command.xml');
+            this.game.load.bitmapFont('carrier', 'assets/font/boxy_bold.png', 'assets/font/boxy_bold.fnt');
         },
         
         create: function() {

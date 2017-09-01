@@ -1,0 +1,3 @@
+Littera
+Tool for generating PNG and XML versions of font files. Use to open .ltr project files via their web app:
+http://kvazars.com/littera/

@@ -11,8 +11,8 @@ define([
         distanceDisplay = new DistanceDisplay(game, 0, 0);
         game.add.existing(distanceDisplay);
         distanceDisplay.fixedToCamera = true;
-        distanceDisplay.cameraOffset.x = 4;
-        distanceDisplay.cameraOffset.y = 4;
+        distanceDisplay.cameraOffset.x = 20;
+        distanceDisplay.cameraOffset.y = 20;
 
     }
     HUD.prototype = Object.create(Phaser.Sprite.prototype);
