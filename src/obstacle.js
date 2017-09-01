@@ -12,6 +12,7 @@ define([
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, 'obstacle');
         this.anchor.set(0.5, 0.75);
+        this.scale.setTo(2,2);
 
         game.physics.enable(this);
 

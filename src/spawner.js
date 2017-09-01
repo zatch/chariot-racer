@@ -76,10 +76,11 @@ define([
                         key = 'token-warning';
                     }
                     sprite = group.getFirstDead(true, 
-                                                game.width - 80 + (this.warningSpread * i), 
+                                                game.width - 160 + (this.warningSpread * i), 
                                                 lane.y+ln*2, 
                                                 key);
                     sprite.anchor.set(1);
+                    sprite.scale.setTo(2,2);
                     sprite.revive();
                     sprite.activeLane = ln;
                 }
@@ -125,7 +126,7 @@ define([
             }
         }
 
-        this.finishLine.x = this.lanes[0].x + this.spread * longest + 192;
+        this.finishLine.x = this.lanes[0].x + this.spread * longest + 384;
 
         // Dispatch onSpawn event.
         this.events.onSpawn.dispatch(this);

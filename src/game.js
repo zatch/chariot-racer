@@ -15,7 +15,7 @@ define([
         constructor: Game,
 
         start: function() {
-            this.game = new Phaser.Game(490, 310, Phaser.AUTO, '', {
+            this.game = new Phaser.Game(980, 620, Phaser.AUTO, '', {
                 preload: this.preload, 
                 create: this.create,
                 init: this.init
@@ -64,11 +64,14 @@ define([
             this.game.load.atlas('chariot-red', 'assets/sprites/chariot-red.png', 'assets/sprites/chariot-red.json');
             this.game.load.atlas('chariot-white', 'assets/sprites/chariot-white.png', 'assets/sprites/chariot-white.json');
 
-            // warriors
-            this.game.load.image('blue-player', 'assets/textures/blue-warrior.png');
-            this.game.load.image('red-player', 'assets/textures/red-warrior.png');
-            this.game.load.image('white-player', 'assets/textures/white-warrior.png');
-            this.game.load.image('green-player', 'assets/textures/green-warrior.png');
+            // menu
+            this.game.load.image('blue-player', 'assets/menu_assets/ui_menu_button_chariot_blue.png');
+            this.game.load.image('red-player', 'assets/menu_assets/ui_menu_button_chariot_red.png');
+            this.game.load.image('white-player', 'assets/menu_assets/ui_menu_button_chariot_orange.png');
+            this.game.load.image('green-player', 'assets/menu_assets/ui_menu_button_chariot_green.png');
+            this.game.load.image('menu-bg-1', 'assets/menu_assets/ui_menu_bg_01.png');
+            this.game.load.image('menu-bg-2', 'assets/menu_assets/ui_menu_bg_02.png');
+            this.game.load.image('menu-btn', 'assets/menu_assets/ui_menu_button_01.png');
 
             // Obstacles
             this.game.load.atlas('obstacle', 'assets/sprites/obstacle.png', 'assets/sprites/obstacle.json');

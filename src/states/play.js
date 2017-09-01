@@ -88,9 +88,14 @@ define([
             sky = game.add.tileSprite(0, 0, game.width, 76, 'sky');
             clouds1 = game.add.tileSprite(0, 0, game.width, 66, 'clouds1');
             clouds2 = game.add.tileSprite(0, 0, game.width, 78, 'clouds2');
-            crowd = game.add.tileSprite(0, 47, game.width, 129, 'crowd');
+            crowd = game.add.tileSprite(0, 94, game.width, 129, 'crowd');
 
-            laneYCoords=[176,176+48*0.5,176+48*0.5+48*0.6];
+            sky.scale.setTo(2, 2);
+            clouds1.scale.setTo(2, 2);
+            clouds2.scale.setTo(2, 2);
+            crowd   .scale.setTo(2, 2);
+
+            laneYCoords=[352,352+48,352+48+48*1.2];
 
             lanes = [
                 game.add.tileSprite(0, laneYCoords[0], game.width, 48, 'dirt-track'),
@@ -98,9 +103,9 @@ define([
                 game.add.tileSprite(0, laneYCoords[2], game.width, 48, 'dirt-track')
             ];
 
-            lanes[0].scale.setTo(1, 0.5);
-            lanes[1].scale.setTo(1, 0.6);
-            lanes[2].scale.setTo(1, 0.7);
+            lanes[0].scale.setTo(1, 1);
+            lanes[1].scale.setTo(1, 1.2);
+            lanes[2].scale.setTo(1, 1.4);
 
             spawnTimer = game.time.create(false);
             spawnTimer.start();
@@ -118,15 +123,16 @@ define([
             warnings = game.add.group();
 
             // Finish line
-            finishLine = new FinishLine(game, -100, 176);
+            finishLine = new FinishLine(game, -100, 352);
+            finishLine.scale.setTo(2, 2);
             game.add.existing(finishLine);
 
             // Spawner
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
             {
-                spread: 24, // px between indices in spawn pattern arrays
+                spread: 48, // px between indices in spawn pattern arrays
                 warningDuration: 1000,
-                warningSpread: 5,
+                warningSpread: 10,
                 warningGroup: warnings,
                 finishLine: finishLine,
                 spawnableObjects: {
@@ -146,18 +152,18 @@ define([
                 lanes: [
                     {
                         x: game.width,
-                        y: laneYCoords[0]+12,
-                        spriteScale: 0.7
+                        y: laneYCoords[0]+24,
+                        spriteScale: 1.4
                     },
                     {
                         x: game.width,
-                        y: laneYCoords[1]+14,
-                        spriteScale: 0.8
+                        y: laneYCoords[1]+28,
+                        spriteScale: 1.6
                     },
                     {
                         x: game.width,
-                        y: laneYCoords[2]+16,
-                        spriteScale: 0.9
+                        y: laneYCoords[2]+32,
+                        spriteScale: 1.8
                     }
                 ]
             });
@@ -165,14 +171,14 @@ define([
             game.add.existing(spawner);
 
             // Insert player
-            player = new Player(game, 160 , 0, playerKey);
+            player = new Player(game, 320 , 0, playerKey);
             player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
             player.events.onPowerUpStart.add(this.onPowerUpStart, this);
             player.events.onPowerUpEnd.add(this.onPowerUpEnd, this);
             player.fixedToCamera = true;
-            player.scale.setTo(0.6);
-            player.cameraOffset.y = laneYCoords[player.activeLane] + 22;
+            player.scale.setTo(1.2);
+            player.cameraOffset.y = laneYCoords[player.activeLane] + 44;
 
             // setup input
             lanes[player.activeLane].frame =1;
@@ -237,16 +243,16 @@ define([
                     tweenAutoPlay=true;
                 switch(player.activeLane){
                     case 0: 
-                        targetY = laneYCoords[0]+18;
-                        targetScale = {x: 0.55, y: 0.55};
+                        targetY = laneYCoords[0]+36;
+                        targetScale = {x: 1.1, y: 1.1};
                         break;
                     case 1:
-                        targetY = laneYCoords[1]+22;
-                        targetScale = {x: 0.6, y: 0.6};
+                        targetY = laneYCoords[1]+44;
+                        targetScale = {x: 1.2, y: 1.2};
                         break;
                     case 2:
-                        targetY = laneYCoords[2]+26;
-                        targetScale = {x: 0.65, y: 0.65};
+                        targetY = laneYCoords[2]+52;
+                        targetScale = {x: 1.3, y: 1.3};
                         break;
                 }
 
@@ -260,12 +266,12 @@ define([
             hud.updateDisplay(currentLevel,0,metersTraveled);
 
             // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
-            lanes[0].tilePosition.x -= player.body.velocity.x;
-            lanes[1].tilePosition.x -= player.body.velocity.x;
-            lanes[2].tilePosition.x -= player.body.velocity.x;
-            crowd.tilePosition.x -= player.body.velocity.x;
-            clouds1.tilePosition.x -= player.body.velocity.x*0.1;
-            clouds2.tilePosition.x -= player.body.velocity.x*0.09;
+            lanes[0].tilePosition.x -= player.body.velocity.x/2;
+            lanes[1].tilePosition.x -= player.body.velocity.x/2;
+            lanes[2].tilePosition.x -= player.body.velocity.x/2;
+            crowd.tilePosition.x -= player.body.velocity.x/2;
+            clouds1.tilePosition.x -= player.body.velocity.x/2*0.1;
+            clouds2.tilePosition.x -= player.body.velocity.x/2*0.09;
 
             finishLine.body.x -= player.body.velocity.x;
 
