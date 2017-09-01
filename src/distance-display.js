@@ -16,7 +16,7 @@ define([
         game.add.tileSprite(game.width/4, 0, 200,20, 'hud-bg');
         var positioning = this.positioning(this.distance);
 
-        this.distanceText = game.add.bitmapText( positioning, 1, 'carrier', '0m', 12);
+        this.distanceText = game.add.bitmapText( positioning, 1, 'boxy_bold', '0m', 12);
         this.addChild(this.distanceText);
     }
 

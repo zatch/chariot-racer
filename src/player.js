@@ -109,7 +109,7 @@ define([
     };
 
     Player.prototype.powerUp = function (percentage) {
-        var doneText = game.add.bitmapText( 200, 60, 'carrier', '', 14);
+        var doneText = game.add.bitmapText( 200, 60, 'boxy_bold', '', 14);
         if(percentage>.99){
             doneText.text = 'PERFECT';
             this.powerupDuration = 3700;
