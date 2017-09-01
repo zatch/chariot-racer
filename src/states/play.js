@@ -111,13 +111,13 @@ define([
             spawnTimer.start();
             this.setSpawnTimer();
 
-            // Obstacles
-            obstacles = game.add.group();
-            obstacles.classType = Obstacle;
-
             // Tokens
             tokens = game.add.group();
             tokens.classType = Token;
+            
+            // Obstacles
+            obstacles = game.add.group();
+            obstacles.classType = Obstacle;
 
             // Warnings
             warnings = game.add.group();
