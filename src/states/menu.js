@@ -7,10 +7,9 @@ define([
     var game,
         selectedPlayer,
         bg,
-        players,
+        players = {white:{}, green:{}, blue:{}, red:{}},
         okBtn,
         backBtn,
-        memory,
         move,
         music,
 
@@ -41,16 +40,17 @@ define([
             bg = game.add.sprite(bgPos.x, bgPos.y, 'menu-bg-1');
             bg.scale.setTo(2,2);
 
-            players = [
-                game.add.sprite(playerBtnPos.white.x, playerBtnPos.white.y, 'white-player'),
-                game.add.sprite(playerBtnPos.green.x, playerBtnPos.green.y, 'green-player'),
-                game.add.sprite(playerBtnPos.blue.x, playerBtnPos.blue.y, 'blue-player'),
-                game.add.sprite(playerBtnPos.red.x, playerBtnPos.red.y, 'red-player')
-            ];
-            for(var i=0;i<players.length;i++){
-                players[i].scale.setTo(2,2);
-                players[i].inputEnabled = true;
-                players[i].events.onInputDown.add(this.playerSelect);
+            for (var key in players) {
+                var coords = playerBtnPos[key];
+                players[key] = game.add.sprite(
+                    coords.x, 
+                    coords.y, 
+                    key+'-player'
+                );
+                players[key].menuReturnCoords = coords;
+                players[key].scale.setTo(2,2);
+                players[key].inputEnabled = true;
+                players[key].events.onInputDown.add(this.playerSelect);
             }
 
             okBtn = game.add.button(okBtnPos.x, okBtnPos.y, 'menu-btn', this.onOkBtnClicked);
@@ -68,12 +68,13 @@ define([
 
         playerSelect:function(sprite){
             selectedPlayer = sprite;
-            for(var i=0;i<players.length;i++){
-                players[i].alpha =0;
+
+            for (var key in players) {
+                players[key].alpha = 0;
             }
+
             sprite.alpha = 1;
-            memory = [sprite.x,sprite.y];
-            move =game.add.tween(sprite).to({x:selectedPlayerPos.x,y:selectedPlayerPos.y},800).start();
+            move = game.add.tween(sprite).to({x:selectedPlayerPos.x,y:selectedPlayerPos.y},800).start();
             okBtn.alpha = 1;
             backBtn.alpha = 1;
         },
@@ -88,10 +89,10 @@ define([
         },
 
         onBackBtnClicked: function() {
-            move.to({x:memory[0],y:memory[1]},300).start();
-            for(var i=0;i<players.length;i++){
-                if(players[i].alpha===0){
-                    game.add.tween(players[i]).to({alpha:1},1000,null,false,1000).start();
+            move.to(selectedPlayer.menuReturnCoords,300).start();
+            for (var key in players) {
+                if(players[key].alpha===0){
+                    game.add.tween(players[key]).to({alpha:1},1000,null,false,1000).start();
                 }
             }
             okBtn.alpha = 0;
