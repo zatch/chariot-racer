@@ -65,10 +65,10 @@ define([
             this.game.load.atlas('chariot-white', 'assets/sprites/chariot-white.png', 'assets/sprites/chariot-white.json');
 
             // menu
-            this.game.load.image('blue-player', 'assets/menu_assets/ui_menu_button_chariot_blue.png');
-            this.game.load.image('red-player', 'assets/menu_assets/ui_menu_button_chariot_red.png');
-            this.game.load.image('white-player', 'assets/menu_assets/ui_menu_button_chariot_white.png');
-            this.game.load.image('green-player', 'assets/menu_assets/ui_menu_button_chariot_green.png');
+            this.game.load.atlas('blue-player', 'assets/menu_assets/ui_menu_button_chariot_blue.png', 'assets/menu_assets/ui_menu_button_chariot_blue.json');
+            this.game.load.atlas('red-player', 'assets/menu_assets/ui_menu_button_chariot_red.png', 'assets/menu_assets/ui_menu_button_chariot_red.json');
+            this.game.load.atlas('white-player', 'assets/menu_assets/ui_menu_button_chariot_white.png', 'assets/menu_assets/ui_menu_button_chariot_white.json');
+            this.game.load.atlas('green-player', 'assets/menu_assets/ui_menu_button_chariot_green.png', 'assets/menu_assets/ui_menu_button_chariot_green.json');
             this.game.load.image('menu-bg-1', 'assets/menu_assets/ui_menu_bg_01.png');
             this.game.load.image('menu-bg-2', 'assets/menu_assets/ui_menu_bg_02.png');
             this.game.load.image('menu-btn', 'assets/menu_assets/ui_menu_button_01.png');
