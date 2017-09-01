@@ -93,7 +93,7 @@ define([
             sky.scale.setTo(2, 2);
             clouds1.scale.setTo(2, 2);
             clouds2.scale.setTo(2, 2);
-            crowd   .scale.setTo(2, 2);
+            crowd.scale.setTo(2, 2);
 
             laneYCoords=[352,352+48,352+48+48*1.2];
 
