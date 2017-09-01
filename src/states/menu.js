@@ -4,13 +4,28 @@ define([
     'use strict';
 
     // Shortcuts
-    var game, 
-        selected='chariot-white',
+    var game,
+        selectedPlayer,
         bg,
-        Players,
+        players,
+        okBtn,
+        backBtn,
         memory,
         move,
-        music;
+        music,
+
+        bgPos={x: 114, y: 20},
+        playerBtnPos = {
+            white: {x: bgPos.x+229, y: bgPos.y+90},
+            green: {x: bgPos.x+371, y: bgPos.y+90},
+            blue:  {x: bgPos.x+229, y: bgPos.y+236},
+            red:   {x: bgPos.x+371, y: bgPos.y+236}
+        },
+
+        selectedPlayerPos={x: bgPos.x+150, y: bgPos.y+130},
+
+        backBtnPos={x: bgPos.x+240, y: bgPos.y+390},
+        okBtnPos={x: bgPos.x+390, y: bgPos.y+390};
 
     return {
         // Intro
@@ -22,71 +37,67 @@ define([
             game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         },
 
-
         create: function () {
-            var pos = 114;
-            bg = game.add.sprite(pos,20,'menu-bg-1');
+            bg = game.add.sprite(bgPos.x, bgPos.y, 'menu-bg-1');
             bg.scale.setTo(2,2);
-            Players = [
-                {key:'white',entity:game.add.sprite(pos+229,100,'white-player')},
-                {key:'green',entity:game.add.sprite(pos+371,100,'green-player')},
-                {key:'blue',entity:game.add.sprite(pos+229,246,'blue-player')},
-                {key:'red',entity:game.add.sprite(pos+371,246,'red-player')}
+
+            players = [
+                game.add.sprite(playerBtnPos.white.x, playerBtnPos.white.y, 'white-player'),
+                game.add.sprite(playerBtnPos.green.x, playerBtnPos.green.y, 'green-player'),
+                game.add.sprite(playerBtnPos.blue.x, playerBtnPos.blue.y, 'blue-player'),
+                game.add.sprite(playerBtnPos.red.x, playerBtnPos.red.y, 'red-player')
             ];
-            for(var i=0;i<Players.length;i++){
-                Players[i].entity.scale.setTo(2,2);
-                Players[i].entity.inputEnabled = true;
-                //Players[i].move = game.add.tween(Players[i].entity);
-
-                Players[i].entity.events.onInputDown.add(function(sprite){
-                    selected = 'chariot-'+ sprite.key.split('-')[0];
-                    for(var i=0;i<Players.length;i++){
-                        Players[i].entity.alpha =0;
-                    }
-                    sprite.alpha = 1;
-                    memory = [sprite.x,sprite.y];
-                    move =game.add.tween(sprite).to({x:pos+229,y:150},800).start();
-                    selectBtn.alpha = 1;
-                    backBtn.alpha = 1;
-                    console.log(selected);
-                });
+            for(var i=0;i<players.length;i++){
+                players[i].scale.setTo(2,2);
+                players[i].inputEnabled = true;
+                players[i].events.onInputDown.add(this.playerSelect);
             }
-            var selectBtn = game.add.button(pos+371,410,'menu-btn',function(){
-                music.onFadeComplete.addOnce(function() {
-                    music.stop();
-                    this.game.state.start('Play',true,false,{color:selected});
-                }, this);
-                music.fadeOut(1000);
-            });
-            selectBtn.scale.setTo(2,2);
-            selectBtn.alpha = 0;
-            var backBtn = game.add.button(pos+229,410,'menu-btn',function(){
-                move.to({x:memory[0],y:memory[1]},300).start();
-                for(var i=0;i<Players.length;i++){
-                    if(Players[i].entity.alpha===0){
-                        game.add.tween(Players[i].entity).to({alpha:1},1000,null,false,1000).start();
-                    }
 
-                }
-                selectBtn.alpha = 0;
-                backBtn.alpha = 0;
+            okBtn = game.add.button(okBtnPos.x, okBtnPos.y, 'menu-btn', this.onOkBtnClicked);
+            okBtn.scale.setTo(2,2);
+            okBtn.alpha = 0;
 
-            });
+            backBtn = game.add.button(backBtnPos.x, backBtnPos.y, 'menu-btn', this.onBackBtnClicked);
             backBtn.scale.setTo(2,2);
             backBtn.alpha=0;
+
             // Music
             music = game.add.audio('menu-music', 0.5, true);
             music.play();
-
         },
+
         playerSelect:function(sprite){
-            for(var i=0;i<Players.length;i++){
-                Players[i].entity.alpha =0;
-                //Players[i].entity.inputEnabled = false;
+            selectedPlayer = sprite;
+            for(var i=0;i<players.length;i++){
+                players[i].alpha =0;
             }
             sprite.alpha = 1;
-            game.add.tween(sprite).to({x:pos+229,y:200});
+            memory = [sprite.x,sprite.y];
+            move =game.add.tween(sprite).to({x:selectedPlayerPos.x,y:selectedPlayerPos.y},800).start();
+            okBtn.alpha = 1;
+            backBtn.alpha = 1;
         },
+
+        onOkBtnClicked: function() {
+            var color = selectedPlayer.key.split('-')[0];
+            music.onFadeComplete.addOnce(function() {
+                music.stop();
+                this.game.state.start('Play',true,false,{color:'chariot-'+ color});
+            }, this);
+            music.fadeOut(1000);
+        },
+
+        onBackBtnClicked: function() {
+            move.to({x:memory[0],y:memory[1]},300).start();
+            for(var i=0;i<players.length;i++){
+                if(players[i].alpha===0){
+                    game.add.tween(players[i]).to({alpha:1},1000,null,false,1000).start();
+                }
+            }
+            okBtn.alpha = 0;
+            backBtn.alpha = 0;
+        },
+
         update:function(){
 
         }
