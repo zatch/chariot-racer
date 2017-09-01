@@ -13,7 +13,7 @@ define([
         move,
         music,
 
-        bgPos={x: 114, y: 20},
+        bgPos={x: 114, y: 80},
         playerBtnPos = {
             white: {x: bgPos.x+229, y: bgPos.y+90},
             green: {x: bgPos.x+371, y: bgPos.y+90},
