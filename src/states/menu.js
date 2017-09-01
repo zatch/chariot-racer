@@ -38,14 +38,13 @@ define([
 
         create: function () {
             bg = game.add.sprite(bgPos.x, bgPos.y, 'menu-bg-1');
-            bg.scale.setTo(2,2);
             bg.label = bg.addChild(new Phaser.BitmapText(
                 game, 
-                bg.width/2/2, // must divide twice due to scale
-                20,
+                bg.width/2,
+                40,
                 'boxy_bold',
                 'SELECT YOUR\nCHARIOTEER',
-                8,
+                16,
                 'center'
             ));
             bg.label.anchor.set(0.5);
@@ -58,34 +57,31 @@ define([
                     key+'-player'
                 );
                 players[key].menuReturnCoords = coords;
-                players[key].scale.setTo(2,2);
                 players[key].inputEnabled = true;
                 players[key].events.onInputDown.add(this.playerSelect);
             }
 
             okBtn = game.add.button(okBtnPos.x, okBtnPos.y, 'menu-btn', this.onOkBtnClicked);
-            okBtn.scale.setTo(2,2);
             okBtn.alpha = 0;
             okBtn.label = okBtn.addChild(new Phaser.BitmapText(
                 game, 
-                okBtn.width/2/2, // must divide twice due to scale
-                okBtn.height/2/2, // must divide twice due to scale
+                okBtn.width/2,
+                okBtn.height/2,
                 'boxy_bold',
                 'OK',
-                8
+                16
             ));
             okBtn.label.anchor.set(0.5);
 
             backBtn = game.add.button(backBtnPos.x, backBtnPos.y, 'menu-btn', this.onBackBtnClicked);
-            backBtn.scale.setTo(2,2);
             backBtn.alpha=0;
             backBtn.label = backBtn.addChild(new Phaser.BitmapText(
                 game, 
-                backBtn.width/2/2, // must divide twice due to scale
-                backBtn.height/2/2, // must divide twice due to scale
+                backBtn.width/2,
+                backBtn.height/2,
                 'boxy_bold',
                 'BACK',
-                8
+                16
             ));
             backBtn.label.anchor.set(0.5);
 
