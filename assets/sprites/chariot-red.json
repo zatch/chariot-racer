@@ -1,6 +1,6 @@
 { "frames": {
    "chariot-red 0.ase": {
-    "frame": { "x": 8, "y": 8, "w": 256, "h": 128 },
+    "frame": { "x": 0, "y": 0, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -8,7 +8,7 @@
     "duration": 50
    },
    "chariot-red 1.ase": {
-    "frame": { "x": 264, "y": 8, "w": 256, "h": 128 },
+    "frame": { "x": 272, "y": 0, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -16,7 +16,7 @@
     "duration": 50
    },
    "chariot-red 2.ase": {
-    "frame": { "x": 520, "y": 8, "w": 256, "h": 128 },
+    "frame": { "x": 544, "y": 0, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -24,7 +24,7 @@
     "duration": 50
    },
    "chariot-red 3.ase": {
-    "frame": { "x": 776, "y": 8, "w": 256, "h": 128 },
+    "frame": { "x": 816, "y": 0, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -32,7 +32,7 @@
     "duration": 50
    },
    "chariot-red 4.ase": {
-    "frame": { "x": 1032, "y": 8, "w": 256, "h": 128 },
+    "frame": { "x": 1088, "y": 0, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -40,7 +40,7 @@
     "duration": 50
    },
    "chariot-red 5.ase": {
-    "frame": { "x": 1288, "y": 8, "w": 256, "h": 128 },
+    "frame": { "x": 1360, "y": 0, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -48,7 +48,7 @@
     "duration": 50
    },
    "chariot-red 6.ase": {
-    "frame": { "x": 1544, "y": 8, "w": 256, "h": 128 },
+    "frame": { "x": 1632, "y": 0, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -56,7 +56,7 @@
     "duration": 50
    },
    "chariot-red 7.ase": {
-    "frame": { "x": 8, "y": 136, "w": 256, "h": 128 },
+    "frame": { "x": 0, "y": 144, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -64,7 +64,7 @@
     "duration": 50
    },
    "chariot-red 8.ase": {
-    "frame": { "x": 264, "y": 136, "w": 256, "h": 128 },
+    "frame": { "x": 272, "y": 144, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -72,7 +72,7 @@
     "duration": 50
    },
    "chariot-red 9.ase": {
-    "frame": { "x": 520, "y": 136, "w": 256, "h": 128 },
+    "frame": { "x": 544, "y": 144, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -80,7 +80,7 @@
     "duration": 50
    },
    "chariot-red 10.ase": {
-    "frame": { "x": 776, "y": 136, "w": 256, "h": 128 },
+    "frame": { "x": 816, "y": 144, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -88,7 +88,7 @@
     "duration": 50
    },
    "chariot-red 11.ase": {
-    "frame": { "x": 1032, "y": 136, "w": 256, "h": 128 },
+    "frame": { "x": 1088, "y": 144, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -96,7 +96,7 @@
     "duration": 50
    },
    "chariot-red 12.ase": {
-    "frame": { "x": 1288, "y": 136, "w": 256, "h": 128 },
+    "frame": { "x": 1360, "y": 144, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -104,7 +104,7 @@
     "duration": 50
    },
    "chariot-red 13.ase": {
-    "frame": { "x": 1544, "y": 136, "w": 256, "h": 128 },
+    "frame": { "x": 1632, "y": 144, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -112,7 +112,7 @@
     "duration": 50
    },
    "chariot-red 14.ase": {
-    "frame": { "x": 8, "y": 264, "w": 256, "h": 128 },
+    "frame": { "x": 0, "y": 288, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -120,7 +120,7 @@
     "duration": 50
    },
    "chariot-red 15.ase": {
-    "frame": { "x": 264, "y": 264, "w": 256, "h": 128 },
+    "frame": { "x": 272, "y": 288, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -128,7 +128,7 @@
     "duration": 50
    },
    "chariot-red 16.ase": {
-    "frame": { "x": 520, "y": 264, "w": 256, "h": 128 },
+    "frame": { "x": 544, "y": 288, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -136,7 +136,7 @@
     "duration": 50
    },
    "chariot-red 17.ase": {
-    "frame": { "x": 776, "y": 264, "w": 256, "h": 128 },
+    "frame": { "x": 816, "y": 288, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -144,7 +144,7 @@
     "duration": 50
    },
    "chariot-red 18.ase": {
-    "frame": { "x": 1032, "y": 264, "w": 256, "h": 128 },
+    "frame": { "x": 1088, "y": 288, "w": 272, "h": 144 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 },
@@ -154,41 +154,10 @@
  },
  "meta": {
   "app": "http://www.aseprite.org/",
-  "version": "1.1.13",
-  "image": "D:\\LightTPD\\htdocs\\chariot-racer\\assets\\sprites\\chariot-red.png",
+  "version": "1.1.0.1",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\sprites\\chariot-red.png",
   "format": "RGBA8888",
   "size": { "w": 2048, "h": 512 },
-  "scale": "1",
-  "frameTags": [
-   { "name": "Loop", "from": 0, "to": 8, "direction": "forward" },
-   { "name": "Lose", "from": 9, "to": 18, "direction": "forward" }
-  ],
-  "layers": [
-   { "name": "bg", "opacity": 255, "blendMode": "normal" },
-   { "name": "Chariot Base", "opacity": 255, "blendMode": "normal" },
-   { "name": "Chariot Decor", "opacity": 255, "blendMode": "normal" },
-   { "name": "Chariot Wheel", "opacity": 255, "blendMode": "normal" },
-   { "name": "Chariot Driver", "opacity": 255, "blendMode": "normal" },
-   { "name": "Driver Cape", "opacity": 255, "blendMode": "normal" },
-   { "name": "Rear Horse", "opacity": 255, "blendMode": "normal" },
-   { "name": "Front Horse", "opacity": 255, "blendMode": "normal" },
-   { "name": "Reins", "opacity": 255, "blendMode": "normal" },
-   { "name": "Dust Cloud", "opacity": 255, "blendMode": "normal" },
-   { "name": "wheel back", "opacity": 255, "blendMode": "normal" },
-   { "name": "horse 2", "opacity": 255, "blendMode": "normal" },
-   { "name": "effects dust", "opacity": 255, "blendMode": "normal" },
-   { "name": "chariot back", "opacity": 255, "blendMode": "normal" },
-   { "name": "charioteer", "opacity": 255, "blendMode": "normal" },
-   { "name": "cape", "opacity": 255, "blendMode": "normal" },
-   { "name": "chariot front", "opacity": 255, "blendMode": "normal" },
-   { "name": "wheel front", "opacity": 255, "blendMode": "normal" },
-   { "name": "tail", "opacity": 255, "blendMode": "normal" },
-   { "name": "horse", "opacity": 255, "blendMode": "normal" },
-   { "name": "post", "opacity": 255, "blendMode": "normal" },
-   { "name": "effects dust", "opacity": 255, "blendMode": "normal" },
-   { "name": "effects dust", "opacity": 255, "blendMode": "normal" },
-   { "name": "effects dust", "opacity": 255, "blendMode": "normal" },
-   { "name": "effects dust", "opacity": 255, "blendMode": "normal" }
-  ]
+  "scale": "1"
  }
 }

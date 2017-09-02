@@ -178,7 +178,7 @@ define([
             player.events.onPowerUpEnd.add(this.onPowerUpEnd, this);
             player.fixedToCamera = true;
             player.scale.setTo(1.2);
-            player.cameraOffset.y = laneYCoords[player.activeLane] + 44;
+            player.cameraOffset.y = laneYCoords[player.activeLane] + 56;
 
             // setup input
             lanes[player.activeLane].frame =1;
@@ -243,15 +243,15 @@ define([
                     tweenAutoPlay=true;
                 switch(player.activeLane){
                     case 0: 
-                        targetY = laneYCoords[0]+36;
+                        targetY = laneYCoords[0]+48;
                         targetScale = {x: 1.1, y: 1.1};
                         break;
                     case 1:
-                        targetY = laneYCoords[1]+44;
+                        targetY = laneYCoords[1]+56;
                         targetScale = {x: 1.2, y: 1.2};
                         break;
                     case 2:
-                        targetY = laneYCoords[2]+52;
+                        targetY = laneYCoords[2]+64;
                         targetScale = {x: 1.3, y: 1.3};
                         break;
                 }
