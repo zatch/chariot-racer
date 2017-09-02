@@ -1,0 +1,27 @@
+{ "frames": {
+   "obstacle-warning 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 32, "h": 35 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 19 },
+    "sourceSize": { "w": 16, "h": 19 },
+    "duration": 100
+   },
+   "obstacle-warning 1.ase": {
+    "frame": { "x": 32, "y": 0, "w": 32, "h": 35 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 19 },
+    "sourceSize": { "w": 16, "h": 19 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.0.1",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\sprites\\obstacle-warning.png",
+  "format": "RGBA8888",
+  "size": { "w": 64, "h": 35 },
+  "scale": "1"
+ }
+}

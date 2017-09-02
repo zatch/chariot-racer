@@ -53,8 +53,7 @@ define([
 
             // HUD
             //this.game.load.image('distance-display', 'assets/hud/distance-display.png');
-            this.game.load.image('obstacle-warning', 'assets/sprites/obstacle-warning.png');
-            this.game.load.image('token-warning', 'assets/sprites/token-warning.png');
+            this.game.load.atlas('spawn-warning', 'assets/sprites/spawn-warning.png', 'assets/sprites/spawn-warning.json');
             this.game.load.atlas('progress', 'assets/sprites/progress.png', 'assets/sprites/progress.json');
             this.game.load.image('hud-bg', 'assets/textures/hud-bg.png');
 

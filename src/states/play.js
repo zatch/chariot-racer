@@ -5,6 +5,7 @@ define([
     'finish-line',
     'token',
     'obstacle',
+    'spawn-warning',
     'hud',
     'level-display',
     'level-data'
@@ -15,6 +16,7 @@ define([
     FinishLine,
     Token,
     Obstacle,
+    SpawnWarning,
     HUD,
     LevelDisplay,
     levelData) {
@@ -121,6 +123,7 @@ define([
 
             // Warnings
             warnings = game.add.group();
+            warnings.classType = SpawnWarning;
 
             // Finish line
             finishLine = new FinishLine(game, -100, 352);

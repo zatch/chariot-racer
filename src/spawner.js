@@ -59,6 +59,7 @@ define([
     Spawner.prototype.queue = function (patternMatrix) {
         var lane,
             key,
+            position,
             group = this.warningGroup,
             sprite;
 
@@ -68,21 +69,29 @@ define([
             lane = this.lanes[ln];
             for (i = patternMatrix[ln].length-1; i >= 0; i--) {
                 key = patternMatrix[ln][i];
+
                 if (key !== 0) {
-                    if (key === 'scaffolding' || key === 'wheel' || key === 'rock') {
-                        key = 'obstacle-warning';
-                    }
-                    else {
-                        key = 'token-warning';
-                    }
                     sprite = group.getFirstDead(true, 
                                                 game.width - 160 + (this.warningSpread * i), 
-                                                lane.y+ln*2, 
-                                                key);
-                    sprite.anchor.set(1);
-                    sprite.scale.setTo(2,2);
+                                                lane.y+ln*2+22);
                     sprite.revive();
                     sprite.activeLane = ln;
+
+                    if (patternMatrix[ln][i-1] && patternMatrix[ln][i-1] == key) {
+                        position = 'subsequent';
+                    }
+                    else {
+                        position = 'first';
+                    }
+
+                    if (key === 'scaffolding' || key === 'wheel' || key === 'rock') {
+                        key = 'obstacle-' + position;
+                    }
+                    else {
+                        key = 'token-' + position;
+                    }
+
+                    sprite.animations.play(key);
                 }
             }
         }
