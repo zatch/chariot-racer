@@ -53,10 +53,6 @@ define([
         // Intro
         init: function () {
             game = this.game;
-
-            // When in full-screen mode, take up as much of the screen as 
-            // possible while maintaining game proportions.
-            game.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL;
         },
 
         create: function () {
