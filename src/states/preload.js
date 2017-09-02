@@ -90,11 +90,10 @@ define([
             game.state.add('GameOver', GameOver);
 
             // Now that everything is loaded, show the menu.
-            //game.state.start('Menu', true, false);
+            game.stateTransition.to('Menu', true, false);
 
-            //game.stateTransition.to('Menu', true, false);
             // Debug: Skip Menu and go straight to Play (for dev testing)
-            game.stateTransition.to('Play',true,false,{color:'chariot-red'});
+            //game.stateTransition.to('Play',true,false,{color:'chariot-red'});
         }
     };
 });
