@@ -171,7 +171,9 @@ define([
             var color = selectedPlayer.key.split('-')[0];
             music.onFadeComplete.addOnce(function() {
                 music.stop();
-                this.game.state.start('Play',true,false,{color:'chariot-'+ color});
+                //this.game.state.start('Play',true,false,{color:'chariot-'+ color});
+
+                this.game.stateTransition.to('Play', true, false, {color:'chariot-'+ color});
             }, this);
             music.fadeOut(1000);
         },

@@ -28,14 +28,13 @@ define([
         
         // Main
         create: function () {
-            game.stage.backgroundColor = "#616161";
             openTime = game.time.now;
             totalTimeout = 3000;
 
             dieText = game.add.text(game.width / 2, game.height / 2, 'You reached '+Math.floor(game.score)+' Points', {align: 'center', fill: '#ff279a'});
             dieText.anchor.set(0.5);
             var button = game.add.button(game.world.centerX,game.world.centerY+50,'play-button',function(){
-                this.game.state.start('Menu',true,false);
+                this.game.stateTransition.to('Menu',true,false);
             });
 
         }

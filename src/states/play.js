@@ -84,9 +84,6 @@ define([
             laneCount = 3;
             laneOffset = 27;
 
-            // Set up game background
-            game.stage.backgroundColor = '#add3ff';
-
             sky = game.add.tileSprite(0, 0, game.width, 76, 'sky');
             clouds1 = game.add.tileSprite(0, 0, game.width, 66, 'clouds1');
             clouds2 = game.add.tileSprite(0, 0, game.width, 78, 'clouds2');

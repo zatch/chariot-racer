@@ -11,7 +11,7 @@
     "phaser": "latest",
     "javascript-state-machine": "~2.3.5",
     "phaser-swipe":"latest",
-    "phaser-state-transition-plugin": "https://github.com/suicidepills/phaser-state-transition-plugin.git#master"
+    "phaser-state-transition-plugin": "latest"
   },
   "ignore": [
     "src/lib"
