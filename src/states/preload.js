@@ -34,6 +34,7 @@ define([
             game.load.image('clouds2', 'assets/textures/clouds2.png');
             game.load.image('active-lane-marker', 'assets/textures/active-lane-marker.png');
             game.load.image('foreground', 'assets/textures/foreground.png');
+            game.load.image('finish-line', 'assets/sprites/finish-line.png');
 
             // HUD
             //this.game.load.image('distance-display', 'assets/hud/distance-display.png');
@@ -47,9 +48,7 @@ define([
             game.load.atlas('chariot-red', 'assets/sprites/chariot-red.png', 'assets/sprites/chariot-red.json');
             game.load.atlas('chariot-white', 'assets/sprites/chariot-white.png', 'assets/sprites/chariot-white.json');
 
-
-
-            // menu
+            // Menu
             game.load.atlas('blue-player', 'assets/menu_assets/ui_menu_button_chariot_blue.png', 'assets/menu_assets/ui_menu_button_chariot_blue.json');
             game.load.atlas('red-player', 'assets/menu_assets/ui_menu_button_chariot_red.png', 'assets/menu_assets/ui_menu_button_chariot_red.json');
             game.load.atlas('white-player', 'assets/menu_assets/ui_menu_button_chariot_white.png', 'assets/menu_assets/ui_menu_button_chariot_white.json');
@@ -58,13 +57,12 @@ define([
             game.load.image('menu-bg-2', 'assets/menu_assets/ui_menu_bg_02.png');
             game.load.image('menu-btn', 'assets/menu_assets/ui_menu_button_01.png');
 
-            // Obstacles
+            // Spawnable objects
             game.load.atlas('obstacle', 'assets/sprites/obstacle.png', 'assets/sprites/obstacle.json');
-
-            game.load.image('finish-line', 'assets/sprites/finish-line.png');
-
-            // Power-ups
             game.load.atlas('token', 'assets/sprites/token.png', 'assets/sprites/token.json');
+
+            // Bonus text
+            game.load.atlas('bonus-text', 'assets/sprites/bonus-text.png', 'assets/sprites/bonus-text.json');
 
             // Blank placeholder (for Sprites without artwork)
             game.load.image('blank', 'assets/blank.png');
@@ -90,10 +88,10 @@ define([
             game.state.add('GameOver', GameOver);
 
             // Now that everything is loaded, show the menu.
-            game.stateTransition.to('Menu', true, false);
+            //game.stateTransition.to('Menu', true, false);
 
             // Debug: Skip Menu and go straight to Play (for dev testing)
-            //game.stateTransition.to('Play',true,false,{color:'chariot-red'});
+            game.stateTransition.to('Play',true,false,{color:'chariot-red'});
         }
     };
 });

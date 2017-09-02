@@ -6,6 +6,7 @@ define([
     'token',
     'obstacle',
     'spawn-warning',
+    'bonus-text',
     'hud',
     'level-display',
     'level-data'
@@ -17,6 +18,7 @@ define([
     Token,
     Obstacle,
     SpawnWarning,
+    BonusText,
     HUD,
     LevelDisplay,
     levelData) {
@@ -32,7 +34,7 @@ define([
         laneHeight,
         laneCount,
         laneOffset,
-        laneYCoords,
+        laneYCoords=[370,420,476],
 
         pixelsPerMeter=60, // Divisor for Phaser-to-reality physics conversion
         metersTraveled=0,
@@ -60,6 +62,7 @@ define([
         clouds1,
         clouds2,
         activeLaneMarker,
+        bonusText,
         sfx={},
         soundOn=false,
         hud,
@@ -92,14 +95,16 @@ define([
             crowd = game.add.tileSprite(0, 94, game.width, 258, 'crowd');
             ground = game.add.tileSprite(0, 352, game.width, 226, 'ground');
 
-            laneYCoords=[370,420,476];
+            // Bonus text
+            bonusText = new BonusText(game, game.width/2, 128);
+            game.add.existing(bonusText);
 
             // Finish line
             finishLine = new FinishLine(game, -100, 352);
             finishLine.scale.setTo(2, 2);
             game.add.existing(finishLine);
 
-            // Active Lane Marker
+            // Active lane marker
             activeLaneMarker = game.add.sprite(game.width, 0, 'active-lane-marker');
             activeLaneMarker.anchor.set(1, 0.88);
 
@@ -369,12 +374,16 @@ define([
             inPattern = true;
         },
 
-        onPowerUpStart: function () {
+        onPowerUpStart: function (player, msg, duration) {
+            bonusText.play(msg, duration);
+
             sfx.powerUp.play();
             spawnTimer.pause();
         },
 
-        onPowerUpEnd: function () {
+        onPowerUpEnd: function (player) {
+            bonusText.hide();
+
             spawnTimer.resume();
         },
 

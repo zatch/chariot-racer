@@ -27,7 +27,8 @@ define([
         this.poweredUpMaxVelocity = 50;
         this.normalMaxVelocity = 14;
 
-        this.powerupDuration = 3700;
+        this.powerupMsg = '';
+        this.powerupDuration = 0;
         this.powerupTimer = game.time.create(false);
         this.powerupTimer.start();
 
@@ -109,25 +110,20 @@ define([
     };
 
     Player.prototype.powerUp = function (percentage) {
-        var doneText = game.add.bitmapText( 200, 60, 'boxy_bold', '', 14);
-        if(percentage>.99){
-            doneText.text = 'PERFECT';
-            this.powerupDuration = 3700;
-        } else if(percentage>.8){
-            doneText.text = 'Nice Job!';
-            this.powerupDuration = 3000;
-        } else if(percentage>.5){
-            doneText.text = 'OK';
-            this.powerupDuration = 2000;
+        this.powerupDuration = 4000 * percentage;
+        if(percentage===1){
+            this.powerupMsg = 'perfect';
+        } else if(percentage>0.8){
+            this.powerupMsg = 'great';
+        } else if(percentage>0.4){
+            this.powerupMsg = 'good';
+        } else if(percentage>0) {
+            this.powerupMsg = 'ok';
         } else {
-            doneText.text = 'Poor';
-            this.powerupDuration = 400;
+            this.powerupMsg = 'miss';
         }
 
         this.stateMachine.setState('powered-up');
-        window.setTimeout(function(){
-            doneText.text = '';
-        },this.powerupDuration);
     };
     
     Player.prototype.onSelfChangeState = function (sm, stateName) {
@@ -159,8 +155,7 @@ define([
                     this.stateMachine.setState('normal');
                 }, 
                 this);
-            console.log('powered up for ',this.powerupTimer.duration);
-            this.events.onPowerUpStart.dispatch(this);
+            this.events.onPowerUpStart.dispatch(this, this.powerupMsg, this.powerupDuration);
         }
         else if (stateName === 'dying') {
             this.invulnerable = true;

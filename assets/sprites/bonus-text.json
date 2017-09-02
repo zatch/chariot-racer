@@ -1,0 +1,131 @@
+{ "frames": {
+   "bonus-text 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 1.ase": {
+    "frame": { "x": 304, "y": 0, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 2.ase": {
+    "frame": { "x": 608, "y": 0, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 3.ase": {
+    "frame": { "x": 912, "y": 0, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 4.ase": {
+    "frame": { "x": 1216, "y": 0, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 5.ase": {
+    "frame": { "x": 1520, "y": 0, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 6.ase": {
+    "frame": { "x": 0, "y": 144, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 7.ase": {
+    "frame": { "x": 304, "y": 144, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 8.ase": {
+    "frame": { "x": 608, "y": 144, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 9.ase": {
+    "frame": { "x": 912, "y": 144, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 10.ase": {
+    "frame": { "x": 1216, "y": 144, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 11.ase": {
+    "frame": { "x": 1520, "y": 144, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 12.ase": {
+    "frame": { "x": 0, "y": 288, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 13.ase": {
+    "frame": { "x": 304, "y": 288, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   },
+   "bonus-text 14.ase": {
+    "frame": { "x": 608, "y": 288, "w": 304, "h": 144 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 288, "h": 128 },
+    "sourceSize": { "w": 288, "h": 128 },
+    "duration": 50
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.0.1",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\sprites\\bonus-text.png",
+  "format": "RGBA8888",
+  "size": { "w": 2048, "h": 512 },
+  "scale": "1"
+ }
+}
