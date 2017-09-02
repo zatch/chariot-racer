@@ -32,7 +32,6 @@ define([
         laneHeight,
         laneCount,
         laneOffset,
-        lanes,
         laneYCoords,
 
         pixelsPerMeter=60, // Divisor for Phaser-to-reality physics conversion
@@ -55,9 +54,12 @@ define([
         currentLevelSpawnCount,
         levelDisplay,
         crowd,
+        ground,
+        foreground,
         sky,
         clouds1,
         clouds2,
+        activeLaneMarker,
         sfx={},
         soundOn=false,
         hud,
@@ -84,27 +86,22 @@ define([
             laneCount = 3;
             laneOffset = 27;
 
-            sky = game.add.tileSprite(0, 0, game.width, 76, 'sky');
-            clouds1 = game.add.tileSprite(0, 0, game.width, 66, 'clouds1');
-            clouds2 = game.add.tileSprite(0, 0, game.width, 78, 'clouds2');
-            crowd = game.add.tileSprite(0, 94, game.width, 129, 'crowd');
+            sky = game.add.tileSprite(0, 0, game.width, 152, 'sky');
+            clouds1 = game.add.tileSprite(0, 0, game.width, 124, 'clouds1');
+            clouds2 = game.add.tileSprite(0, 0, game.width, 128, 'clouds2');
+            crowd = game.add.tileSprite(0, 94, game.width, 258, 'crowd');
+            ground = game.add.tileSprite(0, 352, game.width, 226, 'ground');
 
-            sky.scale.setTo(2, 2);
-            clouds1.scale.setTo(2, 2);
-            clouds2.scale.setTo(2, 2);
-            crowd.scale.setTo(2, 2);
+            laneYCoords=[370,420,476];
 
-            laneYCoords=[352,352+48,352+48+48*1.2];
+            // Finish line
+            finishLine = new FinishLine(game, -100, 352);
+            finishLine.scale.setTo(2, 2);
+            game.add.existing(finishLine);
 
-            lanes = [
-                game.add.tileSprite(0, laneYCoords[0], game.width, 48, 'dirt-track'),
-                game.add.tileSprite(0, laneYCoords[1], game.width, 48, 'dirt-track'),
-                game.add.tileSprite(0, laneYCoords[2], game.width, 48, 'dirt-track')
-            ];
-
-            lanes[0].scale.setTo(1, 1);
-            lanes[1].scale.setTo(1, 1.2);
-            lanes[2].scale.setTo(1, 1.4);
+            // Active Lane Marker
+            activeLaneMarker = game.add.sprite(game.width, 0, 'active-lane-marker');
+            activeLaneMarker.anchor.set(1, 0.88);
 
             spawnTimer = game.time.create(false);
             spawnTimer.start();
@@ -121,11 +118,6 @@ define([
             // Warnings
             warnings = game.add.group();
             warnings.classType = SpawnWarning;
-
-            // Finish line
-            finishLine = new FinishLine(game, -100, 352);
-            finishLine.scale.setTo(2, 2);
-            game.add.existing(finishLine);
 
             // Spawner
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
@@ -180,14 +172,16 @@ define([
             player.scale.setTo(1.2);
             player.cameraOffset.y = laneYCoords[player.activeLane] + 56;
 
-            // setup input
-            lanes[player.activeLane].frame =1;
-            game.input.y = laneYCoords[player.activeLane];
+            // Sync activeLaneMarker to player
+            activeLaneMarker.fixedToCamera = true;
+            activeLaneMarker.scale.setTo(1.2);
+            activeLaneMarker.cameraOffset.y = player.cameraOffset.y;
 
             // Make player accessible via game object.
             game.player = player;
-
             game.add.existing(player);
+
+            foreground = game.add.tileSprite(0, game.height - 108, game.width, 108, 'foreground');
 
             // HUD
             hud = new HUD(game);
@@ -232,10 +226,6 @@ define([
 
             if(newLane!==player.activeLane){
                 player.activeLane = newLane;
-                lanes[0].frame = 0;
-                lanes[1].frame = 0;
-                lanes[2].frame = 0;
-                lanes[player.activeLane].frame = 1;
                 var targetY,
                     targetScale,
                     tweenDuration=100,
@@ -258,21 +248,21 @@ define([
 
                 game.add.tween(player.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
                 game.add.tween(player.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
+
+                game.add.tween(activeLaneMarker.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
+                game.add.tween(activeLaneMarker.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
+
             }
 
             metersTraveled += player.body.velocity.x / pixelsPerMeter;
 
-
             hud.updateDisplay(currentLevel,0,metersTraveled);
 
-            // TO DO: Make Sprites and tileSprites move relative to teh same speed...not sure what's wrong here.
-            lanes[0].tilePosition.x -= player.body.velocity.x/2;
-            lanes[1].tilePosition.x -= player.body.velocity.x/2;
-            lanes[2].tilePosition.x -= player.body.velocity.x/2;
-            crowd.tilePosition.x -= player.body.velocity.x/2;
-            clouds1.tilePosition.x -= player.body.velocity.x/2*0.1;
-            clouds2.tilePosition.x -= player.body.velocity.x/2*0.09;
-
+            ground.tilePosition.x -= player.body.velocity.x;
+            crowd.tilePosition.x -= player.body.velocity.x;
+            foreground.tilePosition.x -= player.body.velocity.x;
+            clouds1.tilePosition.x -= player.body.velocity.x*0.1;
+            clouds2.tilePosition.x -= player.body.velocity.x*0.09;
             finishLine.body.x -= player.body.velocity.x;
 
             // Clean up off-screen obstacles.

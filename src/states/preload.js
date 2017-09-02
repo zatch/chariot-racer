@@ -27,11 +27,13 @@ define([
             game.load.setPreloadSprite(fill);
 
             // World textures
-            game.load.atlas('dirt-track', 'assets/textures/dirt-track.png', 'assets/textures/dirt-track.json');
             game.load.image('crowd', 'assets/textures/crowd.png');
+            game.load.image('ground', 'assets/textures/ground.png');
             game.load.image('sky', 'assets/textures/sky.png');
             game.load.image('clouds1', 'assets/textures/clouds1.png');
             game.load.image('clouds2', 'assets/textures/clouds2.png');
+            game.load.image('active-lane-marker', 'assets/textures/active-lane-marker.png');
+            game.load.image('foreground', 'assets/textures/foreground.png');
 
             // HUD
             //this.game.load.image('distance-display', 'assets/hud/distance-display.png');
@@ -44,6 +46,8 @@ define([
             game.load.atlas('chariot-green', 'assets/sprites/chariot-green.png', 'assets/sprites/chariot-green.json');
             game.load.atlas('chariot-red', 'assets/sprites/chariot-red.png', 'assets/sprites/chariot-red.json');
             game.load.atlas('chariot-white', 'assets/sprites/chariot-white.png', 'assets/sprites/chariot-white.json');
+
+
 
             // menu
             game.load.atlas('blue-player', 'assets/menu_assets/ui_menu_button_chariot_blue.png', 'assets/menu_assets/ui_menu_button_chariot_blue.json');
@@ -73,8 +77,7 @@ define([
             game.load.audio('token-collect', 'assets/sfx/coin10.mp3');
             game.load.audio('power-up', 'assets/sfx/power-up-amped-and-crushed.mp3');
             game.load.audio('crash', 'assets/sfx/atari_boom.wav');
-            // Buttons
-            game.load.image('play-button','assets/textures/play-button.png');
+
             // Fonts
             game.load.bitmapFont('boxy_bold', 'assets/font/boxy_bold.png', 'assets/font/boxy_bold.fnt');
         },
@@ -89,9 +92,9 @@ define([
             // Now that everything is loaded, show the menu.
             //game.state.start('Menu', true, false);
 
-            game.stateTransition.to('Menu', true, false);
+            //game.stateTransition.to('Menu', true, false);
             // Debug: Skip Menu and go straight to Play (for dev testing)
-            // this.game.state.start('Play',true,false,{color:'chariot-white'});
+            game.stateTransition.to('Play',true,false,{color:'chariot-red'});
         }
     };
 });

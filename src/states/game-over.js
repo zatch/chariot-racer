@@ -33,7 +33,7 @@ define([
 
             dieText = game.add.text(game.width / 2, game.height / 2, 'You reached '+Math.floor(game.score)+' Points', {align: 'center', fill: '#ff279a'});
             dieText.anchor.set(0.5);
-            var button = game.add.button(game.world.centerX,game.world.centerY+50,'play-button',function(){
+            var button = game.add.button(game.world.centerX,game.world.centerY+50,'menu-btn',function(){
                 this.game.stateTransition.to('Menu',true,false);
             });
 
