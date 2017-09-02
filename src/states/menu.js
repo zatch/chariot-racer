@@ -81,7 +81,7 @@ define([
                 16
             ));
             playerDescription.maxWidth = 300;
-            playerDescription.x -= playerDescription.maxWidth;
+            playerDescription.x -= playerDescription.maxWidth+200;
 
             playerDescriptionMask = game.add.graphics(0, 0);
             playerDescriptionMask.beginFill(0xffffff);
