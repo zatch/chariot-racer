@@ -33,7 +33,7 @@ define([
         laneYCoords=[370,420,476],
 
         pixelsPerMeter=60, // Divisor for Phaser-to-reality physics conversion
-        metersTraveled=0,
+        metersTraveled,
 
         spawner,
         finishLine,
@@ -164,6 +164,7 @@ define([
                 music.fadeIn(2500, true);
             }
 
+            metersTraveled = 0;
             currentLevel = 0;
             currentLevelSpawnCount = 0;
         },
@@ -316,7 +317,6 @@ define([
         onPlayerDeath: function (player) {
             game.camera.unfollow();
             game.score = Math.floor(metersTraveled);
-            metersTraveled = 0;
             game.time.events.add(Phaser.Timer.SECOND * 2, function () {
                 game.stateTransition.to('GameOver', true, false);
                 if(soundOn){
