@@ -28,6 +28,7 @@ define([
 
         this.powerupMsg = '';
         this.powerupDuration = 0;
+        this.maxPowerupDuration = 4000;
         this.powerupTimer = game.time.create(false);
         this.powerupTimer.start();
 
@@ -50,6 +51,7 @@ define([
         // Signals
         this.events.onDeath = new Phaser.Signal();
         this.events.onPowerUpStart = new Phaser.Signal();
+        this.events.onPowerUpStep = new Phaser.Signal();
         this.events.onPowerUpEnd = new Phaser.Signal();
 
         StateMachine.extend(this);
@@ -77,7 +79,8 @@ define([
     };
 
     Player.prototype.update_poweredUp = function () {
-        
+        // Announce remaining power up as percentage of total duration.
+        this.events.onPowerUpStep.dispatch(this, this.powerupTimer.duration / this.maxPowerupDuration);
     };
 
     Player.prototype.update_dying = function () {

@@ -37,10 +37,8 @@ define([
             game.load.image('finish-line', 'assets/sprites/finish-line.png');
 
             // HUD
-            //this.game.load.image('distance-display', 'assets/hud/distance-display.png');
-            game.load.atlas('spawn-warning', 'assets/sprites/spawn-warning.png', 'assets/sprites/spawn-warning.json');
-            game.load.atlas('progress', 'assets/sprites/progress.png', 'assets/sprites/progress.json');
             game.load.image('hud-frame', 'assets/hud/hud-frame.png');
+            game.load.image('boost-meter-fill', 'assets/hud/boost-meter-fill.png');
 
             // Chariot racers
             game.load.atlas('chariot-blue', 'assets/sprites/chariot-blue.png', 'assets/sprites/chariot-blue.json');
@@ -58,6 +56,7 @@ define([
             game.load.image('menu-btn', 'assets/menu_assets/ui_menu_button_01.png');
 
             // Spawnable objects
+            game.load.atlas('spawn-warning', 'assets/sprites/spawn-warning.png', 'assets/sprites/spawn-warning.json');
             game.load.atlas('obstacle', 'assets/sprites/obstacle.png', 'assets/sprites/obstacle.json');
             game.load.atlas('token', 'assets/sprites/token.png', 'assets/sprites/token.json');
 
