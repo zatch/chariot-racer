@@ -354,8 +354,9 @@ define([
         },
 
         onPowerUpEnd: function (player) {
-            bonusText.hide();
-
+            // Hide bonus text, but make sure it's on screen long enough to read.
+            game.time.events.add(Phaser.Timer.SECOND, bonusText.hide, bonusText);
+        
             spawnTimer.resume();
         },
 

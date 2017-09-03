@@ -30,9 +30,16 @@ define([
     BonusText.prototype.constructor = BonusText;
     
     BonusText.prototype.play = function (key, duration) {
-        var durString = Math.floor(duration/100)/10;
-        if (durString % 1 === 0) durString += '.0';
-        durString = '+' + durString + ' SEC BOOST';
+        var durString;
+        if (duration > 0) {
+            durString = Math.floor(duration/100)/10;
+            if (durString % 1 === 0) durString += '.0';
+            durString = '+' + durString + ' SEC BOOST';
+        }
+        else {
+            durString = 'NO BONUS';
+        }
+
         boostMsg.text = durString;
         this.renderable = true;
         this.animations.play(key);
