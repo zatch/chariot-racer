@@ -101,7 +101,6 @@ define([
 
             // Finish line
             finishLine = new FinishLine(game, -100, 352);
-            finishLine.scale.setTo(2, 2);
             game.add.existing(finishLine);
 
             // Active lane marker
