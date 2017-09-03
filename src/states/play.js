@@ -291,10 +291,10 @@ define([
             game.add.tween(token)
                 .to({x: targetX, y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay)
                 .onComplete.add(this.consumeToken, this);
+            sfx.tokenCollect.play();
         },
 
         consumeToken: function (token) {
-            sfx.tokenCollect.play();
             token.kill();
             currentTokensCollected++;
             hud.updateBoostMeter(currentTokensCollected/currentPatternTokenCount);
