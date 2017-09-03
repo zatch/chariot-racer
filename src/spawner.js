@@ -14,30 +14,7 @@ define([
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, key, frame);
 
-        Phaser.Utils.extend(true, this, {
-            spread: 10, // px between indices in spawn pattern arrays
-            warningDuration: 1000,
-            warningSpread: 10,
-            //warningGroup: group,
-            //finishLine: finishLine,
-            spawnableObjects: {
-                /*
-                'sprite key': {
-                    group: group // game group to revive sprites from
-                }
-                */
-            },
-            lanes: [
-                /*
-                {
-                    x: game.width,      // sprite spawn x-coord
-                    y: laneYCoords[0],  // sprite spawn y-coord
-                    spriteScale: 1      // sprite scale percentage
-                }
-                */
-            ]
-        },
-        props);
+        Phaser.Utils.extend(true, this, props);
 
         // Spawn timer
         this.spawnTimer = game.time.create(false);
@@ -60,7 +37,6 @@ define([
         var lane,
             key,
             position,
-            group = this.warningGroup,
             sprite;
 
         var ln,
@@ -71,7 +47,7 @@ define([
                 key = patternMatrix[ln][i];
 
                 if (key !== 0) {
-                    sprite = group.getFirstDead(true, 
+                    sprite = lane.warnings.getFirstDead(true, 
                                                 game.width - 160 + (this.warningSpread * i), 
                                                 lane.y+ln*2+22);
                     sprite.revive();
@@ -98,7 +74,9 @@ define([
 
         // 
         this.spawnTimer.add(this.warningDuration, function () {
-            this.warningGroup.callAll('kill');
+            for (var lcv = 0; lcv < this.lanes.length; lcv++) {
+                this.lanes[lcv].warnings.callAll('kill');
+            }
             this.spawn(patternMatrix);
         }, this);
     };
@@ -117,7 +95,12 @@ define([
             for (i = 0; i < patternMatrix[ln].length; i++) {
                 key = patternMatrix[ln][i];
                 if (key !== 0) {
-                    group = this.spawnableObjects[key].group;
+                    if (key === 'token') {
+                        group = lane.tokens;
+                    }
+                    else {
+                        group = lane.obstacles;
+                    }
 
                     sprite = group.getFirstDead(true, 
                                                 lane.x + (this.spread * i), 
@@ -127,7 +110,7 @@ define([
                     sprite.scale.x = lane.spriteScale;
                     sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
-                    if (key === 'scaffolding' || key === 'wheel' || key === 'rock') {
+                    if (key != 'token') {
                         sprite.setObstacleFrame(key);
                     }
                 }

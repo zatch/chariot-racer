@@ -23,7 +23,6 @@ define([
         this.dyingLastFrame = 16; // 16 is a blank frame
         this.dying = false;
 
-        this.invulnerable = false;
         this.poweredUpMaxVelocity = 50;
         this.normalMaxVelocity = 14;
 
@@ -129,7 +128,6 @@ define([
     Player.prototype.onSelfChangeState = function (sm, stateName) {
         if (stateName === 'normal') {
             this.anims.walk.speed = 20;
-            this.invulnerable = false;
             //this.body.maxVelocity.x = this.normalMaxVelocity;
             game.add.tween(this.body.velocity).to(
                 { x: this.normalMaxVelocity }, 
@@ -140,7 +138,6 @@ define([
         }
         else if (stateName === 'powered-up') {
             this.anims.walk.speed = 30;
-            this.invulnerable = true;
             //this.body.maxVelocity.x = this.poweredUpMaxVelocity;
             game.add.tween(this.body.velocity).to(
                 { x: this.poweredUpMaxVelocity }, 
@@ -158,7 +155,6 @@ define([
             this.events.onPowerUpStart.dispatch(this, this.powerupMsg, this.powerupDuration);
         }
         else if (stateName === 'dying') {
-            this.invulnerable = true;
         }
     };
     

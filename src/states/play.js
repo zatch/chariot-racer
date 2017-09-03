@@ -41,7 +41,7 @@ define([
 
         spawner,
         finishLine,
-        obstacles,
+        lanes,
         tokens,
         indicators,
         warnings,
@@ -75,10 +75,6 @@ define([
             // Shortcut variables.
             game = this.game;
             playerKey = data.color;
-            game.spriteClassTypes = {
-                'skull': Phaser.Sprite,
-                'token': Phaser.Sprite
-            };
         },
         
         // Main
@@ -111,17 +107,23 @@ define([
             spawnTimer.start();
             this.setSpawnTimer();
 
-            // Tokens
-            tokens = game.add.group();
-            tokens.classType = Token;
-
             // Obstacles
-            obstacles = game.add.group();
-            obstacles.classType = Obstacle;
-
-            // Warnings
-            warnings = game.add.group();
-            warnings.classType = SpawnWarning;
+            lanes = [];
+            for (var lcv = 0; lcv < 3; lcv++) {
+                lanes.push({
+                    obstacles: game.add.group(),
+                    tokens: game.add.group(),
+                    warnings: game.add.group(),
+                    x: game.width
+                });
+                lanes[lcv].y = laneYCoords[lcv]+24;
+                lanes[lcv].obstacles.classType = Obstacle;
+                lanes[lcv].tokens.classType = Token;
+                lanes[lcv].warnings.classType = SpawnWarning;
+            }
+            lanes[0].spriteScale = 1.4;
+            lanes[1].spriteScale = 1.6;
+            lanes[2].spriteScale = 1.8;
 
             // Spawner
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
@@ -129,39 +131,8 @@ define([
                 spread: 48, // px between indices in spawn pattern arrays
                 warningDuration: 1000,
                 warningSpread: 10,
-                warningGroup: warnings,
                 finishLine: finishLine,
-                spawnableObjects: {
-                    'scaffolding': {
-                        group: obstacles
-                    },
-                    'wheel': {
-                        group: obstacles
-                    },
-                    'rock': {
-                        group: obstacles
-                    },
-                    'token': {
-                        group: tokens
-                    }
-                },
-                lanes: [
-                    {
-                        x: game.width,
-                        y: laneYCoords[0]+24,
-                        spriteScale: 1.4
-                    },
-                    {
-                        x: game.width,
-                        y: laneYCoords[1]+28,
-                        spriteScale: 1.6
-                    },
-                    {
-                        x: game.width,
-                        y: laneYCoords[2]+32,
-                        spriteScale: 1.8
-                    }
-                ]
+                lanes: lanes
             });
             spawner.events.onSpawn.add(this.onSpawnerSpawn, this);
             game.add.existing(spawner);
@@ -215,7 +186,8 @@ define([
 
         update: function () {
             // Direct input to player and do all the map and collision stuff.
-            var newLane=player.activeLane;
+            var newLane=player.activeLane,
+                lcv;
             if(game.input.activePointer.isDown){
                 if (game.input.y < laneYCoords[1]) {
                     newLane = 0;
@@ -250,9 +222,19 @@ define([
                         break;
                 }
 
+                // Sort render order based on new active lane.
+                game.world.bringToTop(player);
+                for (lcv = player.activeLane+1; lcv < lanes.length; lcv++) {
+                    game.world.bringToTop(lanes[lcv].obstacles);
+                    game.world.bringToTop(lanes[lcv].tokens);
+                }
+                game.world.bringToTop(foreground);
+
+                // Tween player to new lane.
                 game.add.tween(player.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
                 game.add.tween(player.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
 
+                // Tween active lane marker to new lane.
                 game.add.tween(activeLaneMarker.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
                 game.add.tween(activeLaneMarker.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
 
@@ -262,6 +244,7 @@ define([
 
             hud.updateDisplay(currentLevel,0,metersTraveled);
 
+            // Move all the things relative to the player.
             ground.tilePosition.x -= player.body.velocity.x;
             crowd.tilePosition.x -= player.body.velocity.x;
             foreground.tilePosition.x -= player.body.velocity.x;
@@ -269,38 +252,28 @@ define([
             clouds2.tilePosition.x -= player.body.velocity.x*0.09;
             finishLine.body.x -= player.body.velocity.x;
 
-            // Clean up off-screen obstacles.
-            obstacles.forEachAlive(function(obstacle) {
-                obstacle.body.x -= player.body.velocity.x;
-
-                // Recycle off-camera obstacles.
-                // Not using killOffCamera because we want to start obstacles off camera.
-                if(!obstacle.inCamera && obstacle.body.x < 0) {
-                    // Recycle off-camera obstacles.
-                    // Not using killOffCamera because we want to start obstacles off camera.
-                    obstacle.kill();
-                }
-            }, this);
-
-            // Clean up off-screen tokens.
-            tokens.forEachAlive(function(token) {
-                token.body.x -= player.body.velocity.x;
-
-                if(!token.inCamera && token.body.x < 0) {
-                    // Recycle off-camera tokens.
-                    // Not using killOffCamera because we want to start tokens off camera.
-                    token.kill();
-                }
-            }, this);
-
-            // Collide player + obstacles.
-            if (!player.invulnerable) {
-                game.physics.arcade.overlap(player, obstacles, this.onPlayerCollidesObstacle, null, this);               
+            // Move sprites and kill them if they're off camera.
+            for (lcv = 0; lcv < 3; lcv++) {
+                lanes[lcv].obstacles.forEachAlive(this.updateSpawnedSprite, this);
+                lanes[lcv].tokens.forEachAlive(this.updateSpawnedSprite, this);
             }
-            // Collide player + tokens.
+
+            // Collide player and spawned stuff.
+            // Only check against active lane, if applicable.
             if (!player.dying) {
-                game.physics.arcade.overlap(player, tokens, this.onPlayerCollidesToken, null, this);
+                game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
+                game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
                 game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
+            }
+        },
+
+        updateSpawnedSprite: function(sprite) {
+            sprite.body.x -= player.body.velocity.x;
+
+            // Recycle off-camera sprites.
+            // Not using killOffCamera because we want to start sprites off camera.
+            if(!sprite.inCamera && sprite.body.x < 0) {
+                sprite.kill();
             }
         },
 
