@@ -26,8 +26,8 @@ define([
         this.poweredUpMaxVelocity = 50;
         this.normalMaxVelocity = 14;
 
-        this.powerupMsg = '';
         this.powerupDuration = 0;
+        this.maxPowerupDuration = 4000;
         this.powerupTimer = game.time.create(false);
         this.powerupTimer.start();
 
@@ -50,6 +50,7 @@ define([
         // Signals
         this.events.onDeath = new Phaser.Signal();
         this.events.onPowerUpStart = new Phaser.Signal();
+        this.events.onPowerUpStep = new Phaser.Signal();
         this.events.onPowerUpEnd = new Phaser.Signal();
 
         StateMachine.extend(this);
@@ -77,7 +78,8 @@ define([
     };
 
     Player.prototype.update_poweredUp = function () {
-        
+        // Announce remaining power up as percentage of total duration.
+        this.events.onPowerUpStep.dispatch(this, this.powerupTimer.duration / this.maxPowerupDuration);
     };
 
     Player.prototype.update_dying = function () {
@@ -100,19 +102,7 @@ define([
     };
 
     Player.prototype.powerUp = function (percentage) {
-        this.powerupDuration = 4000 * percentage;
-        if(percentage===1){
-            this.powerupMsg = 'perfect';
-        } else if(percentage>0.8){
-            this.powerupMsg = 'great';
-        } else if(percentage>0.4){
-            this.powerupMsg = 'good';
-        } else if(percentage>0) {
-            this.powerupMsg = 'ok';
-        } else {
-            this.powerupMsg = 'miss';
-        }
-
+        this.powerupDuration = this.maxPowerupDuration * percentage;
         this.stateMachine.setState('powered-up');
     };
     
@@ -148,7 +138,7 @@ define([
                     this.stateMachine.setState('normal');
                 }, 
                 this);
-            this.events.onPowerUpStart.dispatch(this, this.powerupMsg, this.powerupDuration);
+            this.events.onPowerUpStart.dispatch(this);
         }
 
         // Dying

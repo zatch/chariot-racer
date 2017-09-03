@@ -6,9 +6,7 @@ define([
     'token',
     'obstacle',
     'spawn-warning',
-    'bonus-text',
     'hud',
-    'level-display',
     'level-data'
 ], function (
     Phaser,
@@ -18,9 +16,7 @@ define([
     Token,
     Obstacle,
     SpawnWarning,
-    BonusText,
     HUD,
-    LevelDisplay,
     levelData) {
 
     'use strict';
@@ -54,7 +50,6 @@ define([
         inPattern=false,
         currentLevel,
         currentLevelSpawnCount,
-        levelDisplay,
         crowd,
         ground,
         foreground,
@@ -62,7 +57,6 @@ define([
         clouds1,
         clouds2,
         activeLaneMarker,
-        bonusText,
         sfx={},
         soundOn=false,
         hud,
@@ -90,10 +84,6 @@ define([
             clouds2 = game.add.tileSprite(0, 0, game.width, 128, 'clouds2');
             crowd = game.add.tileSprite(0, 94, game.width, 258, 'crowd');
             ground = game.add.tileSprite(0, 352, game.width, 226, 'ground');
-
-            // Bonus text
-            bonusText = new BonusText(game, game.width/2, 128);
-            game.add.existing(bonusText);
 
             // Finish line
             finishLine = new FinishLine(game, -100, 352);
@@ -142,6 +132,7 @@ define([
             player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
             player.events.onPowerUpStart.add(this.onPowerUpStart, this);
+            player.events.onPowerUpStep.add(this.onPowerUpStep, this);
             player.events.onPowerUpEnd.add(this.onPowerUpEnd, this);
             player.fixedToCamera = true;
             player.scale.setTo(1.2);
@@ -161,11 +152,6 @@ define([
             // HUD
             hud = new HUD(game, game.width/2, 0);
             game.add.existing(hud);
-
-            // mockup level
-            levelDisplay = new LevelDisplay(game,0,0);
-            game.add.existing(levelDisplay);
-            levelDisplay.fixedToCamera = true;
 
             // SFX
             sfx.tokenCollect = game.sound.add('token-collect');
@@ -244,7 +230,8 @@ define([
 
             metersTraveled += player.body.velocity.x / pixelsPerMeter;
 
-            hud.updateDisplay(currentLevel,0,metersTraveled);
+            // Update HUD.
+            hud.updateDistanceDisplay(metersTraveled);
 
             // Move all the things relative to the player.
             ground.tilePosition.x -= player.body.velocity.x;
@@ -291,16 +278,26 @@ define([
 
         onPlayerCollidesToken: function (player, token) {
             // TO DO: Animate tokens into HUD before killing them.
+            game.add.existing(token);
+            token.animations.stop();
+            token.frame = 0;
+
+            var targetX = hud.x+10,
+                targetY = hud.y+20,
+                targetScale,
+                tweenDuration = 300,
+                tweenEasing = Phaser.Easing.Cubic.In,
+                tweenAutoPlay = true;
+            game.add.tween(token)
+                .to({x: targetX, y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay)
+                .onComplete.add(this.consumeToken, this);
             sfx.tokenCollect.play();
+        },
+
+        consumeToken: function (token) {
             token.kill();
             currentTokensCollected++;
-
-            // Mockup
-            var eighth = 0;
-            if(currentPatternTokenCount>0){
-                eighth =  Math.floor(currentTokensCollected/currentPatternTokenCount*8);
-            }
-            levelDisplay.updateDisplay(currentLevel,eighth);
+            hud.updateBoostMeter(currentTokensCollected/currentPatternTokenCount);
         },
 
         onPlayerCollidesFinishLine: function (player, fLine) {
@@ -308,27 +305,11 @@ define([
                 // Clear flag.
                 inPattern = false;
 
-                // Mockup
-                var eighth = 0;
-                if(currentPatternTokenCount>0){
-                    eighth =  Math.floor(currentTokensCollected/currentPatternTokenCount*8);
-                }
-                levelDisplay.updateDisplay(currentLevel,eighth);
-
-                // boost
-                player.powerUp(currentTokensCollected/currentPatternTokenCount);
-                // Mockup
-                var pseudoDeplete = player.powerupDuration/8;
-                var self = this;
-                var stop = setInterval(function(){
-                    if(eighth<1){
-                        clearInterval(stop);
-                        self.setSpawnTimer();
-                    }
-                    levelDisplay.updateDisplay(currentLevel,eighth);
-                    eighth=eighth-1;
-                    console.log(eighth);
-                },pseudoDeplete);
+                var boostPercent = currentTokensCollected/currentPatternTokenCount;
+                // Power up!
+                player.powerUp(boostPercent);
+                hud.showBonusText(boostPercent, player.powerupDuration);
+                sfx.powerUp.play();
             }
         },
 
@@ -349,26 +330,25 @@ define([
             inPattern = true;
         },
 
-        onPowerUpStart: function (player, msg, duration) {
-            bonusText.play(msg, duration);
-
-            sfx.powerUp.play();
+        onPowerUpStart: function (player) {
             spawnTimer.pause();
+        },
+
+        onPowerUpStep: function (player, percentRemaining) {
+            hud.updateBoostMeter(percentRemaining);
         },
 
         onPowerUpEnd: function (player) {
             // Hide bonus text, but make sure it's on screen long enough to read.
-            game.time.events.add(Phaser.Timer.SECOND, bonusText.hide, bonusText);
-        
-            spawnTimer.resume();
+            game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
+            
+            // Prepare for next spawn.
+            this.setSpawnTimer();
         },
 
         setSpawnTimer: function () {
             spawnTimer.add(restDuration, this.spawnPattern, this);
-        },
-
-        clearSpawnTimer: function () {
-            spawnTimer.removeAll();
+            spawnTimer.resume();
         },
 
         spawnPattern: function () {
