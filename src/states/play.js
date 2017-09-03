@@ -58,7 +58,7 @@ define([
         clouds2,
         activeLaneMarker,
         sfx={},
-        soundOn=false,
+        soundOn=true,
         hud,
         music;
 
@@ -155,13 +155,17 @@ define([
 
             // SFX
             sfx.tokenCollect = game.sound.add('token-collect');
-            sfx.powerUp = game.sound.add('power-up');
+            sfx.speedUp = game.sound.add('speed-up');
+            sfx.slowDown = game.sound.add('slow-down');
+            sfx.heartbeat = game.sound.add('heartbeat', 1, true);
             sfx.crash = game.sound.add('crash');
 
             // Music
             if(soundOn){
-                music = game.sound.add('race-music',0.25);
-                music.fadeIn(2500, true);
+                music = game.sound.add('race-music',1,true);
+                //music.play();
+                music.fadeIn(1000, true);
+                console.log('ok music, go!');
             }
 
             metersTraveled = 0;
@@ -310,7 +314,6 @@ define([
                 // Power up!
                 player.powerUp(boostPercent);
                 hud.showBonusText(boostPercent, player.powerupDuration);
-                sfx.powerUp.play();
             }
         },
 
@@ -332,6 +335,11 @@ define([
 
         onPowerUpStart: function (player) {
             spawnTimer.pause();
+
+            // Switch to power-up sound effects.
+            music.fadeTo(500, 0.1);
+            sfx.slowDown.play();
+            sfx.heartbeat.play();
         },
 
         onPowerUpStep: function (player, percentRemaining) {
@@ -341,6 +349,11 @@ define([
         onPowerUpEnd: function (player) {
             // Hide bonus text, but make sure it's on screen long enough to read.
             game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
+
+            // Switch to normal music.
+            music.fadeTo(500, 1);
+            sfx.speedUp.play();
+            sfx.heartbeat.stop();
             
             // Prepare for next spawn.
             this.setSpawnTimer();
