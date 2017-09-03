@@ -23,7 +23,7 @@ define([
     
     // Shortcuts
     var game, 
-        moveKeys, 
+        gameWorld, 
 
         player,
         playerKey,
@@ -75,22 +75,25 @@ define([
         create: function () {
 
             var self = this;
+
+            gameWorld = game.add.group();
+
             laneHeight = 48;
             laneCount = 3;
             laneOffset = 27;
 
-            sky = game.add.tileSprite(0, 0, game.width, 152, 'sky');
-            clouds1 = game.add.tileSprite(0, 0, game.width, 124, 'clouds1');
-            clouds2 = game.add.tileSprite(0, 0, game.width, 128, 'clouds2');
-            crowd = game.add.tileSprite(0, 94, game.width, 258, 'crowd');
-            ground = game.add.tileSprite(0, 352, game.width, 226, 'ground');
+            sky = gameWorld.add(new Phaser.TileSprite(game, 0, 0, game.width, 152, 'sky'));
+            clouds1 = gameWorld.add(new Phaser.TileSprite(game, 0, 0, game.width, 124, 'clouds1'));
+            clouds2 = gameWorld.add(new Phaser.TileSprite(game, 0, 0, game.width, 128, 'clouds2'));
+            crowd = gameWorld.add(new Phaser.TileSprite(game, 0, 94, game.width, 258, 'crowd'));
+            ground = gameWorld.add(new Phaser.TileSprite(game, 0, 352, game.width, 226, 'ground'));
 
             // Finish line
             finishLine = new FinishLine(game, -100, 352);
-            game.add.existing(finishLine);
+            gameWorld.add(finishLine);
 
             // Active lane marker
-            activeLaneMarker = game.add.sprite(game.width, 0, 'active-lane-marker');
+            activeLaneMarker = gameWorld.create(game.width, 0, 'active-lane-marker');
             activeLaneMarker.anchor.set(1, 0.88);
 
             spawnTimer = game.time.create(false);
@@ -101,9 +104,9 @@ define([
             lanes = [];
             for (var lcv = 0; lcv < 3; lcv++) {
                 lanes.push({
-                    obstacles: game.add.group(),
-                    tokens: game.add.group(),
-                    warnings: game.add.group(),
+                    obstacles: gameWorld.add(new Phaser.Group(game)),
+                    tokens: gameWorld.add(new Phaser.Group(game)),
+                    warnings: gameWorld.add(new Phaser.Group(game)),
                     x: game.width
                 });
                 lanes[lcv].y = laneYCoords[lcv]+24;
@@ -125,7 +128,7 @@ define([
                 lanes: lanes
             });
             spawner.events.onSpawn.add(this.onSpawnerSpawn, this);
-            game.add.existing(spawner);
+            gameWorld.add(spawner);
 
             // Insert player
             player = new Player(game, 320 , 0, playerKey);
@@ -145,9 +148,9 @@ define([
 
             // Make player accessible via game object.
             game.player = player;
-            game.add.existing(player);
+            gameWorld.add(player);
 
-            foreground = game.add.tileSprite(0, game.height - 108, game.width, 108, 'foreground');
+            foreground = gameWorld.add(new Phaser.TileSprite(game, 0, game.height - 108, game.width, 108, 'foreground'));
 
             // HUD
             hud = new HUD(game, game.width/2, 0);
@@ -216,12 +219,12 @@ define([
                 }
 
                 // Sort render order based on new active lane.
-                game.world.bringToTop(player);
+                gameWorld.bringToTop(player);
                 for (lcv = player.activeLane+1; lcv < lanes.length; lcv++) {
-                    game.world.bringToTop(lanes[lcv].obstacles);
-                    game.world.bringToTop(lanes[lcv].tokens);
+                    gameWorld.bringToTop(lanes[lcv].obstacles);
+                    gameWorld.bringToTop(lanes[lcv].tokens);
                 }
-                game.world.bringToTop(foreground);
+                gameWorld.bringToTop(foreground);
 
                 // Tween player to new lane.
                 game.add.tween(player.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
@@ -336,6 +339,10 @@ define([
         onPowerUpStart: function (player) {
             spawnTimer.pause();
 
+            // Zoom in for close-up of player.
+            game.add.tween(gameWorld.scale).to({x: 2, y: 2}, 300, Phaser.Easing.Cubic.In, true);
+            game.add.tween(gameWorld).to({y: game.height/-2-100}, 300, Phaser.Easing.Cubic.In, true);
+
             // Switch to power-up sound effects.
             music.fadeTo(500, 0.1);
             sfx.slowDown.play();
@@ -347,6 +354,10 @@ define([
         },
 
         onPowerUpEnd: function (player) {
+            // Return to normal scale and position.
+            game.add.tween(gameWorld.scale).to({x: 1, y: 1}, 300, Phaser.Easing.Cubic.In, true);
+            game.add.tween(gameWorld).to({y: 0}, 300, Phaser.Easing.Cubic.In, true);
+
             // Hide bonus text, but make sure it's on screen long enough to read.
             game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
 
