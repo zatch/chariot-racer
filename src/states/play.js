@@ -23,7 +23,7 @@ define([
     
     // Shortcuts
     var game, 
-        gameWorld, 
+        gameWorld,
 
         player,
         playerKey,
@@ -181,21 +181,59 @@ define([
         },
 
         update: function () {
-            // Direct input to player and do all the map and collision stuff.
-            var newLane=player.activeLane,
-                lcv;
+            // Direct input to player.
             if(game.input.activePointer.isDown){
                 if (game.input.y < laneYCoords[1]) {
-                    newLane = 0;
+                    this.setPlayerActiveLane(0);
                 }
                 else if (game.input.y > laneYCoords[2]) {
-                    newLane = 2;
+                    this.setPlayerActiveLane(2);
                 }
                 else {
-                    newLane = 1;
+                    this.setPlayerActiveLane(1);
                 }
             }
 
+            // Update distance travaled.
+            metersTraveled += player.body.velocity.x / pixelsPerMeter;
+
+            // Update HUD.
+            hud.updateDistanceDisplay(metersTraveled);
+
+            // Move all the things relative to the player.
+            ground.tilePosition.x -= player.body.velocity.x;
+            crowd.tilePosition.x -= player.body.velocity.x;
+            foreground.tilePosition.x -= player.body.velocity.x;
+            clouds1.tilePosition.x -= player.body.velocity.x*0.1;
+            clouds2.tilePosition.x -= player.body.velocity.x*0.09;
+            finishLine.body.x -= player.body.velocity.x;
+
+            // Move sprites and kill them if they're off camera.
+            for (var lcv = 0; lcv < 3; lcv++) {
+                lanes[lcv].obstacles.forEachAlive(this.updateSpawnedSprite, this);
+                lanes[lcv].tokens.forEachAlive(this.updateSpawnedSprite, this);
+            }
+
+            // Collide player and spawned stuff.
+            // Only check against active lane, if applicable.
+            if (!player.dying) {
+                game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
+                game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
+                game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
+            }
+        },
+
+        updateSpawnedSprite: function(sprite) {
+            sprite.body.x -= player.body.velocity.x;
+
+            // Recycle off-camera sprites.
+            // Not using killOffCamera because we want to start sprites off camera.
+            if(!sprite.inCamera && sprite.body.x < 0) {
+                sprite.kill();
+            }
+        },
+
+        setPlayerActiveLane: function(newLane) {
             if(newLane!==player.activeLane){
                 player.activeLane = newLane;
                 var targetY,
@@ -220,7 +258,7 @@ define([
 
                 // Sort render order based on new active lane.
                 gameWorld.bringToTop(player);
-                for (lcv = player.activeLane+1; lcv < lanes.length; lcv++) {
+                for (var lcv = player.activeLane+1; lcv < lanes.length; lcv++) {
                     gameWorld.bringToTop(lanes[lcv].obstacles);
                     gameWorld.bringToTop(lanes[lcv].tokens);
                 }
@@ -233,44 +271,6 @@ define([
                 // Tween active lane marker to new lane.
                 game.add.tween(activeLaneMarker.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
                 game.add.tween(activeLaneMarker.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
-
-            }
-
-            metersTraveled += player.body.velocity.x / pixelsPerMeter;
-
-            // Update HUD.
-            hud.updateDistanceDisplay(metersTraveled);
-
-            // Move all the things relative to the player.
-            ground.tilePosition.x -= player.body.velocity.x;
-            crowd.tilePosition.x -= player.body.velocity.x;
-            foreground.tilePosition.x -= player.body.velocity.x;
-            clouds1.tilePosition.x -= player.body.velocity.x*0.1;
-            clouds2.tilePosition.x -= player.body.velocity.x*0.09;
-            finishLine.body.x -= player.body.velocity.x;
-
-            // Move sprites and kill them if they're off camera.
-            for (lcv = 0; lcv < 3; lcv++) {
-                lanes[lcv].obstacles.forEachAlive(this.updateSpawnedSprite, this);
-                lanes[lcv].tokens.forEachAlive(this.updateSpawnedSprite, this);
-            }
-
-            // Collide player and spawned stuff.
-            // Only check against active lane, if applicable.
-            if (!player.dying) {
-                game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
-                game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
-                game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
-            }
-        },
-
-        updateSpawnedSprite: function(sprite) {
-            sprite.body.x -= player.body.velocity.x;
-
-            // Recycle off-camera sprites.
-            // Not using killOffCamera because we want to start sprites off camera.
-            if(!sprite.inCamera && sprite.body.x < 0) {
-                sprite.kill();
             }
         },
 
@@ -338,6 +338,9 @@ define([
 
         onPowerUpStart: function (player) {
             spawnTimer.pause();
+
+            // Move player to center lane for zoom effect.
+            this.setPlayerActiveLane(1);
 
             // Zoom in for close-up of player.
             game.add.tween(gameWorld.scale).to({x: 2, y: 2}, 300, Phaser.Easing.Cubic.In, true);
