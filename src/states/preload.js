@@ -39,6 +39,7 @@ define([
             // HUD
             game.load.image('hud-frame', 'assets/hud/hud-frame.png');
             game.load.image('boost-meter-fill', 'assets/hud/boost-meter-fill.png');
+            game.load.atlas('bonus-text', 'assets/sprites/bonus-text.png', 'assets/sprites/bonus-text.json');
 
             // Chariot racers
             game.load.atlas('chariot-blue', 'assets/sprites/chariot-blue.png', 'assets/sprites/chariot-blue.json');
@@ -59,9 +60,6 @@ define([
             game.load.atlas('spawn-warning', 'assets/sprites/spawn-warning.png', 'assets/sprites/spawn-warning.json');
             game.load.atlas('obstacle', 'assets/sprites/obstacle.png', 'assets/sprites/obstacle.json');
             game.load.atlas('token', 'assets/sprites/token.png', 'assets/sprites/token.json');
-
-            // Bonus text
-            game.load.atlas('bonus-text', 'assets/sprites/bonus-text.png', 'assets/sprites/bonus-text.json');
 
             // Blank placeholder (for Sprites without artwork)
             game.load.image('blank', 'assets/blank.png');

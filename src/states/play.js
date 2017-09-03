@@ -6,7 +6,6 @@ define([
     'token',
     'obstacle',
     'spawn-warning',
-    'bonus-text',
     'hud',
     'level-data'
 ], function (
@@ -17,7 +16,6 @@ define([
     Token,
     Obstacle,
     SpawnWarning,
-    BonusText,
     HUD,
     levelData) {
 
@@ -59,7 +57,6 @@ define([
         clouds1,
         clouds2,
         activeLaneMarker,
-        bonusText,
         sfx={},
         soundOn=false,
         hud,
@@ -87,10 +84,6 @@ define([
             clouds2 = game.add.tileSprite(0, 0, game.width, 128, 'clouds2');
             crowd = game.add.tileSprite(0, 94, game.width, 258, 'crowd');
             ground = game.add.tileSprite(0, 352, game.width, 226, 'ground');
-
-            // Bonus text
-            bonusText = new BonusText(game, game.width/2, 128);
-            game.add.existing(bonusText);
 
             // Finish line
             finishLine = new FinishLine(game, -100, 352);
@@ -312,8 +305,11 @@ define([
                 // Clear flag.
                 inPattern = false;
 
+                var boostPercent = currentTokensCollected/currentPatternTokenCount;
                 // Power up!
-                player.powerUp(currentTokensCollected/currentPatternTokenCount);
+                player.powerUp(boostPercent);
+                hud.showBonusText(boostPercent, player.powerupDuration);
+                sfx.powerUp.play();
             }
         },
 
@@ -333,10 +329,7 @@ define([
             inPattern = true;
         },
 
-        onPowerUpStart: function (player, msg, duration) {
-            bonusText.play(msg, duration);
-
-            sfx.powerUp.play();
+        onPowerUpStart: function (player) {
             spawnTimer.pause();
         },
 
@@ -346,7 +339,7 @@ define([
 
         onPowerUpEnd: function (player) {
             // Hide bonus text, but make sure it's on screen long enough to read.
-            game.time.events.add(Phaser.Timer.SECOND, bonusText.hide, bonusText);
+            game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
             
             // Prepare for next spawn.
             this.setSpawnTimer();
