@@ -17,8 +17,8 @@ define([
 
         // Set up animations.
         this.anims = {};
-        this.anims.walk = this.animations.add('walk', [0,1,2,3,4,5,6,7,8], 20);
-        this.anims.dying = this.animations.add('dying', [9,10,11,12,13,14,15,16,17,18], 15, true);
+        this.animations.add('walk', [0,1,2,3,4,5,6,7,8], 20);
+        this.animations.add('dying', [9,10,11,12,13,14,15,16,17,18], 15, true);
         this.frame = 0;
         this.dyingLastFrame = 16; // 16 is a blank frame
         this.dying = false;
@@ -59,7 +59,7 @@ define([
                 'update': this.update_normal
             },
             'powered-up': {
-                'update': this.update_normal
+                'update': this.update_poweredUp
             },
             'dying': {
                 'update': this.update_dying
@@ -73,35 +73,26 @@ define([
     Player.prototype.constructor = Player;
 
     Player.prototype.update_normal = function () {
-        // Play walk animation.
-        if(!this.anims.walk.isPlaying) this.anims.walk.play();
+        
+    };
 
-        //this.body.acceleration.x = this.moveAccel;
-
-        Phaser.Sprite.prototype.update.call(this);
+    Player.prototype.update_poweredUp = function () {
+        
     };
 
     Player.prototype.update_dying = function () {
-        if(!this.anims.dying.isPlaying && !this.dying) this.anims.dying.play();
-        this.dying = true;
-        this.body.acceleration.x = 0;
-        this.body.drag.x = 60;
 
-        Phaser.Sprite.prototype.update.call(this);
-
-        if(this.frame===this.dyingLastFrame) {
-            this.anims.dying.stop();
-            this.events.onDeath.dispatch(this);
-        }
     };
     
     // Update children.
     Player.prototype.update = function () {
         this.stateMachine.handle('update');
+        Phaser.Sprite.prototype.update.call(this);
     };
 
     Player.prototype.stopMoving = function () {
         this.body.acceleration.x = 0;
+        this.body.drag.x = 60;
     };
 
     Player.prototype.damage = function () {
@@ -126,9 +117,11 @@ define([
     };
     
     Player.prototype.onSelfChangeState = function (sm, stateName) {
+        // Normal
         if (stateName === 'normal') {
-            this.anims.walk.speed = 20;
-            //this.body.maxVelocity.x = this.normalMaxVelocity;
+            this.animations.play('walk', 20, true);
+            this.animations.getAnimation('walk').speed = 20;
+
             game.add.tween(this.body.velocity).to(
                 { x: this.normalMaxVelocity }, 
                 500, 
@@ -136,9 +129,12 @@ define([
                 true);
             this.events.onPowerUpEnd.dispatch(this);
         }
+
+        // Powered Up
         else if (stateName === 'powered-up') {
-            this.anims.walk.speed = 30;
-            //this.body.maxVelocity.x = this.poweredUpMaxVelocity;
+            this.animations.play('walk', 40, true);
+            this.animations.getAnimation('walk').speed = 40;
+
             game.add.tween(this.body.velocity).to(
                 { x: this.poweredUpMaxVelocity }, 
                 250, 
@@ -154,7 +150,15 @@ define([
                 this);
             this.events.onPowerUpStart.dispatch(this, this.powerupMsg, this.powerupDuration);
         }
+
+        // Dying
         else if (stateName === 'dying') {
+            this.animations.play('dying', 20, false);
+            this.dying = true;
+            this.stopMoving();
+            this.animations.getAnimation('dying').onComplete.add(function() {
+                this.events.onDeath.dispatch(this);
+            }, this);
         }
     };
     
