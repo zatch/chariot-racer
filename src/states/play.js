@@ -281,7 +281,7 @@ define([
             // TO DO: Animate tokens into HUD before killing them.
             game.add.existing(token);
             token.animations.stop();
-            token.frame = 0;
+            token.frame = 13;
 
             var targetX = hud.x+10,
                 targetY = hud.y+20,

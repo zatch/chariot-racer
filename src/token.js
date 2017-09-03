@@ -16,11 +16,15 @@ define([
         game.physics.enable(this);
         
         this.animations.add('spin');
-        this.animations.play('spin', 15, true);
+        this.animations.play('spin', 10, true);
     }
 
     Token.prototype = Object.create(Phaser.Sprite.prototype);
     Token.prototype.constructor = Token;
+    
+    Token.prototype.setAnimationFrame = function (frameIndex) {
+        this.animations.getAnimation('spin').frame = frameIndex;
+    };
 
     return Token;
 

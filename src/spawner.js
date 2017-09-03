@@ -85,7 +85,8 @@ define([
         var lane,
             key,
             group,
-            sprite;
+            sprite,
+            tokenFrame=0;
 
         var ln,
             i,
@@ -112,6 +113,11 @@ define([
                     sprite.activeLane = ln;
                     if (key != 'token') {
                         sprite.setObstacleFrame(key);
+                    }
+                    else {
+                        // 
+                        sprite.setAnimationFrame(tokenFrame);
+                        tokenFrame = tokenFrame >= 4 ? 0 : tokenFrame+1;
                     }
                 }
                 if (i > longest) longest++;
