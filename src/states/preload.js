@@ -40,7 +40,7 @@ define([
             //this.game.load.image('distance-display', 'assets/hud/distance-display.png');
             game.load.atlas('spawn-warning', 'assets/sprites/spawn-warning.png', 'assets/sprites/spawn-warning.json');
             game.load.atlas('progress', 'assets/sprites/progress.png', 'assets/sprites/progress.json');
-            game.load.image('hud-bg', 'assets/textures/hud-bg.png');
+            game.load.image('hud-frame', 'assets/hud/hud-frame.png');
 
             // Chariot racers
             game.load.atlas('chariot-blue', 'assets/sprites/chariot-blue.png', 'assets/sprites/chariot-blue.json');

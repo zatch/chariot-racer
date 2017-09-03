@@ -159,7 +159,9 @@ define([
             foreground = game.add.tileSprite(0, game.height - 108, game.width, 108, 'foreground');
 
             // HUD
-            hud = new HUD(game);
+            hud = new HUD(game, game.width/2, 0);
+            game.add.existing(hud);
+
             // mockup level
             levelDisplay = new LevelDisplay(game,0,0);
             game.add.existing(levelDisplay);
