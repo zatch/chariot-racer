@@ -48,14 +48,17 @@ define([
             game.load.atlas('chariot-red', 'assets/sprites/chariot-red.png', 'assets/sprites/chariot-red.json');
             game.load.atlas('chariot-white', 'assets/sprites/chariot-white.png', 'assets/sprites/chariot-white.json');
 
-            // Menu
+            // Menu & game over
             game.load.atlas('blue-player', 'assets/menu_assets/ui_menu_button_chariot_blue.png', 'assets/menu_assets/ui_menu_button_chariot_blue.json');
             game.load.atlas('red-player', 'assets/menu_assets/ui_menu_button_chariot_red.png', 'assets/menu_assets/ui_menu_button_chariot_red.json');
             game.load.atlas('white-player', 'assets/menu_assets/ui_menu_button_chariot_white.png', 'assets/menu_assets/ui_menu_button_chariot_white.json');
             game.load.atlas('green-player', 'assets/menu_assets/ui_menu_button_chariot_green.png', 'assets/menu_assets/ui_menu_button_chariot_green.json');
             game.load.image('menu-bg-1', 'assets/menu_assets/ui_menu_bg_01.png');
             game.load.image('menu-bg-2', 'assets/menu_assets/ui_menu_bg_02.png');
+            game.load.image('score-text', 'assets/menu_assets/ui_menu_banner_01.png');
             game.load.image('menu-btn', 'assets/menu_assets/ui_menu_button_01.png');
+            game.load.image('menu-btn2', 'assets/menu_assets/ui_menu_button_02.png');
+            game.load.image('menu-btn3', 'assets/menu_assets/ui_menu_button_03.png');
 
             // Spawnable objects
             game.load.atlas('obstacle', 'assets/sprites/obstacle.png', 'assets/sprites/obstacle.json');
@@ -88,10 +91,10 @@ define([
             game.state.add('GameOver', GameOver);
 
             // Now that everything is loaded, show the menu.
-            //game.stateTransition.to('Menu', true, false);
+            game.stateTransition.to('GameOver', true, false);
 
             // Debug: Skip Menu and go straight to Play (for dev testing)
-            game.stateTransition.to('Play',true,false,{color:'chariot-red'});
+            //game.stateTransition.to('Play',true,false,{color:'chariot-red'});
         }
     };
 });

@@ -334,6 +334,7 @@ define([
 
         onPlayerDeath: function (player) {
             game.camera.unfollow();
+            game.score = Math.floor(metersTraveled);
             metersTraveled = 0;
             game.time.events.add(Phaser.Timer.SECOND * 2, function () {
                 game.stateTransition.to('GameOver', true, false);
