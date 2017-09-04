@@ -11,12 +11,8 @@ define([
 
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, 'obstacle');
-        this.anchor.set(0.5, 0.75);
+        this.anchor.set(0, 0.75);
         this.scale.setTo(2,2);
-
-        game.physics.enable(this);
-
-        this.body.setSize(32,20,0, 30);
     }
 
     Obstacle.prototype = Object.create(Phaser.Sprite.prototype);
