@@ -110,6 +110,7 @@ define([
                 16
             ));
             okBtn.label.anchor.set(0.5);
+            okBtn.animations.add('selected', [0,1,0], 20);
 
             okBtnMask = game.add.graphics(0, 0);
             okBtnMask.beginFill(0xffffff);
@@ -128,6 +129,7 @@ define([
                 16
             ));
             backBtn.label.anchor.set(0.5);
+            backBtn.animations.add('selected', [0,1,0], 20);
 
             backBtnMask = game.add.graphics(0, 0);
             backBtnMask.beginFill(0xffffff);
@@ -168,33 +170,32 @@ define([
         },
 
         onOkBtnClicked: function() {
-            var color = selectedPlayer.key.split('-')[0];
-            music.onFadeComplete.addOnce(function() {
+            okBtn.animations.play('selected').onComplete.addOnce(function() {
+                var color = selectedPlayer.key.split('-')[0];
                 music.stop();
-                //this.game.state.start('Play',true,false,{color:'chariot-'+ color});
-
                 this.game.stateTransition.to('Play', true, false, {color:'chariot-'+ color});
             }, this);
-            music.fadeOut(1000);
         },
 
         onBackBtnClicked: function() {
-            game.add.tween(playerDescription).to({x:playerDescriptionPos.x-playerDescriptionMask.width},200).start();
-            game.add.tween(okBtn).to({y:okBtnPos.y-okBtn.height},200).start();
-            game.add.tween(backBtn).to({y:backBtnPos.y-backBtn.height},200).start();
-            playerReturnXTween = game.add.tween(selectedPlayer).to({x:selectedPlayer.menuReturnCoords.x},200);
-            playerReturnYTween = game.add.tween(selectedPlayer).to({y:selectedPlayer.menuReturnCoords.y},200);
-            playerReturnXTween.chain(playerReturnYTween);
-            playerReturnXTween.onComplete.addOnce(function() {
-                for (var key in players) {
-                    players[key].inputEnabled = true;
-                    if (players[key] !== selectedPlayer) {
-                        game.add.tween(players[key].scale).to({x:1,y:1},200).start();
+            backBtn.animations.play('selected').onComplete.addOnce(function() {
+                game.add.tween(playerDescription).to({x:playerDescriptionPos.x-playerDescriptionMask.width},200).start();
+                game.add.tween(okBtn).to({y:okBtnPos.y-okBtn.height},200).start();
+                game.add.tween(backBtn).to({y:backBtnPos.y-backBtn.height},200).start();
+                playerReturnXTween = game.add.tween(selectedPlayer).to({x:selectedPlayer.menuReturnCoords.x},200);
+                playerReturnYTween = game.add.tween(selectedPlayer).to({y:selectedPlayer.menuReturnCoords.y},200);
+                playerReturnXTween.chain(playerReturnYTween);
+                playerReturnXTween.onComplete.addOnce(function() {
+                    for (var key in players) {
+                        players[key].inputEnabled = true;
+                        if (players[key] !== selectedPlayer) {
+                            game.add.tween(players[key].scale).to({x:1,y:1},200).start();
+                        }
                     }
-                }
-            }, this);
+                }, this);
 
-            playerReturnXTween.start();
+                playerReturnXTween.start();
+            }, this);
 
             okBtn.inputEnabled = false;
             backBtn.inputEnabled = false;

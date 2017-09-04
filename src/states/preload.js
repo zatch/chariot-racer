@@ -55,9 +55,9 @@ define([
             game.load.image('menu-bg-1', 'assets/menu_assets/ui_menu_bg_01.png');
             game.load.image('menu-bg-2', 'assets/menu_assets/ui_menu_bg_02.png');
             game.load.image('score-text', 'assets/menu_assets/ui_menu_banner_01.png');
-            game.load.image('menu-btn', 'assets/menu_assets/ui_menu_button_01.png');
-            game.load.image('menu-btn2', 'assets/menu_assets/ui_menu_button_02.png');
-            game.load.image('menu-btn3', 'assets/menu_assets/ui_menu_button_03.png');
+            game.load.atlas('menu-btn', 'assets/menu_assets/ui_menu_button_01.png', 'assets/menu_assets/ui_menu_button_01.json');
+            game.load.atlas('menu-btn2', 'assets/menu_assets/ui_menu_button_02.png', 'assets/menu_assets/ui_menu_button_02.json');
+            game.load.atlas('menu-btn3', 'assets/menu_assets/ui_menu_button_03.png', 'assets/menu_assets/ui_menu_button_03.json');
 
             // Spawnable objects
             game.load.atlas('spawn-warning', 'assets/sprites/spawn-warning.png', 'assets/sprites/spawn-warning.json');
