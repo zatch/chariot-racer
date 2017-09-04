@@ -83,8 +83,8 @@ define([
             laneOffset = 27;
 
             sky = gameWorld.add(new Phaser.TileSprite(game, 0, 0, game.width, 152, 'sky'));
-            clouds1 = gameWorld.add(new Phaser.TileSprite(game, 0, 26, game.width, 128, 'clouds1'));
-            clouds2 = gameWorld.add(new Phaser.TileSprite(game, 0, 0, game.width, 128, 'clouds2'));
+            clouds1 = gameWorld.add(new Phaser.TileSprite(game, 0, 18, game.width, 128, 'clouds1'));
+            clouds2 = gameWorld.add(new Phaser.TileSprite(game, 0, 8, game.width, 128, 'clouds2'));
             crowd = gameWorld.add(new Phaser.TileSprite(game, 0, 94, game.width, 258, 'crowd'));
             ground = gameWorld.add(new Phaser.TileSprite(game, 0, 352, game.width, 226, 'ground'));
 
