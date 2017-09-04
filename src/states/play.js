@@ -349,8 +349,8 @@ define([
             this.setPlayerActiveLane(1);
 
             // Zoom in for close-up of player.
-            game.add.tween(gameWorld.scale).to({x: 2, y: 2}, 300, Phaser.Easing.Cubic.In, true);
-            game.add.tween(gameWorld).to({y: game.height/-2-100}, 300, Phaser.Easing.Cubic.In, true);
+            game.add.tween(gameWorld.scale).to({x: 1.5, y: 1.5}, 300, Phaser.Easing.Cubic.In, true);
+            game.add.tween(gameWorld).to({y: game.height/-2.5-50}, 300, Phaser.Easing.Cubic.In, true);
 
             // Switch to power-up sound effects.
             music.fadeTo(500, 0.1);
