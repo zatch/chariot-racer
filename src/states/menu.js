@@ -37,20 +37,19 @@ define([
 
         music,
 
-        bgPos = {x: 114, y: 80},
         playerBtnPos = {
-            white: {x: bgPos.x+295, y: bgPos.y+158},
-            green: {x: bgPos.x+437, y: bgPos.y+158},
-            blue:  {x: bgPos.x+295, y: bgPos.y+304},
-            red:   {x: bgPos.x+437, y: bgPos.y+304}
+            white: {x: 295, y: 158},
+            green: {x: 437, y: 158},
+            blue:  {x: 295, y: 304},
+            red:   {x: 437, y: 304}
         },
 
-        selectedPlayerPos = {x: bgPos.x+216, y: bgPos.y+198},
+        selectedPlayerPos = {x: 216, y: 198},
 
-        playerDescriptionPos = {x: bgPos.x+300, y: bgPos.y+144},
+        playerDescriptionPos = {x: 300, y: 144},
 
-        backBtnPos = {x: bgPos.x+240, y: bgPos.y+390},
-        okBtnPos = {x: bgPos.x+390, y: bgPos.y+390};
+        backBtnPos = {x: 240, y: 390},
+        okBtnPos = {x: 390, y: 390};
 
     return {
         // Intro
@@ -59,8 +58,14 @@ define([
         },
 
         create: function () {
+            // Button SFX
+            game.sound.add('menu-select');
+            game.sound.add('menu-back');
+
             // Background
-            bg = game.add.sprite(bgPos.x, bgPos.y, 'menu-bg-1');
+            bg = game.add.sprite(0, 80, 'menu-bg-1');
+            bg.x = game.width / 2 - bg.width / 2;
+
             bg.label = bg.addChild(new Phaser.BitmapText(
                 game, 
                 bg.width/2,
@@ -72,15 +77,11 @@ define([
             ));
             bg.label.anchor.set(0.5);
 
-            // Button SFX
-            game.sound.add('menu-select');
-            game.sound.add('menu-back');
-
             // Player descriptions
-            playerDescription = game.add.existing(new Phaser.BitmapText(
+            playerDescription = bg.addChild(new Phaser.BitmapText(
                 game,
-                playerDescriptionPos.x,
-                playerDescriptionPos.y,
+                300,
+                144,
                 'boxy_bold',
                 'null',
                 16
@@ -88,7 +89,7 @@ define([
             playerDescription.maxWidth = 300;
             playerDescription.x -= playerDescription.maxWidth+200;
 
-            playerDescriptionMask = game.add.graphics(0, 0);
+            playerDescriptionMask = bg.addChild(new Phaser.Graphics(game, 0, 0));
             playerDescriptionMask.beginFill(0xffffff);
             playerDescriptionMask.drawRect(selectedPlayerPos.x+66, playerDescriptionPos.y, playerDescription.maxWidth+200, 500);
             playerDescription.mask = playerDescriptionMask;
@@ -96,11 +97,12 @@ define([
             // Player select buttons
             for (var key in players) {
                 var coords = playerBtnPos[key];
-                players[key] = game.add.sprite(
+                players[key] = bg.addChild(new Phaser.Sprite(
+                    game,
                     coords.x, 
                     coords.y, 
                     key+'-player'
-                );
+                ));
                 players[key].anchor.set(0.5);
                 players[key].animations.add('selected', [0,1,0,1,0,1,0], 20);
                 players[key].menuReturnCoords = coords;
@@ -109,7 +111,7 @@ define([
             }
 
             // OK button
-            okBtn = game.add.button(okBtnPos.x, okBtnPos.y, 'menu-btn', this.onOkBtnClicked);
+            okBtn = bg.addChild(new Phaser.Button(game, okBtnPos.x, okBtnPos.y, 'menu-btn', this.onOkBtnClicked));
             okBtn.inputEnabled = false;
             okBtn.y -= okBtn.height;
             okBtn.label = okBtn.addChild(new Phaser.BitmapText(
@@ -123,13 +125,13 @@ define([
             okBtn.label.anchor.set(0.5);
             okBtn.animations.add('selected', [0,1,0], 20);
 
-            okBtnMask = game.add.graphics(0, 0);
+            okBtnMask = bg.addChild(new Phaser.Graphics(game, 0, 0));
             okBtnMask.beginFill(0xffffff);
             okBtnMask.drawRect(okBtnPos.x, okBtnPos.y, okBtn.width, okBtn.height);
             okBtn.mask = okBtnMask;
 
             // Back button
-            backBtn = game.add.button(backBtnPos.x, backBtnPos.y, 'menu-btn', this.onBackBtnClicked);
+            backBtn = bg.addChild(new Phaser.Button(game, backBtnPos.x, backBtnPos.y, 'menu-btn', this.onBackBtnClicked));
             backBtn.inputEnabled = false;
             backBtn.y -= backBtn.height;
             backBtn.label = backBtn.addChild(new Phaser.BitmapText(
@@ -143,7 +145,7 @@ define([
             backBtn.label.anchor.set(0.5);
             backBtn.animations.add('selected', [0,1,0], 20);
 
-            backBtnMask = game.add.graphics(0, 0);
+            backBtnMask = bg.addChild(new Phaser.Graphics(game, 0, 0));
             backBtnMask.beginFill(0xffffff);
             backBtnMask.drawRect(backBtnPos.x, backBtnPos.y, backBtn.width, backBtn.height);
             backBtn.mask = backBtnMask;
@@ -237,7 +239,7 @@ define([
                 music.stop();
                 this.game.stateTransition.to('Credits', true, false);
             }, this);
-            
+
             okBtn.inputEnabled = false;
             backBtn.inputEnabled = false;
             creditsBtn.inputEnabled = false;
