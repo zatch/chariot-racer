@@ -1,6 +1,7 @@
 define([
-    'phaser'
-], function (Phaser) { 
+    'phaser',
+    'mute-button'
+], function (Phaser, MuteButton) { 
     'use strict';
 
     // Shortcuts
@@ -135,6 +136,9 @@ define([
             backBtnMask.beginFill(0xffffff);
             backBtnMask.drawRect(backBtnPos.x, backBtnPos.y, backBtn.width, backBtn.height);
             backBtn.mask = backBtnMask;
+
+            // Mute button
+            game.add.existing(new MuteButton(game, 5, 5));
 
             // Music
             music = game.add.audio('menu-music', 0.5, true);

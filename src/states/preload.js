@@ -59,6 +59,9 @@ define([
             game.load.atlas('menu-btn2', 'assets/menu_assets/ui_menu_button_02.png', 'assets/menu_assets/ui_menu_button_02.json');
             game.load.atlas('menu-btn3', 'assets/menu_assets/ui_menu_button_03.png', 'assets/menu_assets/ui_menu_button_03.json');
 
+            // Mute button
+            game.load.atlas('mute-btn', 'assets/menu_assets/mute-button.png', 'assets/menu_assets/mute-button.json');
+
             // Spawnable objects
             game.load.atlas('spawn-warning', 'assets/sprites/spawn-warning.png', 'assets/sprites/spawn-warning.json');
             game.load.atlas('obstacle', 'assets/sprites/obstacle.png', 'assets/sprites/obstacle.json');

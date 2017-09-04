@@ -1,6 +1,7 @@
 define([
-    'phaser'
-], function (Phaser) { 
+    'phaser',
+    'mute-button'
+], function (Phaser, MuteButton) { 
     'use strict';
 
     // Shortcuts
@@ -66,6 +67,9 @@ define([
             var challengedText = new Phaser.BitmapText(game,0,0,'boxy_bold','CHALLANGE A FRIEND',16);
             challengedText.anchor.set(0.5,0.5);
             challengeBtn.addChild(challengedText);
+
+            // Mute button
+            game.add.existing(new MuteButton(game, 5, 5));
         }
     };
 });
