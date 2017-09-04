@@ -10,8 +10,9 @@
     "requirejs": "latest",
     "phaser": "latest",
     "javascript-state-machine": "~2.3.5",
-    "phaser-swipe":"latest",
-    "phaser-state-transition-plugin": "latest"
+    "phaser-swipe": "latest",
+    "phaser-state-transition-plugin": "latest",
+    "angular": "^1.6.6"
   },
   "ignore": [
     "src/lib"

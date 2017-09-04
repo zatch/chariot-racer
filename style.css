@@ -1,11 +1,67 @@
+@font-face {
+    font-family: 'Boxy';
+    src: url('assets/font/Boxy-Bold.ttf');
+}
+html{
+    background: black;
+    color:purple;
+
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: yellow;
+    font-family: 'Boxy', monospace;
+}
+p{
+    font-size: 26px;
+}
+.form{
+    width:80%;
+    margin: auto auto;
+    position: relative;
+
+}
+.form img{
+    width:100%;
+    position: absolute;
+    z-index: -1;
+}
+.form form{
+    z-index: 1;
+    display:inline-block;
+}
+.title{
+    position:relative;
+    top:24px;
+    text-align: center;
+    font-size:18px;
+}
+.racer{
+    width: 152px;
+    height: 152px;
+    background-position: left;
+    margin:10% 0 0 10%;
+    display:inline-block;
+}
+button{
+    position: relative;
+    top:50px;
+    left:30%;
+    width: 180px;
+    height: 56px;
+    background: url('assets/menu_assets/ui_menu_button_02.png') no-repeat;
+    background-size: contain;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
 #headline{
     background-color:white;
     color:black;
 
 }
 #email{
-    color:red;
+    background:red;
+    font-size: 16px;
     border: 3px #9f2aff dashed;
-    padding: 10px 0 20px 5px;
-    width: 50%;
+    padding: 10px;
+    width: 70%;
 }

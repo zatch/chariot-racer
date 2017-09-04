@@ -45,7 +45,7 @@ define([
             scoreText.anchor.set(0.5,0.5);
             cont.addChild(scoreText);
 
-            dieText = new Phaser.BitmapText(game, 0, 0, 'boxy_bold', 'DISTANCE TRAVELLED: '+game.score+'m', 16);
+            dieText = new Phaser.BitmapText(game, 0, 0, 'boxy_bold', 'DISTANCE TRAVELLED: '+data.travelled+'m', 16);
             dieText.anchor.set(0.5);
             scoreText.addChild(dieText);
 
@@ -60,7 +60,8 @@ define([
 
             // challenge a friend button
             var challengeBtn = game.add.button(game.width/5*3,game.height/5*4,'menu-btn3',function(){
-                window.location.href='recommend.html';
+                //window.location.href='recommend.html?m='+data.travelled+'&p='+data.player;
+                out(data.travelled);
             });
             challengeBtn.anchor.set(0.5);
             var challengedText = new Phaser.BitmapText(game,0,0,'boxy_bold','CHALLANGE A FRIEND',16);

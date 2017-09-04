@@ -12,5 +12,18 @@
         </style>
     </head>
     <body>
+    <script>
+        var out = function(score){
+            var email = window.prompt('email');
+            if(email){
+                var link = "mailto:"+email
+                    + "&subject=" + encodeURI("I raced "+score+"m. Try to beat me!")
+                    + "&body=" + encodeURIComponent("Visit http://example.com to beat me")
+                ;
+                window.location.href = link;
+            }
+
+        }
+    </script>
     </body>
 </html>

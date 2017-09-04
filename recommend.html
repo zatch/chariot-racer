@@ -5,20 +5,44 @@
     <title>Tell a friend</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<h1 id="headline">
-    Tell a friend
-</h1>
-<form method="get">
-    <label for="email">
-        Your friend's email
-    </label>
+<body ng-app="app" ng-controller="ctrl">
 
-    <input id="email" type="email" name="email" placeholder="mail@example.com" required/>
-    <button>
-        send
-    </button>
-</form>
+<div class="form">
+    <img src="assets/menu_assets/ui_menu_bg_02.png" alt="background">
+    <h1 class="title">
+        Tell a friend
+    </h1>
+    <div class="racer" ng-if="player" ng-style="player" alt=""></div>
+    <form ng-submit="send(fields)">
+        <p>I raced for <strong>{{params.score}}m</strong>. <br>Can you beat me?</p>
+        <input id="email" type="email" name="email" placeholder="mail@example.com" required/>
+        <button type="submit">
+            CHALLENGE
+        </button>
+    </form>
+</div>
 
+<script src="src/lib/angular/angular.min.js"></script>
+<script>
+    var app = angular.module('app',[]).config(function($locationProvider){
+            $locationProvider.html5Mode({enabled:true,requireBase:false});
+        })
+        .controller('ctrl',['$scope','$location',function($scope,$location){
+            $scope.player = false;
+            $scope.params = {
+                player:$location.search().p,
+                score:$location.search().m
+            };
+            if(typeof $scope.params.player !== 'undefined'){
+                $scope.player = {
+                    'background-image':'url(assets/menu_assets/ui_menu_button_'+$scope.params.player.replace('-','_')+'.png)'
+                };
+            }
+            $scope.fields ={};
+            $scope.send = function(fields){
+
+            }
+        }]);
+</script>
 </body>
 </html>

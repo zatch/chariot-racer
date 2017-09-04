@@ -49,8 +49,7 @@ define([
         create: function() {
             // Set up game background
             this.game.stage.backgroundColor = '#0c0e11';
-            // setup scoring
-            this.game.score =0;
+
 
             this.game.state.add('Preload', Preload);
             this.game.state.start('Preload');
