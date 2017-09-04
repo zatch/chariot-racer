@@ -191,7 +191,7 @@ define([
 
         update: function () {
             // Direct input to player.
-            if(game.input.activePointer.isDown){
+            if(game.input.activePointer.isDown && !player.dying){
                 if (game.input.y < laneYCoords[1] * gameWorld.scale.x + gameWorld.y) {
                     this.setPlayerActiveLane(0);
                 }
