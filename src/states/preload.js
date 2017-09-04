@@ -1,9 +1,10 @@
 define([
     'phaser',
     'states/menu',
+    'states/credits',
     'states/play',
     'states/game-over'
-], function (Phaser, Menu, Play, GameOver) { 
+], function (Phaser, Menu, Credits, Play, GameOver) { 
     'use strict';
 
     // Shortcuts
@@ -54,10 +55,13 @@ define([
             game.load.atlas('green-player', 'assets/menu_assets/ui_menu_button_chariot_green.png', 'assets/menu_assets/ui_menu_button_chariot_green.json');
             game.load.image('menu-bg-1', 'assets/menu_assets/ui_menu_bg_01.png');
             game.load.image('menu-bg-2', 'assets/menu_assets/ui_menu_bg_02.png');
+            game.load.image('menu-bg-3', 'assets/menu_assets/ui_menu_bg_03.png');
+            game.load.image('menu-banner-2', 'assets/menu_assets/ui_menu_banner_02.png');
             game.load.image('score-text', 'assets/menu_assets/ui_menu_banner_01.png');
             game.load.atlas('menu-btn', 'assets/menu_assets/ui_menu_button_01.png', 'assets/menu_assets/ui_menu_button_01.json');
             game.load.atlas('menu-btn2', 'assets/menu_assets/ui_menu_button_02.png', 'assets/menu_assets/ui_menu_button_02.json');
             game.load.atlas('menu-btn3', 'assets/menu_assets/ui_menu_button_03.png', 'assets/menu_assets/ui_menu_button_03.json');
+            game.load.atlas('credits-btn', 'assets/menu_assets/credits-button.png', 'assets/menu_assets/credits-button.json');
 
             // Mute button
             game.load.atlas('mute-btn', 'assets/menu_assets/mute-button.png', 'assets/menu_assets/mute-button.json');
@@ -73,6 +77,7 @@ define([
             // Music
             game.load.audio('menu-music', 'assets/music/Preparing_for_War.mp3');
             game.load.audio('race-music', 'assets/music/SuperHero_original.mp3');
+            game.load.audio('credits-music', 'assets/music/Lines_of_Code.mp3');
 
             // SFX
             game.load.audio('token-collect', 'assets/sfx/Pickup_Coin.mp3');
@@ -92,6 +97,7 @@ define([
         create: function () {
             // Add states to our game.
             game.state.add('Menu', Menu);
+            game.state.add('Credits', Credits);
             game.state.add('Play', Play);
             game.state.add('GameOver', GameOver);
 

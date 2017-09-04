@@ -26,6 +26,8 @@ define([
         backBtn,
         backBtnMask,
 
+        creditsBtn,
+
         playerXTween,
         playerYTween,
         playerReturnXTween,
@@ -57,6 +59,7 @@ define([
         },
 
         create: function () {
+            // Background
             bg = game.add.sprite(bgPos.x, bgPos.y, 'menu-bg-1');
             bg.label = bg.addChild(new Phaser.BitmapText(
                 game, 
@@ -69,9 +72,11 @@ define([
             ));
             bg.label.anchor.set(0.5);
 
+            // Button SFX
             game.sound.add('menu-select');
             game.sound.add('menu-back');
 
+            // Player descriptions
             playerDescription = game.add.existing(new Phaser.BitmapText(
                 game,
                 playerDescriptionPos.x,
@@ -88,6 +93,7 @@ define([
             playerDescriptionMask.drawRect(selectedPlayerPos.x+66, playerDescriptionPos.y, playerDescription.maxWidth+200, 500);
             playerDescription.mask = playerDescriptionMask;
 
+            // Player select buttons
             for (var key in players) {
                 var coords = playerBtnPos[key];
                 players[key] = game.add.sprite(
@@ -102,6 +108,7 @@ define([
                 players[key].events.onInputDown.add(this.playerSelect);
             }
 
+            // OK button
             okBtn = game.add.button(okBtnPos.x, okBtnPos.y, 'menu-btn', this.onOkBtnClicked);
             okBtn.inputEnabled = false;
             okBtn.y -= okBtn.height;
@@ -121,6 +128,7 @@ define([
             okBtnMask.drawRect(okBtnPos.x, okBtnPos.y, okBtn.width, okBtn.height);
             okBtn.mask = okBtnMask;
 
+            // Back button
             backBtn = game.add.button(backBtnPos.x, backBtnPos.y, 'menu-btn', this.onBackBtnClicked);
             backBtn.inputEnabled = false;
             backBtn.y -= backBtn.height;
@@ -139,6 +147,11 @@ define([
             backBtnMask.beginFill(0xffffff);
             backBtnMask.drawRect(backBtnPos.x, backBtnPos.y, backBtn.width, backBtn.height);
             backBtn.mask = backBtnMask;
+
+            // Credits button
+            creditsBtn = game.add.button(game.width/2, game.height, 'credits-btn', this.onCreditsBtnClicked);
+            creditsBtn.anchor.set(0.5, 1);
+            creditsBtn.animations.add('selected', [0,1,0], 20);
 
             // Mute button
             game.add.existing(new MuteButton(game));
@@ -186,6 +199,9 @@ define([
                 music.stop();
                 this.game.stateTransition.to('Play', true, false, {color:'chariot-'+ color});
             }, this);
+
+            okBtn.inputEnabled = false;
+            backBtn.inputEnabled = false;
         },
 
         onBackBtnClicked: function() {
@@ -212,6 +228,19 @@ define([
 
             okBtn.inputEnabled = false;
             backBtn.inputEnabled = false;
+        },
+
+        onCreditsBtnClicked: function() {
+            game.sound.play('menu-select');
+
+            creditsBtn.animations.play('selected').onComplete.addOnce(function() {
+                music.stop();
+                this.game.stateTransition.to('Credits', true, false);
+            }, this);
+            
+            okBtn.inputEnabled = false;
+            backBtn.inputEnabled = false;
+            creditsBtn.inputEnabled = false;
         },
 
         update:function(){

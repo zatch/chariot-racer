@@ -1,0 +1,27 @@
+{ "frames": {
+   "credits-button 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 118, "h": 36 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 102, "h": 20 },
+    "sourceSize": { "w": 102, "h": 20 },
+    "duration": 100
+   },
+   "credits-button 1.ase": {
+    "frame": { "x": 118, "y": 0, "w": 118, "h": 36 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 102, "h": 20 },
+    "sourceSize": { "w": 102, "h": 20 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.0.1",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\menu_assets\\credits-button.png",
+  "format": "RGBA8888",
+  "size": { "w": 236, "h": 36 },
+  "scale": "1"
+ }
+}
