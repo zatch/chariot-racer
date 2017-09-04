@@ -1,18 +1,18 @@
 { "frames": {
-   "mute-button.ase": {
-    "frame": { "x": 0, "y": 0, "w": 124, "h": 72 },
+   "mute-button 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 42, "h": 28 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 108, "h": 56 },
-    "sourceSize": { "w": 108, "h": 56 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 28 },
+    "sourceSize": { "w": 42, "h": 28 },
     "duration": 100
    },
-   "ui_menu_button_01 1.ase": {
-    "frame": { "x": 124, "y": 0, "w": 124, "h": 72 },
+   "mute-button 1.ase": {
+    "frame": { "x": 50, "y": 0, "w": 42, "h": 28 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 108, "h": 56 },
-    "sourceSize": { "w": 108, "h": 56 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 42, "h": 28 },
+    "sourceSize": { "w": 42, "h": 28 },
     "duration": 100
    }
  },
@@ -21,7 +21,7 @@
   "version": "1.1.0.1",
   "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\menu_assets\\mute-button.png",
   "format": "RGBA8888",
-  "size": { "w": 248, "h": 72 },
+  "size": { "w": 92, "h": 28 },
   "scale": "1"
  }
 }

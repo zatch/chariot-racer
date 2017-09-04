@@ -163,7 +163,7 @@ define([
             game.add.existing(hud);
 
             // Mute button
-            game.add.existing(new MuteButton(game, 5, 5));
+            game.add.existing(new MuteButton(game));
 
             // SFX
             sfx.tokenCollect = game.sound.add('token-collect');

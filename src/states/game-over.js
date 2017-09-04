@@ -69,7 +69,7 @@ define([
             challengeBtn.addChild(challengedText);
 
             // Mute button
-            game.add.existing(new MuteButton(game, 5, 5));
+            game.add.existing(new MuteButton(game));
         }
     };
 });

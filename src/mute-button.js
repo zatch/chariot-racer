@@ -6,11 +6,11 @@ define([
     // Shortcuts
     var game;
 
-    function MuteButton (_game, x, y) {
+    function MuteButton (_game) {
         game = _game;
 
         // Initialize sprite
-        Phaser.Button.call(this, game, x, y, 'mute-btn', this.toggle);
+        Phaser.Button.call(this, game, 16, 12, 'mute-btn', this.toggle);
         if (game.sound.mute) {
             this.frame = 1;
         }

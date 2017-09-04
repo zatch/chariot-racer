@@ -141,7 +141,7 @@ define([
             backBtn.mask = backBtnMask;
 
             // Mute button
-            game.add.existing(new MuteButton(game, 5, 5));
+            game.add.existing(new MuteButton(game));
 
             // Music
             music = game.add.audio('menu-music', 0.5, true);
