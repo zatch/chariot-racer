@@ -89,7 +89,6 @@ define([
 
             // Finish line
             finishLine = new Phaser.Sprite(game, -500, 352, 'finish-line');
-            game.physics.enable(finishLine);
             gameWorld.add(finishLine);
 
             // Active lane marker
@@ -218,7 +217,7 @@ define([
             foreground.tilePosition.x -= player.body.velocity.x;
             clouds1.tilePosition.x -= player.body.velocity.x*0.1;
             clouds2.tilePosition.x -= player.body.velocity.x*0.09;
-            finishLine.body.x -= player.body.velocity.x;
+            finishLine.x -= player.body.velocity.x;
 
             // Move sprites and kill them if they're off camera.
             for (var lcv = 0; lcv < 3; lcv++) {
@@ -231,7 +230,7 @@ define([
             if (!player.dying) {
                 game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
                 game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
-                game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
+                if (finishLine.x < player.cameraOffset.x - 100) this.onPlayerCollidesFinishLine();
             }
         },
 
@@ -320,7 +319,7 @@ define([
             hud.updateBoostMeter(currentTokensCollected/currentPatternTokenCount);
         },
 
-        onPlayerCollidesFinishLine: function (player, fLine) {
+        onPlayerCollidesFinishLine: function () {
             if (inPattern) {
                 // Clear flag.
                 inPattern = false;
