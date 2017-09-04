@@ -95,7 +95,6 @@ define([], function () {
                     }
                 }
             }
-            console.log(pattern.tokenCount);
         }, this);
     }, this);
     

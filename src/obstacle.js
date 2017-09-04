@@ -37,7 +37,6 @@ define([
                 this.frame = 0;
                 break;
         }
-        console.log(frameKey, this.frame);
     };
 
     return Obstacle;

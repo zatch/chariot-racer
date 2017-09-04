@@ -6,7 +6,7 @@ define([
     'use strict';
 
     function Game() {    
-        console.log('Making the Game');    
+        
     }
     
     Game.prototype = {
@@ -22,20 +22,7 @@ define([
 
         init: function () {
             this.game.stateTransition = this.game.plugins.add(Phaser.Plugin.StateTransition);
-            console.log(Phaser.Plugin.StateTransition.In);
-            console.log(Phaser.Plugin.StateTransition.Out);
-            /*this.game.stateTransition.configure({
-                duration: Phaser.Timer.SECOND * 0.8,
-                ease: Phaser.Easing.Exponential.InOut,
-                properties: {
-                    alpha: 0,
-                    scale: {
-                        x: 1.4,
-                        y: 1.4
-                    }
-                }
-            });*/
-
+            
             // Keep my pixels crisp and crunchy!
             this.game.stage.smoothed = false;
             this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
