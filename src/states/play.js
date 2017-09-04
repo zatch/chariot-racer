@@ -60,7 +60,6 @@ define([
         clouds2,
         activeLaneMarker,
         sfx={},
-        soundOn=true,
         hud,
         music;
 
@@ -177,13 +176,11 @@ define([
             music = game.sound.add('race-music');
             music.addMarker('intro', 0, 1.446);
             music.addMarker('loop', 1.446, 69.39, 1, true);
-            if(soundOn){
-                //music.play();
-                music.play('intro');
-                music.onStop.addOnce(function() {
-                    music.play('loop');
-                }, this);
-            }
+            
+            music.play('intro');
+            music.onStop.addOnce(function() {
+                music.play('loop');
+            }, this);
 
             metersTraveled = 0;
             currentLevel = 0;
@@ -348,10 +345,10 @@ define([
         onPlayerDeath: function (player) {
             game.camera.unfollow();
             game.score = Math.floor(metersTraveled);
-            if(soundOn){
-                music.fadeOut(500);
-                sfx.lose.play();
-            }
+
+            music.fadeOut(500);
+            sfx.lose.play();
+            
             game.time.events.add(Phaser.Timer.SECOND * 2, function () {
                 game.stateTransition.to('GameOver', true, false);
             }, this);
