@@ -69,6 +69,9 @@ define([
             ));
             bg.label.anchor.set(0.5);
 
+            game.sound.add('menu-select');
+            game.sound.add('menu-back');
+
             playerDescription = game.add.existing(new Phaser.BitmapText(
                 game,
                 playerDescriptionPos.x,
@@ -163,6 +166,8 @@ define([
             playerYTween.chain(playerXTween);
             playerYTween.start();
 
+            game.sound.play('menu-select');
+
             playerXTween.onComplete.addOnce(function() {
                 game.add.tween(playerDescription).to({x:playerDescriptionPos.x},150,Phaser.Linear,true,150);
                 game.add.tween(okBtn).to({y:okBtnPos.y},150,Phaser.Linear,true,150);
@@ -174,6 +179,8 @@ define([
         },
 
         onOkBtnClicked: function() {
+            game.sound.play('menu-select');
+
             okBtn.animations.play('selected').onComplete.addOnce(function() {
                 var color = selectedPlayer.key.split('-')[0];
                 music.stop();
@@ -182,6 +189,8 @@ define([
         },
 
         onBackBtnClicked: function() {
+            game.sound.play('menu-back');
+
             backBtn.animations.play('selected').onComplete.addOnce(function() {
                 game.add.tween(playerDescription).to({x:playerDescriptionPos.x-playerDescriptionMask.width},200).start();
                 game.add.tween(okBtn).to({y:okBtnPos.y-okBtn.height},200).start();

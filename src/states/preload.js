@@ -81,6 +81,8 @@ define([
             game.load.audio('heartbeat', 'assets/sfx/heartbeat.mp3');
             game.load.audio('crash', 'assets/sfx/atari_boom.wav');
             game.load.audio('lose', 'assets/sfx/Jingle_Lose_00.mp3');
+            game.load.audio('menu-select', 'assets/sfx/roughSelect.mp3');
+            game.load.audio('menu-back', 'assets/sfx/roughBack.mp3');
 
             // Fonts
             game.load.bitmapFont('boxy_bold', 'assets/font/boxy_bold.png', 'assets/font/boxy_bold.fnt');
