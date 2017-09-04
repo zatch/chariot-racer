@@ -33,19 +33,11 @@ define([
             bg.x = game.width / 2 - bg.width / 2;
 
             // Player descriptions
-            creditsText = bg.addChild(new Phaser.BitmapText(
-                game,
-                bg.width/2,
-                100,
-                'boxy_bold',
-                'CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE CREDIT TEXT GOES HERE',
-                16,
-                'center'
-            ));
-            creditsText.anchor.set(0.5, 0);
-            creditsText.maxWidth = 560;
-
+            creditsText = bg.addChild(new Phaser.Sprite(game, bg.width/2, 200, 'blank'));
             game.physics.enable(creditsText);
+            creditsText.body.setSize(560,0,0,0);
+            this.writeCreditText();
+
             game.time.events.add(Phaser.Timer.SECOND*2, function () {
                 creditsText.body.velocity.y = -20;
             }, this);
@@ -107,8 +99,65 @@ define([
             }, this);
         },
 
-        update:function(){
+        update: function(){
             if (creditsText.y < 0 - creditsText.height) creditsText.y = bg.height;
+        },
+
+        addTitle: function(text){
+            var fontSize = 32;
+            // Fixed top position for title.
+            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, 0);
+            var textObject = new Phaser.BitmapText(
+                game,
+                0,
+                creditsText.getBounds().height,
+                'boxy_bold',
+                text.toUpperCase(),
+                fontSize,
+                'center'
+            );
+            textObject.anchor.set(0.5, 0);
+            textObject.maxWidth = 560;
+            creditsText.addChild(textObject);
+            // Add height of text object to frame height.
+            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, creditsText.height + textObject.height + 150);
+        },
+
+        addH1: function(text){
+            this.addText(text, 32, 24);
+        },
+
+        addP: function(text){
+            this.addText(text, 16, 16);
+        },
+
+        addText: function(text, marginTop, fontSize) {
+            marginTop = marginTop ? marginTop : 0;
+            fontSize = fontSize ? fontSize : 16;
+            // Add margin-top to frame size.
+            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, creditsText.height + marginTop);
+            var textObject = new Phaser.BitmapText(
+                game,
+                0,
+                creditsText.getBounds().height,
+                'boxy_bold',
+                text.toUpperCase(),
+                fontSize,
+                'center'
+            );  
+            textObject.anchor.set(0.5, 0);
+            textObject.maxWidth = 560;
+            creditsText.addChild(textObject);
+            creditsText.update();
+            // Add height of text object to frame height.
+            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, creditsText.height + textObject.height);
+        },
+
+        writeCreditText: function() {
+            this.addTitle('Chariot Racer');
+            this.addH1('sample header');
+            this.addP('sample paragraph sample paragraph sample paragraph');
+            this.addP('sample paragraph sample\nparagraph sample paragraph');
         }
     };
 });
