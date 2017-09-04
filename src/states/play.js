@@ -82,14 +82,14 @@ define([
             laneCount = 3;
             laneOffset = 27;
 
-            sky = gameWorld.add(new Phaser.TileSprite(game, 0, 0, game.width, 152, 'sky'));
-            clouds1 = gameWorld.add(new Phaser.TileSprite(game, 0, 18, game.width, 128, 'clouds1'));
-            clouds2 = gameWorld.add(new Phaser.TileSprite(game, 0, 8, game.width, 128, 'clouds2'));
-            crowd = gameWorld.add(new Phaser.TileSprite(game, 0, 94, game.width, 258, 'crowd'));
-            ground = gameWorld.add(new Phaser.TileSprite(game, 0, 352, game.width, 226, 'ground'));
+            sky = gameWorld.add(new Phaser.TileSprite(game, 0, -28, game.width+50, 180, 'sky'));
+            clouds1 = gameWorld.add(new Phaser.TileSprite(game, 0, 18, game.width+50, 128, 'clouds1'));
+            clouds2 = gameWorld.add(new Phaser.TileSprite(game, 0, 8, game.width+50, 128, 'clouds2'));
+            crowd = gameWorld.add(new Phaser.TileSprite(game, 0, 94, game.width+50, 258, 'crowd'));
+            ground = gameWorld.add(new Phaser.TileSprite(game, 0, 352, game.width+50, 226, 'ground'));
 
             // Finish line
-            finishLine = new FinishLine(game, -100, 352);
+            finishLine = new FinishLine(game, -500, 352);
             gameWorld.add(finishLine);
 
             // Active lane marker
@@ -131,7 +131,7 @@ define([
             gameWorld.add(spawner);
 
             // Insert player
-            player = new Player(game, 320 , 0, playerKey);
+            player = new Player(game, 0, 0, playerKey);
             player.activeLane = 1;
             player.events.onDeath.add(this.onPlayerDeath);
             player.events.onPowerUpStart.add(this.onPowerUpStart, this);
@@ -140,6 +140,10 @@ define([
             player.fixedToCamera = true;
             player.scale.setTo(1.2);
             player.cameraOffset.y = laneYCoords[player.activeLane] + 56;
+            player.cameraOffset.x = 0;
+
+            // Tween player in from left edge of screen during intro.
+            game.add.tween(player.cameraOffset).to({x:320}, 1400, Phaser.Easing.Back.Out, true);
 
             // Sync activeLaneMarker to player
             activeLaneMarker.fixedToCamera = true;
@@ -150,7 +154,7 @@ define([
             game.player = player;
             gameWorld.add(player);
 
-            foreground = gameWorld.add(new Phaser.TileSprite(game, 0, game.height - 108, game.width, 108, 'foreground'));
+            foreground = gameWorld.add(new Phaser.TileSprite(game, 0, game.height - 108, game.width+50, 108, 'foreground'));
 
             // HUD
             hud = new HUD(game, game.width/2, 0);
@@ -346,8 +350,8 @@ define([
             spawnTimer.pause();
 
             // Zoom in for close-up of player.
-            game.add.tween(gameWorld.scale).to({x: 1.5, y: 1.5}, 300, Phaser.Easing.Cubic.In, true);
-            game.add.tween(gameWorld).to({y: game.height/-2.66}, 300, Phaser.Easing.Cubic.In, true);
+            game.add.tween(gameWorld.scale).to({x: 1.5, y: 1.5}, 300, Phaser.Easing.Back.In, true);
+            game.add.tween(gameWorld).to({y: game.height/-2.66}, 300, Phaser.Easing.Back.In, true);
 
             // Switch to power-up sound effects.
             music.fadeTo(500, 0.1);
@@ -361,8 +365,8 @@ define([
 
         onPowerUpEnd: function (player) {
             // Return to normal scale and position.
-            game.add.tween(gameWorld.scale).to({x: 1, y: 1}, 300, Phaser.Easing.Cubic.In, true);
-            game.add.tween(gameWorld).to({y: 0}, 300, Phaser.Easing.Cubic.In, true);
+            game.add.tween(gameWorld.scale).to({x: 1, y: 1}, 300, Phaser.Easing.Back.In, true);
+            game.add.tween(gameWorld).to({y: 0}, 300, Phaser.Easing.Back.In, true);
 
             // Hide bonus text, but make sure it's on screen long enough to read.
             game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);

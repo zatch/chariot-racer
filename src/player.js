@@ -1,8 +1,7 @@
 define([
     'phaser',
-    'entity',
     'utilities/state-machine'
-], function (Phaser, Entity, StateMachine) { 
+], function (Phaser, StateMachine) { 
     'use strict';
 
     // Shortcuts
@@ -12,7 +11,7 @@ define([
         game = _game;
 
         // Initialize sprite
-        Entity.call(this, game, x, y, key);
+        Phaser.Sprite.call(this, game, x, y, key);
         this.anchor.set(1, 1);
 
         // Set up animations.
@@ -33,8 +32,6 @@ define([
 
         // Enable physics.
         game.physics.enable(this);
-        this.body.collideWorldBounds = true;
-        this.checkWorldBounds = true;
 
         // Resize player body/hitbox.
         this.body.setSize(122,20,30,92);
@@ -70,7 +67,7 @@ define([
     }
 
 
-    Player.prototype = Object.create(Entity.prototype);
+    Player.prototype = Object.create(Phaser.Sprite.prototype);
     Player.prototype.constructor = Player;
 
     Player.prototype.update_normal = function () {
