@@ -34,7 +34,7 @@ define([
         game.physics.enable(this);
 
         // Resize player body/hitbox.
-        this.body.setSize(122,20,30,92);
+        this.body.setSize(122,2,30,110);
 
         // Initialize public properites.
         // Fastest possible movement speeds.
