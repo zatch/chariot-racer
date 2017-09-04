@@ -11,9 +11,7 @@ define([
 
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, 'token', 0);
-        this.anchor.set(0.5);
-
-        game.physics.enable(this);
+        this.anchor.set(0, 0.5);
         
         this.animations.add('spin');
         this.animations.play('spin', 10, true);

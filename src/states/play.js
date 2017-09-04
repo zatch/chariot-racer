@@ -186,7 +186,7 @@ define([
         },
 
         render: function () {
-            
+            //if (game.showDebug) game.debug.text(game.time.fps, 64, 16, "#00ff00");
         },
 
         update: function () {
@@ -204,7 +204,6 @@ define([
                     this.setPlayerActiveLane(2);
                 }
             }
-
             // Update distance travaled.
             metersTraveled += player.body.velocity.x / pixelsPerMeter;
 
@@ -230,16 +229,44 @@ define([
             if (!player.dying) {
                 game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
                 game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
-                if (finishLine.x < player.cameraOffset.x - 100) this.onPlayerCollidesFinishLine();
+
+                if (player.body.y-10 > laneYCoords[0] * gameWorld.scale.x + gameWorld.y &&
+                    player.body.y-10 < laneYCoords[1] * gameWorld.scale.x + gameWorld.y) {
+                    lanes[0].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                    lanes[0].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
+                }
+                else if (player.body.y-10 > laneYCoords[1] * gameWorld.scale.x + gameWorld.y &&
+                         player.body.y-10 < laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
+                    lanes[1].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                    lanes[1].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
+                }
+                else if (player.body.y-10 > laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
+                    lanes[2].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                    lanes[2].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
+                }
+
+                if (finishLine.x < player.body.x + player.body.width) this.onPlayerCollidesFinishLine();
+            }
+        },
+
+        checkPlayerOverlapToken: function(token) {
+            if (token.x > player.body.x && token.x < player.body.x + player.body.width) {
+                this.onPlayerCollidesToken(player, token);
+            }
+        },
+
+        checkPlayerOverlapObstacle: function(obstacle) {
+            if (obstacle.x > player.body.x && obstacle.x < player.body.x + player.body.width) {
+                this.onPlayerCollidesObstacle(player, obstacle);
             }
         },
 
         updateSpawnedSprite: function(sprite) {
-            sprite.body.x -= player.body.velocity.x;
+            sprite.x -= player.body.velocity.x;
 
             // Recycle off-camera sprites.
             // Not using killOffCamera because we want to start sprites off camera.
-            if(!sprite.inCamera && sprite.body.x < 0) {
+            if(!sprite.inCamera && sprite.x < 0) {
                 sprite.kill();
             }
         },
