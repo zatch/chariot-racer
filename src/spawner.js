@@ -105,7 +105,7 @@ define([
 
                     sprite = group.getFirstDead(true, 
                                                 lane.x + (this.spread * i), 
-                                                lane.y);
+                                                lane.y - 4 + ln * 2); // funky math to fine-tune lane positioning
 
                     sprite.revive();
                     sprite.scale.x = lane.spriteScale;

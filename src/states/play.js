@@ -144,7 +144,7 @@ define([
             // Sync activeLaneMarker to player
             activeLaneMarker.fixedToCamera = true;
             activeLaneMarker.scale.setTo(1.2);
-            activeLaneMarker.cameraOffset.y = player.cameraOffset.y;
+            activeLaneMarker.cameraOffset.y = player.cameraOffset.y - player.activeLane * 2;
 
             // Make player accessible via game object.
             game.player = player;
@@ -274,7 +274,7 @@ define([
                 game.add.tween(player.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
 
                 // Tween active lane marker to new lane.
-                game.add.tween(activeLaneMarker.cameraOffset).to({y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay);
+                game.add.tween(activeLaneMarker.cameraOffset).to({y:targetY - player.activeLane * 2}, tweenDuration, tweenEasing, tweenAutoPlay);
                 game.add.tween(activeLaneMarker.scale).to(targetScale, tweenDuration, tweenEasing, tweenAutoPlay);
             }
         },
