@@ -188,10 +188,10 @@ define([
         update: function () {
             // Direct input to player.
             if(game.input.activePointer.isDown){
-                if (game.input.y < laneYCoords[1]) {
+                if (game.input.y < laneYCoords[1] * gameWorld.scale.x + gameWorld.y) {
                     this.setPlayerActiveLane(0);
                 }
-                else if (game.input.y > laneYCoords[2]) {
+                else if (game.input.y > laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
                     this.setPlayerActiveLane(2);
                 }
                 else {
@@ -345,12 +345,9 @@ define([
         onPowerUpStart: function (player) {
             spawnTimer.pause();
 
-            // Move player to center lane for zoom effect.
-           // this.setPlayerActiveLane(1);
-
             // Zoom in for close-up of player.
             game.add.tween(gameWorld.scale).to({x: 1.5, y: 1.5}, 300, Phaser.Easing.Cubic.In, true);
-            game.add.tween(gameWorld).to({y: game.height/-2.5-50}, 300, Phaser.Easing.Cubic.In, true);
+            game.add.tween(gameWorld).to({y: game.height/-2.66}, 300, Phaser.Easing.Cubic.In, true);
 
             // Switch to power-up sound effects.
             music.fadeTo(500, 0.1);
