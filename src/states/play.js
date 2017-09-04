@@ -330,8 +330,17 @@ define([
                 inPattern = false;
 
                 var boostPercent = currentTokensCollected/currentPatternTokenCount;
-                // Power up!
-                player.powerUp(boostPercent);
+                if (boostPercent > 0) {
+                    // Power up!
+                    player.powerUp(boostPercent);
+                }
+                else {
+                    // Set timer to clean up after bonus text.
+                    game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
+            
+                    // Prepare for next spawn.
+                    this.setSpawnTimer();
+                }
                 hud.showBonusText(boostPercent, player.powerupDuration);
             }
         },

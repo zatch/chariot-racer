@@ -100,12 +100,16 @@ define([
 
     Player.prototype.powerUp = function (percentage) {
         this.powerupDuration = this.maxPowerupDuration * percentage;
-        this.stateMachine.setState('powered-up');
+        if (this.powerupDuration > 0) {
+            this.stateMachine.setState('powered-up');
+        }
     };
     
     Player.prototype.onSelfChangeState = function (sm, stateName) {
         // Normal
         if (stateName === 'normal') {
+            this.powerupDuration = 0;
+
             this.animations.play('walk', 20, true);
             this.animations.getAnimation('walk').speed = 20;
 
