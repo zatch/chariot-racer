@@ -162,13 +162,18 @@ define([
             sfx.slowDown = game.sound.add('slow-down');
             sfx.heartbeat = game.sound.add('heartbeat', 1, true);
             sfx.crash = game.sound.add('crash');
+            sfx.lose = game.sound.add('lose');
 
             // Music
+            music = game.sound.add('race-music');
+            music.addMarker('intro', 0, 1.446);
+            music.addMarker('loop', 1.446, 69.39, 1, true);
             if(soundOn){
-                music = game.sound.add('race-music',1,true);
                 //music.play();
-                music.fadeIn(1000, true);
-                console.log('ok music, go!');
+                music.play('intro');
+                music.onStop.addOnce(function() {
+                    music.play('loop');
+                }, this);
             }
 
             metersTraveled = 0;
@@ -323,11 +328,12 @@ define([
         onPlayerDeath: function (player) {
             game.camera.unfollow();
             game.score = Math.floor(metersTraveled);
+            if(soundOn){
+                music.fadeOut(500);
+                sfx.lose.play();
+            }
             game.time.events.add(Phaser.Timer.SECOND * 2, function () {
                 game.stateTransition.to('GameOver', true, false);
-                if(soundOn){
-                    music.fadeOut(2500);
-                }
             }, this);
         },
 

@@ -69,7 +69,7 @@ define([
 
             // Music
             game.load.audio('menu-music', 'assets/music/Preparing_for_War.mp3');
-            game.load.audio('race-music', 'assets/music/SuperHero_original_no_Intro.mp3');
+            game.load.audio('race-music', 'assets/music/SuperHero_original.mp3');
 
             // SFX
             game.load.audio('token-collect', 'assets/sfx/Pickup_Coin.mp3');
@@ -77,6 +77,7 @@ define([
             game.load.audio('slow-down', 'assets/sfx/qubodup-SlowDown-trimmed.mp3');
             game.load.audio('heartbeat', 'assets/sfx/heartbeat.mp3');
             game.load.audio('crash', 'assets/sfx/atari_boom.wav');
+            game.load.audio('lose', 'assets/sfx/Jingle_Lose_00.mp3');
 
             // Fonts
             game.load.bitmapFont('boxy_bold', 'assets/font/boxy_bold.png', 'assets/font/boxy_bold.fnt');
