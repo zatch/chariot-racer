@@ -3,7 +3,6 @@ define([
     'mute-button',
     'player',
     'spawner',
-    'finish-line',
     'token',
     'obstacle',
     'spawn-warning',
@@ -14,7 +13,6 @@ define([
     MuteButton,
     Player,
     Spawner,
-    FinishLine,
     Token,
     Obstacle,
     SpawnWarning,
@@ -90,7 +88,8 @@ define([
             ground = gameWorld.add(new Phaser.TileSprite(game, 0, 352, game.width+50, 226, 'ground'));
 
             // Finish line
-            finishLine = new FinishLine(game, -500, 352);
+            finishLine = new Phaser.Sprite(game, -500, 352, 'finish-line');
+            game.physics.enable(finishLine);
             gameWorld.add(finishLine);
 
             // Active lane marker
