@@ -142,7 +142,10 @@ define([
             player.cameraOffset.x = 0;
 
             // Tween player in from left edge of screen during intro.
-            game.add.tween(player.cameraOffset).to({x:320}, 1400, Phaser.Easing.Back.Out, true);
+            // Start after slight delay for mobile performance.
+            game.time.events.add(Phaser.Timer.SECOND*0.1, function () {
+                game.add.tween(player.cameraOffset).to({x:320}, 1400, Phaser.Easing.Back.Out, true);
+            }, this);
 
             // Sync activeLaneMarker to player
             activeLaneMarker.fixedToCamera = true;
