@@ -14,7 +14,7 @@ define([
         playerDescription,
         playerDescriptionMask,
         playerDescriptionText = {
-            white: 'Cassius Cygnus\n\nWhite Team\nSeason: Winter\nDedicated to Zephyr, the god of the west wind.'.toUpperCase(),
+            white: 'Cassius Cygnus\n\nWhite Team\nSeason: Winter\nDedicated to Zephyr, god of the west wind.'.toUpperCase(),
             green: 'Actaeon III\n\nGreen Team\nSeason: Spring\nDedicated to Flora, the goddess of flowers.'.toUpperCase(),
             blue:  'Titus Primus\n\nBlue Team\nSeason: Autumn\nDedicated to the skies and the sea.'.toUpperCase(),
             red:   'Gaius Severus\n\nRed Team\nSeason: Summer\nDedicated to Mars, the god of war.'.toUpperCase()
