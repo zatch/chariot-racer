@@ -180,6 +180,7 @@ define([
                 music.play('loop');
             }, this);
 
+            inPattern = false;
             metersTraveled = 0;
             currentLevel = 0;
             currentLevelSpawnCount = 0;
