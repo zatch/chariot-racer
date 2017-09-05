@@ -13,6 +13,8 @@ define([
 
         creditsText,
         creditsTextMask,
+        creditsDirection,
+        creditsSpeed,
 
         backBtn,
 
@@ -33,19 +35,35 @@ define([
             bg.x = game.width / 2 - bg.width / 2;
 
             // Player descriptions
-            creditsText = bg.addChild(new Phaser.Sprite(game, bg.width/2, 200, 'blank'));
+            creditsText = bg.addChild(new Phaser.Sprite(game, bg.width/2, 0, 'blank'));
             game.physics.enable(creditsText);
             creditsText.body.setSize(560,0,0,0);
+            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, 0);
             this.writeCreditText();
-
-            game.time.events.add(Phaser.Timer.SECOND*2, function () {
-                creditsText.body.velocity.y = -20;
-            }, this);
 
             creditsTextMask = bg.addChild(new Phaser.Graphics(game, 0, 0));
             creditsTextMask.beginFill(0xffffff);
             creditsTextMask.drawRect(50, 40, 632, 364);
             creditsText.mask = creditsTextMask;
+
+            creditsDirection = -1;
+            creditsSpeed = 30;
+            bg.inputEnabled = true;
+            bg.events.onInputDown.add(function() {
+                if (creditsText.body.velocity.y === 0) {
+                    creditsText.body.velocity.y = creditsSpeed * creditsDirection;
+                }
+                else {
+                    creditsText.body.velocity.y = 0;
+                    creditsDirection *= -1;
+                }
+            }, this);
+
+            game.time.events.add(Phaser.Timer.SECOND*2, function () {
+                if (creditsText.body.velocity.y === 0) {
+                    creditsText.body.velocity.y = creditsSpeed * creditsDirection;
+                }
+            }, this);
 
             banner = bg.addChild(new Phaser.Sprite(game, bg.width/2, 8, 'menu-banner-2'));
             banner.anchor.set(0.5, 0);
@@ -101,39 +119,33 @@ define([
 
         update: function(){
             if (creditsText.y < 0 - creditsText.height) creditsText.y = bg.height;
+            if (creditsText.y > bg.height) creditsText.y = 0 - creditsText.height;
         },
 
         addTitle: function(text){
-            var fontSize = 32;
-            // Fixed top position for title.
-            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, 0);
-            var textObject = new Phaser.BitmapText(
-                game,
-                0,
-                creditsText.getBounds().height,
-                'boxy_bold',
-                text.toUpperCase(),
-                fontSize,
-                'center'
-            );
-            textObject.anchor.set(0.5, 0);
-            textObject.maxWidth = 560;
-            creditsText.addChild(textObject);
-            // Add height of text object to frame height.
-            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, creditsText.height + textObject.height + 150);
+            this.addText(text, 48, 192, 128);
+            return this;
         },
 
         addH1: function(text){
-            this.addText(text, 32, 24);
+            this.addText(text, 32, 64);
+            return this;
+        },
+
+        addH2: function(text){
+            this.addText(text, 24, 32);
+            return this;
         },
 
         addP: function(text){
-            this.addText(text, 16, 16);
+            this.addText(text, 16, 8);
+            return this;
         },
 
-        addText: function(text, marginTop, fontSize) {
-            marginTop = marginTop ? marginTop : 0;
+        addText: function(text, fontSize, marginTop, marginBottom) {
             fontSize = fontSize ? fontSize : 16;
+            marginTop = marginTop ? marginTop : 0;
+            marginBottom = marginBottom ? marginBottom : 0;
             // Add margin-top to frame size.
             creditsText.resizeFrame(Phaser.Sprite, creditsText.width, creditsText.height + marginTop);
             var textObject = new Phaser.BitmapText(
@@ -150,14 +162,154 @@ define([
             creditsText.addChild(textObject);
             creditsText.update();
             // Add height of text object to frame height.
-            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, creditsText.height + textObject.height);
+            creditsText.resizeFrame(Phaser.Sprite, creditsText.width, creditsText.height + textObject.height + marginBottom);
         },
 
         writeCreditText: function() {
-            this.addTitle('Chariot Racer');
-            this.addH1('sample header');
-            this.addP('sample paragraph sample paragraph sample paragraph');
-            this.addP('sample paragraph sample\nparagraph sample paragraph');
+/*
+            .addH1      ('');
+
+            .addH2      ('');
+            .addP       ('');
+
+*/ 
+
+            this.addTitle   ('Chariot Racer')
+
+            .addH1      ('Game Development Team')
+
+            .addH2      ('Director')
+            .addP       ('Zachary Bennett')
+            
+            .addH2      ('Programming')
+            .addP       ('Zachary Bennett')
+            .addP       ('Stefan Roehrl')
+            
+            .addH2      ('Artwork')
+            .addP       ('Peter Lazarski')
+            .addP       ('www.imaginarymonsters.com')
+        
+            .addH2      ('Level Design')
+            .addP       ('Zachary Bennett')
+            .addP       ('Stefan Roehrl')
+
+
+
+            .addH1      ('Communications Team')
+
+            .addH2      ('Art Director')
+            .addP       ('Eric Skivington')
+        
+            .addH2      ('Artwork')
+            .addP       ('Roger Trinh')
+        
+            .addH2      ('Writing')
+            .addP       ('Patrick Gear')
+            
+            .addH2      ('Website Development')
+            .addP       ('Andy Knoll')
+            
+            .addH2      ('Project Leader')
+            .addP       ('Christopher Phillips')
+
+            .addH2      ('Communications Manager')
+            .addP       ('Victoria Larco')
+
+
+
+            .addH1      ('Powered by')
+            
+            .addH2      ('Phaser Game Engine')
+            .addP       ('http://phaser.io/')
+            .addP       ('@photonstorm')
+
+
+
+            .addH1      ('Music')
+            
+            .addH2      ('"Preparing for War"')
+            .addP       ('by Trevor Lentz')
+            .addP       ('www.opengameart.org/users/trevor-lentz')
+            .addP       ('used under CC BY-SA 3.0')
+            
+            .addH2      ('"Lines of Code"')
+            .addP       ('by Trevor Lentz')
+            .addP       ('www.opengameart.org/users/trevor-lentz')
+            .addP       ('used under CC BY-SA 3.0')
+            
+            .addH2      ('"SuperHero"')
+            .addP       ('by Cleyton Kauffman')
+            .addP       ('www.opengameart.org/users/doppelganger')
+            .addP       ('used under CC BY-SA 3.0')
+
+
+
+            .addH1      ('Sound Effects')
+            
+            .addH2      ('"Atari Boom"')
+            .addP       ('by dklon')
+            .addP       ('www.opengameart.org/users/dklon')
+            .addP       ('used under CC BY 3.0')
+            
+            .addH2      ('"idg-heartbeats-10"')
+            .addP       ('by intermedia Design Graphics')
+            .addP       ('www.idgraphics.com')
+            .addP       ('used under Flash Kit Freeware terms')
+            
+            .addH2      ('"Jingle_Lose_00"')
+            .addP       ('by Little Robot Sound Factory')
+            .addP       ('www.littlerobotsoundfactory.com')
+            .addP       ('used under CC BY 3.0')
+            
+            .addH2      ('"Pickup_Coin"')
+            .addP       ('8-bit Platformer SFX commissioned by Mark McCorkle for OpenGameArt.org')
+            .addP       ('www.opengameart.org')
+            .addP       ('used under CC BY 3.0')
+            
+            .addH2      ('"SpeedUp" and "SlowDown"')
+            .addP       ('Copyright 2012 Iwan "qubodup" Gabovitch ')
+            .addP       ('http://qubodup.net qubodup@gmail.com')
+            .addP       ('used under CC BY-SA 3.0')
+            
+            .addH2      ('"roughSelect" and "roughBack"')
+            .addP       ('by MadameBerry')
+            .addP       ('www.patreon.com/madameberry')
+            .addP       ('used under CC0 1.0')
+
+
+
+            .addH1      ('Fonts')
+            
+            .addH2      ('Boxy Bold')
+            .addP       ('Originally created by Clint Bellanger, with additional contributions from cemkalyoncu, william.thompsonj, and usr_share')
+            .addP       ('www.opengameart.org/content\n/boxy-bold-truetype-font')
+            .addP       ('www.clintbellanger.net')
+            .addP       ('www.opengameart.org/users/cemkalyoncu')
+            .addP       ('www.opengameart.org/users/williamthompsonj')
+            .addP       ('www.opengameart.org/users/usrshare')
+            .addP       ('used under CC0 1.0')
+
+
+
+            .addH1      ('Licenses')
+
+            .addH2      ('CC BY-SA 3.0')
+            .addP       ('Attribution-ShareAlike 3.0 Unported')
+            .addP       ('https://creativecommons.org\n/licenses/by-sa/3.0/')
+
+            .addH2      ('CC BY 3.0')
+            .addP       ('Attribution 3.0 Unported')
+            .addP       ('https://creativecommons.org\n/licenses/by/3.0/')
+
+            .addH2      ('CC0 1.0')
+            .addP       ('CC0 1.0 Universal')
+            .addP       ('Public Domain Dedication')
+            .addP       ('https://creativecommons.org\n/publicdomain/zero/1.0/')
+
+            .addH2      ('Flash Kit Freeware')
+            .addP       ('http://www.flashkit.com\n/soundfx/guidelines.php')
+
+            ;
         }
     };
 });
