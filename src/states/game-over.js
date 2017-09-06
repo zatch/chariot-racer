@@ -106,8 +106,8 @@ define([
 
             challengeBtn.animations.play('selected').onComplete.addOnce(function() {
                 var mailto = 'mailto:' +
-                             '?subject=I made it ' + metersTraveled + ' meters in Chariot Racer. Can you beat my score?' +
-                             '&body=I made it ' + metersTraveled + ' meters in Chariot Racer. Try to top my score!' +
+                             '?subject=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Can you beat my score?' +
+                             '&body=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Try to top my score!' +
                              '%0D%0A' +
                              '%0D%0A' +
                              'https://learntodomore.com/review/2104_shire_pres_club/chariot-racer/dev/index.html' +
