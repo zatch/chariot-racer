@@ -56,8 +56,8 @@ define([
             game.load.image('menu-bg-1', 'assets/menu_assets/ui_menu_bg_01.png');
             game.load.image('menu-bg-2', 'assets/menu_assets/ui_menu_bg_02.png');
             game.load.image('menu-bg-3', 'assets/menu_assets/ui_menu_bg_03.png');
+            game.load.image('menu-banner-1', 'assets/menu_assets/ui_menu_banner_01.png');
             game.load.image('menu-banner-2', 'assets/menu_assets/ui_menu_banner_02.png');
-            game.load.image('score-text', 'assets/menu_assets/ui_menu_banner_01.png');
             game.load.atlas('menu-btn', 'assets/menu_assets/ui_menu_button_01.png', 'assets/menu_assets/ui_menu_button_01.json');
             game.load.atlas('menu-btn2', 'assets/menu_assets/ui_menu_button_02.png', 'assets/menu_assets/ui_menu_button_02.json');
             game.load.atlas('menu-btn3', 'assets/menu_assets/ui_menu_button_03.png', 'assets/menu_assets/ui_menu_button_03.json');
@@ -106,6 +106,7 @@ define([
 
             // Debug: Skip Menu and go straight to Play (for dev testing)
             //game.stateTransition.to('Play',true,false,{color:'chariot-red'});
+            //game.stateTransition.to('GameOver', true, false, {metersTraveled: 12345});
         }
     };
 });

@@ -379,7 +379,7 @@ define([
             sfx.lose.play();
             
             game.time.events.add(Phaser.Timer.SECOND * 2, function () {
-                game.stateTransition.to('GameOver', true, false);
+                game.stateTransition.to('GameOver', true, false, {metersTraveled: metersTraveled});
             }, this);
         },
 

@@ -17,13 +17,22 @@ define([
         creditsSpeed,
 
         backBtn,
+        backState,
+        backData,
 
         music;
 
     return {
         // Intro
-        init: function () {
+        init: function (data) {
             game = this.game;
+            if (data) {
+                backState = data.backState ? data.backState : 'Menu';
+                if (data.backData) backData = data.backData;
+            }
+            else {
+                backState = 'Menu';
+            }
         },
 
         create: function () {
@@ -70,7 +79,7 @@ define([
             bannerText = banner.addChild(new Phaser.BitmapText(
                 game, 
                 banner/2,
-                24,
+                22,
                 'boxy_bold',
                 'CREDITS',
                 16,
@@ -79,7 +88,7 @@ define([
             bannerText.anchor.set(0.5);
 
             // Back button
-            backBtn = bg.addChild(new Phaser.Button(game, bg.width/2, 404, 'menu-btn', this.onBackBtnClicked));
+            backBtn = bg.addChild(new Phaser.Button(game, bg.width/2, 390, 'menu-btn', this.onBackBtnClicked));
             backBtn.anchor.set(0.5, 0);
             backBtn.label = backBtn.addChild(new Phaser.BitmapText(
                 game, 
@@ -113,7 +122,7 @@ define([
                 // the mask.
                 creditsText.kill();
 
-                this.game.stateTransition.to('Menu', true, false);
+                this.game.stateTransition.to(backState, true, false, backData);
             }, this);
         },
 

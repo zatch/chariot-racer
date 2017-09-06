@@ -6,70 +6,134 @@ define([
 
     // Shortcuts
     var game,
-        dieText,
-        music,
-        openTime,
-        totalTimeout,
-        timeRemaining,
-        data;
+
+        bg,
+        bannerText,
+
+        distanceBanner,
+        metersTraveled,
+
+        playBtn,
+        challengeBtn,
+        creditsBtn,
+
+        music;
 
     return {
         // Intro
-        init: function (_data) {
-            // Shortcut variables.
+        init: function (data) {
             game = this.game;
-            data = _data;
-            console.log(data);
-        },
-
-        update: function () {
-            timeRemaining = totalTimeout - (game.time.now - openTime);
-            if(timeRemaining < 0) timeRemaining = 0;
+            metersTraveled = data.metersTraveled;
         },
         
         // Main
         create: function () {
-            openTime = game.time.now;
-            totalTimeout = 3000;
+            // Button SFX
+            game.sound.add('menu-back');
 
-            // create background
-            var cont = game.add.sprite(114,80,'menu-bg-1');
+            // Background
+            bg = game.add.sprite(0, 80, 'menu-bg-2');
+            bg.x = game.width / 2 - bg.width / 2;
 
-            // create text elements
-            // GAME over
-            var gameOverText = new Phaser.BitmapText(game, cont.width/2, 30, 'boxy_bold', 'GAME OVER', 16);
-            gameOverText.anchor.set(0.5);
-            cont.addChild(gameOverText);
+            bg.label = bg.addChild(new Phaser.BitmapText(
+                game, 
+                bg.width/2,
+                30,
+                'boxy_bold',
+                'GAME OVER',
+                16,
+                'center'
+            ));
+            bg.label.anchor.set(0.5);
 
-            // Scoring
-            var scoreText = game.add.sprite(cont.width/2,cont.height/2,'score-text');
-            scoreText.anchor.set(0.5,0.5);
-            cont.addChild(scoreText);
+            // Distance traveled message
+            distanceBanner = bg.addChild(new Phaser.Sprite(game, bg.width/2, 160, 'menu-banner-1'));
+            distanceBanner.anchor.set(0.5, 0);
+            distanceBanner.label = distanceBanner.addChild(new Phaser.BitmapText(
+                game, 
+                0,
+                40,
+                'boxy_bold',
+                'DISTANCE TRAVELED: ' + Math.floor(metersTraveled) + 'm',
+                16,
+                'center'
+            ));
+            distanceBanner.label.anchor.set(0.5);
 
-            dieText = new Phaser.BitmapText(game, 0, 0, 'boxy_bold', 'DISTANCE TRAVELLED: '+game.score+'m', 16);
-            dieText.anchor.set(0.5);
-            scoreText.addChild(dieText);
+            // Challenge a Friend button
+            challengeBtn = bg.addChild(new Phaser.Button(game, 264, 390, 'menu-btn3', this.onChallengeBtnClicked));
+            challengeBtn.anchor.set(0.5, 0);
+            challengeBtn.label = challengeBtn.addChild(new Phaser.BitmapText(
+                game, 
+                0,
+                challengeBtn.height/2,
+                'boxy_bold',
+                'CHALLENGE A FRIEND',
+                16
+            ));
+            challengeBtn.label.anchor.set(0.5);
+            challengeBtn.animations.add('selected', [0,1,0], 20);
 
-            // play again button
-            var againBtn = game.add.button(game.width/6*2,game.height/5*4,'menu-btn2',function(){
-                this.game.stateTransition.to('Menu',true,false);
-            });
-            againBtn.anchor.set(0.5);
-            var abtnText = new Phaser.BitmapText(game,0,0,'boxy_bold','PLAY AGAIN',16);
-            abtnText.anchor.set(0.5,0.5);
-            againBtn.addChild(abtnText);
+            // Play Again button
+            playBtn = bg.addChild(new Phaser.Button(game, bg.width-200, 390, 'menu-btn2', this.onPlayBtnClicked));
+            playBtn.anchor.set(0.5, 0);
+            playBtn.label = playBtn.addChild(new Phaser.BitmapText(
+                game, 
+                0,
+                playBtn.height/2,
+                'boxy_bold',
+                'PLAY AGAIN',
+                16
+            ));
+            playBtn.label.anchor.set(0.5);
+            playBtn.animations.add('selected', [0,1,0], 20);
 
-            // challenge a friend button
-            var challengeBtn = game.add.button(game.width/5*3,game.height/5*4,'menu-btn3',function(){
-                window.location.href='recommend.html';
-            });
-            challengeBtn.anchor.set(0.5);
-            var challengedText = new Phaser.BitmapText(game,0,0,'boxy_bold','CHALLANGE A FRIEND',16);
-            challengedText.anchor.set(0.5,0.5);
-            challengeBtn.addChild(challengedText);
+            // Credits button
+            creditsBtn = game.add.button(game.width/2, game.height, 'credits-btn', this.onCreditsBtnClicked);
+            creditsBtn.anchor.set(0.5, 1);
+            creditsBtn.animations.add('selected', [0,1,0], 20);
 
             // Mute button
             game.add.existing(new MuteButton(game));
+
+            // Music
+            music = game.add.audio('menu-music', 0.5, true);
+            music.play();
+        },
+
+        onChallengeBtnClicked: function() {
+            game.sound.play('menu-select');
+
+            challengeBtn.animations.play('selected').onComplete.addOnce(function() {
+                var mailto = 'mailto:' +
+                             '?subject=I made it ' + metersTraveled + ' meters in Chariot Racer. Can you beat my score?' +
+                             '&body=I made it ' + metersTraveled + ' meters in Chariot Racer. Try to top my score!' +
+                             '%0D%0A' +
+                             '%0D%0A' +
+                             'https://learntodomore.com/review/2104_shire_pres_club/chariot-racer/dev/index.html' +
+                             '%0D%0A' +
+                             '%0D%0A' +
+                             'Will you accept the Emperor\'s challenge?';
+                window.location.href = mailto;
+            }, this);
+        },
+
+        onPlayBtnClicked: function() {
+            game.sound.play('menu-select');
+
+            playBtn.animations.play('selected').onComplete.addOnce(function() {
+                music.stop();
+                this.game.stateTransition.to('Menu', true, false);
+            }, this);
+        },
+
+        onCreditsBtnClicked: function() {
+            game.sound.play('menu-select');
+
+            creditsBtn.animations.play('selected').onComplete.addOnce(function() {
+                music.stop();
+                this.game.stateTransition.to('Credits', true, false, {backState: 'GameOver', backData: {metersTraveled: metersTraveled}});
+            }, this);
         }
     };
 });
