@@ -356,24 +356,22 @@ define([
             this.consumeToken();
 
             powerupToken = powerup;
-            game.add.existing(powerup);
+            //game.add.existing(powerup);
+            player.addChild(powerup);
             powerup.anchor.set(0, 0.5);
+            powerup.scale.setTo(0.7,0.7);
+            powerup.x = -110;
+            powerup.y = -30;
 
-            /*var targetX = 100,
-                targetY = 300,*/
-            var targetX = 100,
-                targetY = 370,
-                targetScale = 2,
-                tweenDuration = 300,
+            var targetX = -210,
+                targetY = -65,
+                targetScale = 1.2,
+                tweenDuration = 500,
                 tweenAutoPlay = true;
             game.add.tween(powerup).
-                to({x: targetX, y:targetY}, tweenDuration, Phaser.Easing.Cubic.Out, tweenAutoPlay);
+                to({x: targetX, y:targetY}, tweenDuration, Phaser.Easing.Back.In, tweenAutoPlay);
             game.add.tween(powerup.scale).
-                to({x: targetScale, y:targetScale}, tweenDuration, Phaser.Easing.Back.Out, tweenAutoPlay)/*.
-                onComplete.add(function() {
-                    game.add.tween(powerup.scale).
-                        to({x: 0, y:0}, 200, Phaser.Easing.Cubic.InOut, tweenAutoPlay);
-                }, this)*/;
+                to({x: targetScale, y:targetScale}, tweenDuration, Phaser.Easing.Back.Out, tweenAutoPlay);
 
             var boostPercent = currentTokensCollected/currentPatternTokenCount;
             if (boostPercent > 0) {
