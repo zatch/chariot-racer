@@ -275,6 +275,16 @@ define([
             .addP       ('www.opengameart.org')
             .addP       ('used under CC BY 3.0')
             
+            .addH2      ('"Randomize3"')
+            .addP       ('8-bit Platformer SFX commissioned by Mark McCorkle for OpenGameArt.org')
+            .addP       ('www.opengameart.org')
+            .addP       ('used under CC BY 3.0')
+            
+            .addH2      ('"sfx_coin_cluster5"')
+            .addP       ('by Juhani Junkala')
+            .addP       ('www.opengameart.org/users/subspaceaudio')
+            .addP       ('used under CC0 1.0')
+            
             .addH2      ('"SpeedUp" and "SlowDown"')
             .addP       ('Copyright 2012 Iwan "qubodup" Gabovitch ')
             .addP       ('http://qubodup.net qubodup@gmail.com')

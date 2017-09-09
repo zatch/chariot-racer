@@ -114,11 +114,18 @@ define([
             for (i = 0; i < lanesMatrix[ln].length; i++) {
                 key = lanesMatrix[ln][i];
                 if (key !== 0) {
-                    if (key === 'token') {
-                        group = lane.tokens;
-                    }
-                    else {
-                        group = lane.obstacles;
+                    switch(key) {
+                        case 'scaffolding':
+                        case 'wheel':
+                        case 'rock':
+                            group = lane.obstacles;
+                            break;
+                        case 'token':
+                            group = lane.tokens;
+                            break;
+                        case 'power-up':
+                            group = lane.powerups;
+                            break;
                     }
 
                     sprite = group.getFirstDead(true, 
@@ -129,13 +136,16 @@ define([
                     sprite.scale.x = lane.spriteScale;
                     sprite.scale.y = lane.spriteScale;
                     sprite.activeLane = ln;
-                    if (key != 'token') {
-                        sprite.setObstacleFrame(key);
-                    }
-                    else {
-                        // 
-                        sprite.setAnimationFrame(tokenFrame);
-                        tokenFrame = tokenFrame >= 4 ? 0 : tokenFrame+1;
+                    switch(key) {
+                        case 'scaffolding':
+                        case 'wheel':
+                        case 'rock':
+                            sprite.setObstacleFrame(key);
+                            break;
+                        case 'token':
+                            sprite.setAnimationFrame(tokenFrame);
+                            tokenFrame = tokenFrame >= 4 ? 0 : tokenFrame+1;
+                            break;
                     }
                 }
                 if (i > longest) longest++;
@@ -144,7 +154,7 @@ define([
 
 
         if (this.spawnQueue.length <= 0) {
-            this.finishLine.x = this.lanes[0].x + this.spread * longest + 384;
+            this.finishLine.x = this.lanes[0].x + this.spread * longest + 128;
         }
         else {
             this.setMarker.x = this.lanes[0].x + this.spread * longest;

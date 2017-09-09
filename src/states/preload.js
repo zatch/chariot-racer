@@ -70,6 +70,7 @@ define([
             game.load.atlas('spawn-warning', 'assets/sprites/spawn-warning.png', 'assets/sprites/spawn-warning.json');
             game.load.atlas('obstacle', 'assets/sprites/obstacle.png', 'assets/sprites/obstacle.json');
             game.load.atlas('token', 'assets/sprites/token.png', 'assets/sprites/token.json');
+            game.load.atlas('power-up', 'assets/sprites/token-laurel.png', 'assets/sprites/token-laurel.json');
 
             // Blank placeholder (for Sprites without artwork)
             game.load.image('blank', 'assets/blank.png');
@@ -81,6 +82,8 @@ define([
 
             // SFX
             game.load.audio('token-collect', 'assets/sfx/Pickup_Coin.mp3');
+            game.load.audio('powerup-collect', 'assets/sfx/sfx_coin_cluster5.mp3');
+            game.load.audio('powerup-miss', 'assets/sfx/Randomize3.mp3');
             game.load.audio('speed-up', 'assets/sfx/qubodup-SpeedUp-trimmed.mp3');
             game.load.audio('slow-down', 'assets/sfx/qubodup-SlowDown-trimmed.mp3');
             game.load.audio('heartbeat', 'assets/sfx/heartbeat.mp3');

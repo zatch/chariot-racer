@@ -2,6 +2,7 @@ define([], function () {
     'use strict';
 
     var t = 'token',
+        p = 'power-up',
         s = 'scaffolding',
         w = 'wheel',
         r = 'rock';
@@ -13,7 +14,7 @@ define([], function () {
             patterns: [
                 {
                     sets: [
-                        {
+                        /*{
                             lanes: [
                                 [0,0,0,0,0,0,0,t,t,t,t,t],
                                 [t,t,t,t,t,0,0,0,0,0,0,0,0,0,t,t,t,t,t],
@@ -26,11 +27,11 @@ define([], function () {
                                 [t,t,t,t,t],
                                 [s,0,w,0,r]
                             ]
-                        },
+                        },*/
                         {
                             lanes: [
                                 [],
-                                [t,t,t,t,t],
+                                [t,t,t,t,t,0,0,0,p],
                                 []
                             ]
                         }

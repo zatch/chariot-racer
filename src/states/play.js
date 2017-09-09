@@ -4,6 +4,7 @@ define([
     'player',
     'spawner',
     'token',
+    'power-up',
     'obstacle',
     'spawn-warning',
     'hud',
@@ -14,6 +15,7 @@ define([
     Player,
     Spawner,
     Token,
+    PowerUp,
     Obstacle,
     SpawnWarning,
     HUD,
@@ -38,14 +40,11 @@ define([
         spawner,
         setMarker,
         finishLine,
+        powerupToken,
         lanes,
-        tokens,
-        indicators,
-        warnings,
         currentPatternTokenCount=0,
         currentTokensCollected=0,
         restDuration=2000, // ms between spawns
-        warningDuration=1000, // ms between warning and spawn
         spawnTimer,
 
         inPattern=false,
@@ -114,11 +113,13 @@ define([
                     obstacles: gameWorld.add(new Phaser.Group(game)),
                     tokens: gameWorld.add(new Phaser.Group(game)),
                     warnings: gameWorld.add(new Phaser.Group(game)),
+                    powerups: gameWorld.add(new Phaser.Group(game)),
                     x: game.width
                 });
                 lanes[lcv].y = laneYCoords[lcv]+24;
                 lanes[lcv].obstacles.classType = Obstacle;
                 lanes[lcv].tokens.classType = Token;
+                lanes[lcv].powerups.classType = PowerUp;
                 lanes[lcv].warnings.classType = SpawnWarning;
             }
             lanes[0].spriteScale = 1.4;
@@ -176,6 +177,8 @@ define([
 
             // SFX
             sfx.tokenCollect = game.sound.add('token-collect');
+            sfx.powerupCollect = game.sound.add('powerup-collect');
+            sfx.powerupMiss = game.sound.add('powerup-miss');
             sfx.speedUp = game.sound.add('speed-up');
             sfx.slowDown = game.sound.add('slow-down');
             sfx.heartbeat = game.sound.add('heartbeat', 1, true);
@@ -236,6 +239,7 @@ define([
             for (var lcv = 0; lcv < 3; lcv++) {
                 lanes[lcv].obstacles.forEachAlive(this.updateSpawnedSprite, this);
                 lanes[lcv].tokens.forEachAlive(this.updateSpawnedSprite, this);
+                lanes[lcv].powerups.forEachAlive(this.updateSpawnedSprite, this);
             }
 
             // Collide player and spawned stuff.
@@ -243,21 +247,25 @@ define([
             if (!player.dying) {
                 game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
                 game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
+                game.physics.arcade.overlap(player, lanes[player.activeLane].powerups, this.onPlayerCollidesPowerUp, null, this);
                 game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
                 game.physics.arcade.overlap(player, setMarker, spawner.spawnNextInQueue, null, spawner);
 
                 if (player.body.y-10 > laneYCoords[0] * gameWorld.scale.x + gameWorld.y &&
                     player.body.y-10 < laneYCoords[1] * gameWorld.scale.x + gameWorld.y) {
                     lanes[0].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                    lanes[0].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
                     lanes[0].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
                 }
                 else if (player.body.y-10 > laneYCoords[1] * gameWorld.scale.x + gameWorld.y &&
                          player.body.y-10 < laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
                     lanes[1].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                    lanes[1].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
                     lanes[1].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
                 }
                 else if (player.body.y-10 > laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
                     lanes[2].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                    lanes[2].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
                     lanes[2].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
                 }
 
@@ -268,6 +276,12 @@ define([
         checkPlayerOverlapToken: function(token) {
             if (token.x > player.body.x && token.x < player.body.x + player.body.width) {
                 this.onPlayerCollidesToken(player, token);
+            }
+        },
+
+        checkPlayerOverlapPowerUp: function(powerup) {
+            if (powerup.x > player.body.x && powerup.x < player.body.x + player.body.width) {
+                this.onPlayerCollidesPowerUp(player, powerup);
             }
         },
 
@@ -338,6 +352,47 @@ define([
             player.damage();
         },
 
+        onPlayerCollidesPowerUp: function (player, powerup) {
+            this.consumeToken();
+
+            powerupToken = powerup;
+            game.add.existing(powerup);
+            powerup.anchor.set(0, 0.5);
+
+            /*var targetX = 100,
+                targetY = 300,*/
+            var targetX = 100,
+                targetY = 370,
+                targetScale = 2,
+                tweenDuration = 300,
+                tweenAutoPlay = true;
+            game.add.tween(powerup).
+                to({x: targetX, y:targetY}, tweenDuration, Phaser.Easing.Cubic.Out, tweenAutoPlay);
+            game.add.tween(powerup.scale).
+                to({x: targetScale, y:targetScale}, tweenDuration, Phaser.Easing.Back.Out, tweenAutoPlay)/*.
+                onComplete.add(function() {
+                    game.add.tween(powerup.scale).
+                        to({x: 0, y:0}, 200, Phaser.Easing.Cubic.InOut, tweenAutoPlay);
+                }, this)*/;
+
+            var boostPercent = currentTokensCollected/currentPatternTokenCount;
+            if (boostPercent > 0) {
+                // Power up!
+                player.powerUp(boostPercent);
+            }
+            else {
+                // Set timer to clean up after bonus text.
+                game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
+        
+                // Prepare for next spawn.
+                this.setSpawnTimer();
+            }
+            hud.showBonusText(boostPercent, player.powerupDuration);
+
+            sfx.tokenCollect.play();
+            sfx.powerupCollect.play();
+        },
+
         onPlayerCollidesToken: function (player, token) {
             // TO DO: Animate tokens into HUD before killing them.
             game.add.existing(token);
@@ -357,7 +412,7 @@ define([
         },
 
         consumeToken: function (token) {
-            token.kill();
+            if (!!token) token.kill();
             currentTokensCollected++;
             hud.updateBoostMeter(currentTokensCollected/currentPatternTokenCount);
         },
@@ -367,19 +422,18 @@ define([
                 // Clear flag.
                 inPattern = false;
 
-                var boostPercent = currentTokensCollected/currentPatternTokenCount;
-                if (boostPercent > 0) {
-                    // Power up!
-                    player.powerUp(boostPercent);
-                }
-                else {
+                if (player.stateMachine.getState() !== 'powered-up') {
+                    // Play Miss message and sfx.
+                    hud.showBonusText(0, 0);
+                    sfx.powerupMiss.play();
+
                     // Set timer to clean up after bonus text.
                     game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
-            
+
+
                     // Prepare for next spawn.
                     this.setSpawnTimer();
                 }
-                hud.showBonusText(boostPercent, player.powerupDuration);
             }
         },
 
@@ -408,9 +462,9 @@ define([
             game.add.tween(gameWorld).to({y: game.height/-2.66}, 300, Phaser.Easing.Back.In, true);
 
             // Switch to power-up sound effects.
-            music.fadeTo(500, 0.1);
+            music.fadeTo(500, 0.25);
             sfx.slowDown.play();
-            sfx.heartbeat.play();
+            sfx.heartbeat.play('', 0 , 3);
         },
 
         onPowerUpStep: function (player, percentRemaining) {
@@ -421,6 +475,12 @@ define([
             // Return to normal scale and position.
             game.add.tween(gameWorld.scale).to({x: 1, y: 1}, 300, Phaser.Easing.Back.In, true);
             game.add.tween(gameWorld).to({y: 0}, 300, Phaser.Easing.Back.In, true);
+
+            // Get rid of current power-up token.
+            game.add.tween(powerupToken.scale).to({x: 0, y: 0}, 300, Phaser.Easing.Back.In, true).
+                onComplete.add(function() {
+                    powerupToken.kill();
+                });
 
             // Hide bonus text, but make sure it's on screen long enough to read.
             game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
