@@ -16,6 +16,8 @@ define([
 
         this.animations.add('token-first', [0], 15, true);
         this.animations.add('token-subsequent', [1,2,3], 15, true);
+        this.animations.add('power-up-first', [0], 15, true);
+        this.animations.add('power-up-subsequent', [1,2,3], 15, true);
         this.animations.add('obstacle-first', [4], 15, true);
         this.animations.add('obstacle-subsequent', [5,6,7], 15, true);
     }

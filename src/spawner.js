@@ -54,6 +54,7 @@ define([
 
         var lane,
             key,
+            type,
             position,
             sprite;
 
@@ -62,7 +63,8 @@ define([
         for (ln = 0; ln < lanesMatrix.length; ln++) {
             lane = this.lanes[ln];
             for (i = lanesMatrix[ln].length-1; i >= 0; i--) {
-                key = lanesMatrix[ln][i];
+                key = lanesMatrix[ln][i] ? lanesMatrix[ln][i].key : 0;
+                type = lanesMatrix[ln][i] ? lanesMatrix[ln][i].type : 0;
 
                 if (key !== 0) {
                     sprite = lane.warnings.getFirstDead(true, 
@@ -71,21 +73,12 @@ define([
                     sprite.revive();
                     sprite.activeLane = ln;
 
-                    if (lanesMatrix[ln][i-1] && lanesMatrix[ln][i-1] == key) {
-                        position = 'subsequent';
+                    if (lanesMatrix[ln][i-1] && lanesMatrix[ln][i-1].type && lanesMatrix[ln][i-1].type === type) {
+                        sprite.animations.play(type + '-subsequent');
                     }
                     else {
-                        position = 'first';
+                        sprite.animations.play(type + '-first');
                     }
-
-                    if (key === 'scaffolding' || key === 'wheel' || key === 'rock') {
-                        key = 'obstacle-' + position;
-                    }
-                    else {
-                        key = 'token-' + position;
-                    }
-
-                    sprite.animations.play(key);
                 }
             }
         }
@@ -102,6 +95,7 @@ define([
     Spawner.prototype.spawn = function (lanesMatrix) {
         var lane,
             key,
+            type,
             group,
             sprite,
             tokenFrame=0;
@@ -112,12 +106,12 @@ define([
         for (ln = 0; ln < lanesMatrix.length; ln++) {
             lane = this.lanes[ln];
             for (i = 0; i < lanesMatrix[ln].length; i++) {
-                key = lanesMatrix[ln][i];
-                if (key !== 0) {
-                    switch(key) {
-                        case 'scaffolding':
-                        case 'wheel':
-                        case 'rock':
+                key = lanesMatrix[ln][i] ? lanesMatrix[ln][i].key : 0;
+                type = lanesMatrix[ln][i] ? lanesMatrix[ln][i].type : 0;
+
+                if (type !== 0) {
+                    switch(type) {
+                        case 'obstacle':
                             group = lane.obstacles;
                             break;
                         case 'token':
