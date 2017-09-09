@@ -16,6 +16,9 @@ define([
 
         Phaser.Utils.extend(true, this, props);
 
+        this.spawnQueue = [];
+        this.isSpawning = false;
+
         // Spawn timer
         this.spawnTimer = game.time.create(false);
         this.spawnTimer.start(); 
@@ -33,7 +36,22 @@ define([
         Phaser.Sprite.prototype.update.call(this);
     };
 
-    Spawner.prototype.queue = function (patternMatrix) {
+    Spawner.prototype.queue = function (pattern) {
+        for (var lcv = pattern.sets.length-1; lcv >= 0; lcv--) {
+            this.spawnQueue.push(pattern.sets[lcv].lanes);
+        }
+    };
+
+    Spawner.prototype.spawnNextInQueue = function () {
+        if (!this.isSpawning && this.spawnQueue.length > 0) {
+            this.warn(this.spawnQueue.pop());
+        }
+    };
+
+    Spawner.prototype.warn = function (lanesMatrix) {
+        // Set spawning flag.
+        this.isSpawning = true;
+
         var lane,
             key,
             position,
@@ -41,10 +59,10 @@ define([
 
         var ln,
             i;
-        for (ln = 0; ln < patternMatrix.length; ln++) {
+        for (ln = 0; ln < lanesMatrix.length; ln++) {
             lane = this.lanes[ln];
-            for (i = patternMatrix[ln].length-1; i >= 0; i--) {
-                key = patternMatrix[ln][i];
+            for (i = lanesMatrix[ln].length-1; i >= 0; i--) {
+                key = lanesMatrix[ln][i];
 
                 if (key !== 0) {
                     sprite = lane.warnings.getFirstDead(true, 
@@ -53,7 +71,7 @@ define([
                     sprite.revive();
                     sprite.activeLane = ln;
 
-                    if (patternMatrix[ln][i-1] && patternMatrix[ln][i-1] == key) {
+                    if (lanesMatrix[ln][i-1] && lanesMatrix[ln][i-1] == key) {
                         position = 'subsequent';
                     }
                     else {
@@ -77,11 +95,11 @@ define([
             for (var lcv = 0; lcv < this.lanes.length; lcv++) {
                 this.lanes[lcv].warnings.callAll('kill');
             }
-            this.spawn(patternMatrix);
+            this.spawn(lanesMatrix);
         }, this);
     };
 
-    Spawner.prototype.spawn = function (patternMatrix) {
+    Spawner.prototype.spawn = function (lanesMatrix) {
         var lane,
             key,
             group,
@@ -91,10 +109,10 @@ define([
         var ln,
             i,
             longest=0;
-        for (ln = 0; ln < patternMatrix.length; ln++) {
+        for (ln = 0; ln < lanesMatrix.length; ln++) {
             lane = this.lanes[ln];
-            for (i = 0; i < patternMatrix[ln].length; i++) {
-                key = patternMatrix[ln][i];
+            for (i = 0; i < lanesMatrix[ln].length; i++) {
+                key = lanesMatrix[ln][i];
                 if (key !== 0) {
                     if (key === 'token') {
                         group = lane.tokens;
@@ -124,7 +142,16 @@ define([
             }
         }
 
-        this.finishLine.x = this.lanes[0].x + this.spread * longest + 384;
+
+        if (this.spawnQueue.length <= 0) {
+            this.finishLine.x = this.lanes[0].x + this.spread * longest + 384;
+        }
+        else {
+            this.setMarker.x = this.lanes[0].x + this.spread * longest;
+        }
+
+        // Clear spawning flag.
+        this.isSpawning = false;
 
         // Dispatch onSpawn event.
         this.events.onSpawn.dispatch(this);

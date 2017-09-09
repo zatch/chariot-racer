@@ -23,7 +23,7 @@ define([
         this.dying = false;
 
         this.poweredUpMaxVelocity = 50;
-        this.normalMaxVelocity = 14;
+        this.normalMaxVelocity = 17;
 
         this.powerupDuration = 0;
         this.maxPowerupDuration = 4000;

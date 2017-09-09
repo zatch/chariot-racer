@@ -36,6 +36,7 @@ define([
         metersTraveled,
 
         spawner,
+        setMarker,
         finishLine,
         lanes,
         tokens,
@@ -89,7 +90,14 @@ define([
 
             // Finish line
             finishLine = new Phaser.Sprite(game, -500, 352, 'finish-line');
+            game.physics.enable(finishLine);
             gameWorld.add(finishLine);
+
+            // Set marker (invisible marker similar to finish line to indicate set end)
+            setMarker = new Phaser.Sprite(game, -500, 352, 'finish-line');
+            setMarker.renderable = false;
+            game.physics.enable(setMarker);
+            gameWorld.add(setMarker);
 
             // Active lane marker
             activeLaneMarker = gameWorld.create(game.width, 0, 'active-lane-marker');
@@ -120,10 +128,11 @@ define([
             // Spawner
             spawner = new Spawner(game, 0, 0, 'blank', 0, 
             {
-                spread: 48, // px between indices in spawn pattern arrays
-                warningDuration: 1000,
+                spread: 64, // px between indices in spawn pattern arrays
+                warningDuration: 800,
                 warningSpread: 10,
                 finishLine: finishLine,
+                setMarker: setMarker,
                 lanes: lanes
             });
             spawner.events.onSpawn.add(this.onSpawnerSpawn, this);
@@ -221,6 +230,7 @@ define([
             clouds1.tilePosition.x -= player.body.velocity.x*0.1;
             clouds2.tilePosition.x -= player.body.velocity.x*0.09;
             finishLine.x -= player.body.velocity.x;
+            setMarker.x -= player.body.velocity.x;
 
             // Move sprites and kill them if they're off camera.
             for (var lcv = 0; lcv < 3; lcv++) {
@@ -233,6 +243,8 @@ define([
             if (!player.dying) {
                 game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
                 game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
+                game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
+                game.physics.arcade.overlap(player, setMarker, spawner.spawnNextInQueue, null, spawner);
 
                 if (player.body.y-10 > laneYCoords[0] * gameWorld.scale.x + gameWorld.y &&
                     player.body.y-10 < laneYCoords[1] * gameWorld.scale.x + gameWorld.y) {
@@ -249,7 +261,7 @@ define([
                     lanes[2].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
                 }
 
-                if (finishLine.x < player.body.x + player.body.width) this.onPlayerCollidesFinishLine();
+                //if (finishLine.x < player.body.x + player.body.width) this.onPlayerCollidesFinishLine();
             }
         },
 
@@ -443,14 +455,14 @@ define([
             // Pick a pattern from the level.
             var patternIndex = Math.floor(Math.random() * currentLevelData.patterns.length);
             var pattern = currentLevelData.patterns[patternIndex];
-            
-            // Send the pattern's lanes to the spawn queue.
-            var lanes = pattern.lanes;
-            spawner.queue(lanes);
 
             // Reset power-up counters.
             currentTokensCollected = 0;
             currentPatternTokenCount = pattern.tokenCount;
+            
+            // Send the pattern to the spawn queue.
+            spawner.queue(pattern);
+            spawner.spawnNextInQueue();
 
             // Increment spawn count for this level.
             currentLevelSpawnCount++;

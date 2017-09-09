@@ -12,14 +12,32 @@ define([], function () {
             maxSpawns: 1,
             patterns: [
                 {
-                    lanes: [
-                        [s,0,0,w,0,0,r],
-                        [t,t,t,t,t,0,0,0,0,0,0,t,t,t,t,t,0,0,0,0,0,0,t,t,t,t,t,t,t,t,t,t],
-                        []
+                    sets: [
+                        {
+                            lanes: [
+                                [0,0,0,0,0,0,0,t,t,t,t,t],
+                                [t,t,t,t,t,0,0,0,0,0,0,0,0,0,t,t,t,t,t],
+                                []
+                            ]
+                        },
+                        {
+                            lanes: [
+                                [s,0,w,0,r],
+                                [t,t,t,t,t],
+                                [s,0,w,0,r]
+                            ]
+                        },
+                        {
+                            lanes: [
+                                [],
+                                [t,t,t,t,t],
+                                []
+                            ]
+                        }
                     ]
                 }
             ]
-        },
+        }/*,
         // L1
         {
             maxSpawns: 2,
@@ -79,22 +97,24 @@ define([], function () {
                     ]
                 }
             ]
-        }
+        }*/
     ];
 
     // Tally total tokens for each pattern.
     levels.forEach(function (level) {
         level.patterns.forEach(function (pattern) {
             pattern.tokenCount = 0;
-            var lane,
-                i;
-            for (lane = 0; lane < pattern.lanes.length; lane++) {
-                for (i = 0; i < pattern.lanes[lane].length; i++) {
-                    if (pattern.lanes[lane][i] === t) {
-                        pattern.tokenCount++;
+            pattern.sets.forEach(function (set) {
+                var lane,
+                    i;
+                for (lane = 0; lane < set.lanes.length; lane++) {
+                    for (i = 0; i < set.lanes[lane].length; i++) {
+                        if (set.lanes[lane][i] === t) {
+                            pattern.tokenCount++;
+                        }
                     }
                 }
-            }
+            }, this);
         }, this);
     }, this);
     
