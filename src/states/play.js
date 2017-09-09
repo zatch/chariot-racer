@@ -399,6 +399,8 @@ define([
             token.animations.stop();
             token.frame = 13;
 
+            this.consumeToken();
+
             var targetX = hud.x+10,
                 targetY = hud.y+20,
                 targetScale,
@@ -407,12 +409,11 @@ define([
                 tweenAutoPlay = true;
             game.add.tween(token)
                 .to({x: targetX, y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay)
-                .onComplete.add(this.consumeToken, this);
+                .onComplete.add(function(token) { token.kill(); }, this);
             sfx.tokenCollect.play();
         },
 
         consumeToken: function (token) {
-            if (!!token) token.kill();
             currentTokensCollected++;
             hud.updateBoostMeter(currentTokensCollected/currentPatternTokenCount);
         },
