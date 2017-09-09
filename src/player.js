@@ -19,7 +19,7 @@ define([
         this.animations.add('walk', [0,1,2,3,4,5,6,7,8], 20);
         this.animations.add('dying', [9,10,11,12,13,14,15,16,17,18], 15, true);
         this.frame = 0;
-        this.dyingLastFrame = 16; // 16 is a blank frame
+        this.dyingLastFrame = 14; // 16 is a blank frame
         this.dying = false;
 
         this.poweredUpMaxVelocity = 50;
