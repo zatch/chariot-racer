@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Level Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../src/lib/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body ng-app="app" layout="column">
+    <script src="../src/lib/angular/angular.min.js"></script>
+    <script src="../src/lib/angular-animate/angular-animate.min.js"></script>
+    <script src="../src/lib/angular-aria/angular-aria.min.js"></script>
+    <script src="../src/lib/angular-messages/angular-messages.min.js"></script>
+    <script src="../src/lib/angular-material/angular-material.min.js"></script>
+    <script src="level-data.js"></script>
+    <script src="app.js"></script>
+    <div ng-controller="mainCtrl" layout-padding  layout="column" flex>
+        <div layout="row">
+            <div class="tool" ng-repeat="tool in tools" ng-class="{selected:activeTool==tool.name}" ng-click="setTool(tool.name)">
+                <i class="fa fa-{{tool.icon}}" ng-if="tool.icon"></i>
+                <span ng-if="!tool.icon">{{tool.name}}</span>
+            </div>
+            <div flex></div>
+            <div>
+                <md-button class="md-raised md-primary" ng-click="save()">
+                    save
+                </md-button>
+            </div>
+        </div>
+        <md-content flex>
+            <div ng-repeat="level in levels" >
+                <h3>Level: {{$index}}</h3>
+                <md-input-container>
+                    <label>MaxSpawn</label>
+                    <input type="number" ng-model="level.maxSpawns">
+                </md-input-container>
+                <md-content ng-repeat="set in level.patterns[0].sets track by $index" ng-init="set.lanes=setLength(set.lanes)" layout-padding>
+                    <div layout="row" ng-repeat="lane in set.lanes track by $index">
+                        <div class="co">{{$index+1}}:</div>
+                        <div class="co" ng-repeat="field in lane track by $index"
+                             ng-class="{green:field.type&&field.type!=='obstacle','red':field.type=='obstacle'}"
+                             ng-click="update.field($parent.$parent.$parent.$index,$parent.$parent.$index,$parent.$index,$index)">
+
+                            {{field.key}}</div>
+                        <div class="co">
+                            <md-button class="md-fab" ng-click="update.size($parent.$parent.$index,$parent.$index)">
+                                <i class="fa fa-plus"></i>
+                            </md-button>
+                        </div>
+                    </div>
+                    <div ng-if="$last">
+                        <md-button class="md-warn md-raised" ng-click="delete.set($parent.$parent.$index)">
+                            <i class="fa fa-minus"></i>
+                            remove set
+                        </md-button>
+                        <md-button class="md-raised md-accent" ng-click="add.set($parent.$parent.$index)">
+                            <i class="fa fa-plus"></i>
+                            add set
+                        </md-button>
+                    </div>
+                    <md-divider></md-divider>
+                </md-content>
+                <div ng-if="$last">
+                    <md-button class="md-raised md-primary" ng-click="add.level()">
+                        <i class="fa fa-plus"></i>
+                        add level
+                    </md-button>
+                </div>
+            </div>
+        </md-content>
+
+    </div>
+    <style>
+        .co{
+            height: 80px;
+            width: 85px;
+            border-top: 1px dotted;
+            border-right: 1px dotted;
+            border-bottom: 1px dotted;
+            overflow: hidden;
+        }
+        .tool{
+            border: 1px solid;
+            width:90px;
+            cursor: pointer;
+        }
+        .selected{
+            background-color: rgba(0,0,0,.25);
+        }
+        .green{
+            background-color: green;
+        }
+        .red{
+            background-color: red;
+        }
+    </style>
+</body>
+</html>
