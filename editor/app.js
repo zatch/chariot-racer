@@ -4,6 +4,7 @@ var app = angular.module('app',['ngMaterial'])
             $http.post('writer.php',{levels:$scope.levels});
         };
         $scope.levels = levels;
+        $scope.isDrawing = false;
         $scope.setLength = function(setArray){
             var ind = setArray.map(function(a){return a.length;}).indexOf(Math.max.apply(Math, setArray.map(function(a){return a.length;})));
             var handle = [];
@@ -51,24 +52,34 @@ var app = angular.module('app',['ngMaterial'])
             }
         };
         $scope.update = {
-            field:function(parent_parent_parent,parent_parent,parent, ind){
-                var setter = 0;
-                switch ($scope.activeTool){
-                    case 'eraser': setter = 0;
-                    break;
-                    case 'token':setter={key:'token',type:'token'};
-                    break;
-                    case 'power-up':setter={key:'power-up',type:'power-up'};
-                    break;
-                    case 'scaffolding':setter={key:'scaffolding',type:'obstacle'};
-                    break;
-                    case 'wheel':setter={key:'wheel',type:'obstacle'};
-                    break;
-                    case 'rock':setter={key:'rock',type:'obstacle'};
-                    break;
+            drawStart: function(e) {
+                e.preventDefault();
+                $scope.isDrawing = true;
+            },
+            drawEnd: function() {
+                $scope.isDrawing = false;
+            },
+            draw:function(parent_parent_parent,parent_parent,parent, ind){
+                if ($scope.isDrawing) {
+                console.log('trying to draw');
+                    var setter = 0;
+                    switch ($scope.activeTool){
+                        case 'eraser': setter = 0;
+                        break;
+                        case 'token':setter={key:'token',type:'token'};
+                        break;
+                        case 'power-up':setter={key:'power-up',type:'power-up'};
+                        break;
+                        case 'scaffolding':setter={key:'scaffolding',type:'obstacle'};
+                        break;
+                        case 'wheel':setter={key:'wheel',type:'obstacle'};
+                        break;
+                        case 'rock':setter={key:'rock',type:'obstacle'};
+                        break;
 
+                    }
+                    $scope.levels[parent_parent_parent].patterns[0].sets[parent_parent].lanes[parent][ind] = setter;
                 }
-                $scope.levels[parent_parent_parent].patterns[0].sets[parent_parent].lanes[parent][ind] = setter;
             },
             size:function(parent_parent_parent,parent_parent){
 

@@ -15,7 +15,7 @@
     <script src="../src/lib/angular-material/angular-material.min.js"></script>
     <script src="level-data.js"></script>
     <script src="app.js"></script>
-    <div ng-controller="mainCtrl" layout-padding  layout="column" flex>
+    <div ng-controller="mainCtrl" layout-padding  layout="column" flex ng-mouseup="update.drawEnd()">
         <div layout="row">
             <div class="tool {{tool.name}}" ng-repeat="tool in tools" ng-class="{selected:activeTool==tool.name}" ng-click="setTool(tool.name)">
                 <i class="fa fa-{{tool.icon}}" ng-if="tool.icon"></i>
@@ -38,8 +38,9 @@
                     <div layout="row" ng-repeat="lane in set.lanes track by $index">
                         <div class="co">{{$index+1}}:</div>
                         <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
-                             
-                             ng-click="update.field($parent.$parent.$parent.$index,$parent.$parent.$index,$parent.$index,$index)"></div>
+
+                             ng-mousedown="update.drawStart($event)"
+                             ng-mouseover="update.draw($parent.$parent.$parent.$index,$parent.$parent.$index,$parent.$index,$index)"></div>
 
                         <div class="co">
                             <md-button class="md-fab md-mini" ng-click="update.size($parent.$parent.$index,$parent.$index)">
