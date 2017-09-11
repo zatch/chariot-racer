@@ -17,9 +17,8 @@
     <script src="app.js"></script>
     <div ng-controller="mainCtrl" layout-padding  layout="column" flex>
         <div layout="row">
-            <div class="tool" ng-repeat="tool in tools" ng-class="{selected:activeTool==tool.name}" ng-click="setTool(tool.name)">
+            <div class="tool {{tool.name}}" ng-repeat="tool in tools" ng-class="{selected:activeTool==tool.name}" ng-click="setTool(tool.name)">
                 <i class="fa fa-{{tool.icon}}" ng-if="tool.icon"></i>
-                <span ng-if="!tool.icon">{{tool.name}}</span>
             </div>
             <div flex></div>
             <div>
@@ -38,13 +37,12 @@
                 <md-content ng-repeat="set in level.patterns[0].sets track by $index" ng-init="set.lanes=setLength(set.lanes)" layout-padding>
                     <div layout="row" ng-repeat="lane in set.lanes track by $index">
                         <div class="co">{{$index+1}}:</div>
-                        <div class="co" ng-repeat="field in lane track by $index"
-                             ng-class="{green:field.type&&field.type!=='obstacle','red':field.type=='obstacle'}"
-                             ng-click="update.field($parent.$parent.$parent.$index,$parent.$parent.$index,$parent.$index,$index)">
+                        <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
+                             
+                             ng-click="update.field($parent.$parent.$parent.$index,$parent.$parent.$index,$parent.$index,$index)"></div>
 
-                            {{field.key}}</div>
                         <div class="co">
-                            <md-button class="md-fab" ng-click="update.size($parent.$parent.$index,$parent.$index)">
+                            <md-button class="md-fab md-mini" ng-click="update.size($parent.$parent.$index,$parent.$index)">
                                 <i class="fa fa-plus"></i>
                             </md-button>
                         </div>
@@ -74,25 +72,37 @@
     <style>
         .co{
             height: 80px;
-            width: 85px;
+            width: 50px;
             border-top: 1px dotted;
             border-right: 1px dotted;
             border-bottom: 1px dotted;
             overflow: hidden;
+            background: url(img/ground.png) center;
         }
         .tool{
-            border: 1px solid;
-            width:90px;
+            border: 4px solid #999999;
+            height: 80px;
+            width: 50px;
             cursor: pointer;
         }
         .selected{
             background-color: rgba(0,0,0,.25);
+            border: 4px solid rgb(255,64,129);
         }
-        .green{
-            background-color: green;
+        .token{
+            background: url(img/token.png) center;
         }
-        .red{
-            background-color: red;
+        .power-up{
+            background: url(img/power-up.png) center;
+        }
+        .scaffolding{
+            background: url(img/scaffolding.png) center;
+        }
+        .wheel{
+            background: url(img/wheel.png) center;
+        }
+        .rock{
+            background: url(img/rock.png) center;
         }
     </style>
 </body>
