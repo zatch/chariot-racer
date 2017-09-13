@@ -39,7 +39,7 @@
                         <div class="co">{{$index+1}}:</div>
                         <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
 
-                             ng-mousedown="update.drawStart($event)"
+                             ng-mousedown="update.drawStart($event); update.draw($parent.$parent.$parent.$index,$parent.$parent.$index,$parent.$index,$index);"
                              ng-mouseover="update.draw($parent.$parent.$parent.$index,$parent.$parent.$index,$parent.$index,$index)"></div>
 
                         <div class="co">
