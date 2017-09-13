@@ -10,7 +10,7 @@ define([], function () {
     var levels = [
         // L0
         {
-            maxSpawns: 1,
+            maxSpawns: 0,
             patterns: [
                 {
                     sets: [

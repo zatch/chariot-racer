@@ -66,7 +66,7 @@ define([
             challengeBtn.label = challengeBtn.addChild(new Phaser.BitmapText(
                 game, 
                 0,
-                challengeBtn.height/2,
+                26,
                 'boxy_bold',
                 'CHALLENGE A FRIEND',
                 16
@@ -80,7 +80,7 @@ define([
             playBtn.label = playBtn.addChild(new Phaser.BitmapText(
                 game, 
                 0,
-                playBtn.height/2,
+                26,
                 'boxy_bold',
                 'PLAY AGAIN',
                 16

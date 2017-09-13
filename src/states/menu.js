@@ -117,7 +117,7 @@ define([
             okBtn.label = okBtn.addChild(new Phaser.BitmapText(
                 game, 
                 okBtn.width/2,
-                okBtn.height/2,
+                26,
                 'boxy_bold',
                 'OK',
                 16
@@ -137,7 +137,7 @@ define([
             backBtn.label = backBtn.addChild(new Phaser.BitmapText(
                 game, 
                 backBtn.width/2,
-                backBtn.height/2,
+                26,
                 'boxy_bold',
                 'BACK',
                 16

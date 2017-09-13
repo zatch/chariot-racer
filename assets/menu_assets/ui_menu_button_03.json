@@ -1,14 +1,14 @@
 { "frames": {
-   "ui_menu_button_03 0.ase": {
-    "frame": { "x": 0, "y": 0, "w": 326, "h": 72 },
+   "ui_menu_button_02 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 310, "h": 56 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 310, "h": 56 },
     "sourceSize": { "w": 310, "h": 56 },
     "duration": 100
    },
-   "ui_menu_button_03 1.ase": {
-    "frame": { "x": 326, "y": 0, "w": 326, "h": 72 },
+   "ui_menu_button_02 1.ase": {
+    "frame": { "x": 311, "y": 0, "w": 310, "h": 56 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 310, "h": 56 },
@@ -21,7 +21,7 @@
   "version": "1.1.0.1",
   "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\menu_assets\\ui_menu_button_03.png",
   "format": "RGBA8888",
-  "size": { "w": 652, "h": 72 },
+  "size": { "w": 621, "h": 56 },
   "scale": "1"
  }
 }

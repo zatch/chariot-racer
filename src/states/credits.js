@@ -78,7 +78,7 @@ define([
             banner.anchor.set(0.5, 0);
             bannerText = banner.addChild(new Phaser.BitmapText(
                 game, 
-                banner/2,
+                0,
                 22,
                 'boxy_bold',
                 'CREDITS',
@@ -93,7 +93,7 @@ define([
             backBtn.label = backBtn.addChild(new Phaser.BitmapText(
                 game, 
                 0,
-                backBtn.height/2,
+                26,
                 'boxy_bold',
                 'BACK',
                 16
