@@ -1,0 +1,59 @@
+{ "frames": {
+   "tap-to-play-button 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 302, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 302, "h": 20 },
+    "sourceSize": { "w": 302, "h": 20 },
+    "duration": 100
+   },
+   "tap-to-play-button 1.ase": {
+    "frame": { "x": 303, "y": 0, "w": 302, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 302, "h": 20 },
+    "sourceSize": { "w": 302, "h": 20 },
+    "duration": 100
+   },
+   "tap-to-play-button 2.ase": {
+    "frame": { "x": 606, "y": 0, "w": 302, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 302, "h": 20 },
+    "sourceSize": { "w": 302, "h": 20 },
+    "duration": 100
+   },
+   "tap-to-play-button 3.ase": {
+    "frame": { "x": 909, "y": 0, "w": 302, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 302, "h": 20 },
+    "sourceSize": { "w": 302, "h": 20 },
+    "duration": 100
+   },
+   "tap-to-play-button 4.ase": {
+    "frame": { "x": 1212, "y": 0, "w": 302, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 302, "h": 20 },
+    "sourceSize": { "w": 302, "h": 20 },
+    "duration": 100
+   },
+   "tap-to-play-button 5.ase": {
+    "frame": { "x": 1515, "y": 0, "w": 302, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 302, "h": 20 },
+    "sourceSize": { "w": 302, "h": 20 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.1.0.1",
+  "image": "C:\\Users\\zbennett\\Documents\\LightTPD\\htdocs\\chariot-racer\\assets\\splash\\tap-to-play-button.png",
+  "format": "RGBA8888",
+  "size": { "w": 1817, "h": 20 },
+  "scale": "1"
+ }
+}

@@ -1,10 +1,11 @@
 define([
     'phaser',
+    'states/splash',
     'states/menu',
     'states/credits',
     'states/play',
     'states/game-over'
-], function (Phaser, Menu, Credits, Play, GameOver) { 
+], function (Phaser, Splash, Menu, Credits, Play, GameOver) { 
     'use strict';
 
     // Shortcuts
@@ -72,6 +73,10 @@ define([
             game.load.atlas('token', 'assets/sprites/token.png', 'assets/sprites/token.json');
             game.load.atlas('power-up', 'assets/sprites/token-laurel.png', 'assets/sprites/token-laurel.json');
 
+            // Splash screen
+            game.load.image('title', 'assets/splash/title.png');
+            game.load.atlas('tap-to-play-btn', 'assets/splash/tap-to-play-button.png', 'assets/splash/tap-to-play-button.json');
+
             // Blank placeholder (for Sprites without artwork)
             game.load.image('blank', 'assets/blank.png');
 
@@ -99,13 +104,14 @@ define([
         // Main
         create: function () {
             // Add states to our game.
+            game.state.add('Splash', Splash);
             game.state.add('Menu', Menu);
             game.state.add('Credits', Credits);
             game.state.add('Play', Play);
             game.state.add('GameOver', GameOver);
 
             // Now that everything is loaded, show the menu.
-            game.stateTransition.to('Menu', true, false);
+            game.stateTransition.to('Splash', true, false);
 
             // Debug: Skip Menu and go straight to Play (for dev testing)
             //game.stateTransition.to('Play',true,false,{color:'chariot-red'});
