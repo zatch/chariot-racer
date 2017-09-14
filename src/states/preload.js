@@ -92,7 +92,7 @@ define([
             game.load.audio('speed-up', 'assets/sfx/qubodup-SpeedUp-trimmed.mp3');
             game.load.audio('slow-down', 'assets/sfx/qubodup-SlowDown-trimmed.mp3');
             game.load.audio('heartbeat', 'assets/sfx/heartbeat.mp3');
-            game.load.audio('crash', 'assets/sfx/atari_boom.wav');
+            game.load.audio('crash', 'assets/sfx/atari_boom.mp3');
             game.load.audio('lose', 'assets/sfx/Jingle_Lose_00.mp3');
             game.load.audio('menu-select', 'assets/sfx/roughSelect.mp3');
             game.load.audio('menu-back', 'assets/sfx/roughBack.mp3');
