@@ -463,7 +463,7 @@ define([
             // Switch to power-up sound effects.
             music.fadeTo(500, 0.25);
             sfx.slowDown.play();
-            sfx.heartbeat.play('', 0 , 3);
+            sfx.heartbeat.play();
         },
 
         onPowerUpStep: function (player, percentRemaining) {
