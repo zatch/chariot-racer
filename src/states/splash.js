@@ -60,7 +60,7 @@ define([
 
         onPlayBtnClicked: function() {
             if (!muteBtn.input.pointerOver()) {
-                game.sound.play('menu-select', 20);
+                game.sound.play('menu-select');
 
                 playBtn.animations.play('selected').onComplete.addOnce(function() {
                     music.stop();
