@@ -422,8 +422,12 @@ define([
                 inPattern = false;
 
                 if (player.stateMachine.getState() !== 'powered-up') {
+                    // Reset toekn counter.
+                    currentTokensCollected = 0;
+
                     // Play Miss message and sfx.
                     hud.showBonusText(0, 0);
+                    hud.updateBoostMeter(0);
                     sfx.powerupMiss.play();
 
                     // Set timer to clean up after bonus text.
