@@ -17,6 +17,22 @@
         var levels = '';
         function define(junk, data) {
             levels = data();
+            // Tally total tokens for each pattern.
+            levels.forEach(function (level) {
+                level.patterns.forEach(function (pattern) {
+                    pattern.tokenCount = 0;
+                    pattern.sets.forEach(function (set) {
+                        var lane,
+                            i;
+                        for (lane = 0; lane < set.lanes.length; lane++) {
+                            while (set.lanes[lane].length < 20) {
+                                set.lanes[lane].push(0);
+                            }
+                        }
+                    }, this);
+                }, this);
+            }, this);
+            console.log(levels);
             console.log(levels);
         }
     </script>
@@ -57,7 +73,7 @@
                         <i class="fa fa-plus"></i>
                         add set
                     </md-button>
-                    <md-content class="set" md-inset ng-repeat="set in pattern.sets track by $index" ng-init="set.lanes=setLength(set.lanes)" layout-padding>
+                    <md-content class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
                         <div class="lane" layout="row" ng-repeat="lane in set.lanes track by $index">
                             <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
 

@@ -10,6 +10,11 @@ var app = angular.module('app',['ngMaterial'])
                         var lane,
                             i;
                         for (lane = 0; lane < set.lanes.length; lane++) {
+                            // Trim 0's off end of lanes before saving.
+                            while (set.lanes[lane][set.lanes[lane].length-1] === 0) {
+                                set.lanes[lane].pop();
+                            }
+
                             for (i = 0; i < set.lanes[lane].length; i++) {
                                 if (set.lanes[lane][i].key === 'token' || set.lanes[lane][i].key === 'power-up') {
                                     pattern.tokenCount++;
@@ -19,33 +24,27 @@ var app = angular.module('app',['ngMaterial'])
                     }, this);
                 }, this);
             }, this);
-            console.log(levels);
 
-            $http.post('writer.php',{levels:levels});
+            $http.post('writer.php',{levels:levels}).then(function() {
+                // Make sure lanes always appear to have 20 fields.
+                levels.forEach(function (level) {
+                    level.patterns.forEach(function (pattern) {
+                        pattern.tokenCount = 0;
+                        pattern.sets.forEach(function (set) {
+                            var lane,
+                                i;
+                            for (lane = 0; lane < set.lanes.length; lane++) {
+                                while (set.lanes[lane].length < 20) {
+                                    set.lanes[lane].push(0);
+                                }
+                            }
+                        }, this);
+                    }, this);
+                }, this);
+            });
         };
         $scope.levels = levels;
         $scope.isDrawing = false;
-        $scope.setLength = function(setArray){
-            var ind = setArray.map(function(a){return a.length;}).indexOf(Math.max.apply(Math, setArray.map(function(a){return a.length;})));
-            var handle = [];
-            angular.forEach(setArray,function(lane,k){
-                if(typeof  handle[k] === 'undefined'){
-                    handle.push([]);
-                }
-                for(var i =0;i<setArray[ind].length;i++){
-
-                    if(typeof lane[i] !== 'undefined'){
-
-                        handle[k].push(lane[i])
-                    } else {
-                        handle[k].push(0);
-                    }
-                }
-
-            });
-            console.log(handle);
-            return handle;
-        };
         $scope.tools = [
             {name:'eraser',icon:'eraser'},
             {name:'wheel',icon:false},
