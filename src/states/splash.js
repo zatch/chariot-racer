@@ -26,11 +26,11 @@ define([
             game.sound.add('menu-select');
 
             // Background
-            title = game.add.sprite(game.width / 2, 80, 'title');
+            title = game.add.sprite(game.width / 2, 0, 'title');
             title.anchor.set(0.5, 0);
 
             // Credits button
-            playBtn = game.add.button(game.width / 2, game.height - 80, 'tap-to-play-btn', this.onPlayBtnClicked);
+            playBtn = game.add.button(game.width / 2, game.height - 20, 'tap-to-play-btn', this.onPlayBtnClicked);
             playBtn.anchor.set(0.5, 1);
             playBtn.animations.add('selected', [0,1,0], 20);
             
