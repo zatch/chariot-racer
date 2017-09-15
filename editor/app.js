@@ -85,7 +85,6 @@ var app = angular.module('app',['ngMaterial'])
                 level.patterns.splice(index, 1);
             },
             level:function(levels, index){
-                console.log(levels);
                 levels.splice(index, 1);
             }
         };
@@ -99,7 +98,6 @@ var app = angular.module('app',['ngMaterial'])
             },
             draw:function(lane, index){
                 if ($scope.isDrawing) {
-                console.log('trying to draw', lane[index]);
                     var setter = 0;
                     switch ($scope.activeTool){
                         case 'eraser': setter = 0;

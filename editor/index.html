@@ -17,7 +17,7 @@
         var levels = '';
         function define(junk, data) {
             levels = data();
-            // Tally total tokens for each pattern.
+            // Make sure lanes always appear to have 20 fields.
             levels.forEach(function (level) {
                 level.patterns.forEach(function (pattern) {
                     pattern.tokenCount = 0;
@@ -32,8 +32,6 @@
                     }, this);
                 }, this);
             }, this);
-            console.log(levels);
-            console.log(levels);
         }
     </script>
     <script src="../src/level-data.js"></script>
