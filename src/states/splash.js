@@ -22,9 +22,6 @@ define([
         
         // Main
         create: function () {
-            // Button SFX
-            game.sound.add('menu-select');
-
             // Background
             title = game.add.sprite(game.width / 2, 0, 'title');
             title.anchor.set(0.5, 0);
@@ -42,10 +39,6 @@ define([
 
             // Mute button
             muteBtn = game.add.existing(new MuteButton(game));
-
-            // Music
-            music = game.add.audio('menu-music', 0.5, true);
-            music.play();
         },
 
         blinkOn: function() {
@@ -60,10 +53,7 @@ define([
 
         onPlayBtnClicked: function() {
             if (!muteBtn.input.pointerOver()) {
-                game.sound.play('menu-select');
-
                 playBtn.animations.play('selected').onComplete.addOnce(function() {
-                    music.stop();
                     this.game.stateTransition.to('Menu', true, false);
                 }, this);
             }
