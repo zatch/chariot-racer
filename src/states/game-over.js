@@ -99,6 +99,29 @@ define([
             // Music
             music = game.add.audio('menu-music', 0.5, true);
             music.play();
+
+            var mailto = 'mailto:' +
+                         '?subject=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Can you beat my score?' +
+                         '&body=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Try to top my score!' +
+                         '%0D%0A' +
+                         '%0D%0A' +
+                         'https://shirepharma.sharepoint.com/sites/PresidentsClub/2017/Chariot%2520Racer/index.aspx' +
+                         '%0D%0A' +
+                         '%0D%0A' +
+                         'Will you accept the Emperor\'s challenge?';
+
+
+            var challengeAnchor = document.createElement('a');
+            challengeAnchor.href=mailto;
+            challengeAnchor.target='_top';
+            challengeAnchor.width=challengeBtn.width;
+            challengeAnchor.height=challengeBtn.height;
+            challengeAnchor.setAttribute('style','display:block;position:absolute;background-color:rgba(255,255,255,0);top:'+((challengeBtn.y+80)*game.scale.scaleFactorInversed.y)+'px;left:'+((challengeBtn.x-31)*game.scale.scaleFactorInversed.x)+'px;width:'+(challengeBtn.width*game.scale.scaleFactorInversed.x)+'px;height:'+(challengeBtn.height*game.scale.scaleFactorInversed.y)+'px;');
+            document.body.appendChild(challengeAnchor);
+
+            game.scale.onSizeChange.add(function() {
+                challengeAnchor.setAttribute('style','display:block;position:absolute;background-color:rgba(255,255,255,0);top:'+((challengeBtn.y+80)*game.scale.scaleFactorInversed.y)+'px;left:'+((challengeBtn.x-31)*game.scale.scaleFactorInversed.x)+'px;width:'+(challengeBtn.width*game.scale.scaleFactorInversed.x)+'px;height:'+(challengeBtn.height*game.scale.scaleFactorInversed.y)+'px;');
+            }, this);
         },
 
         onChallengeBtnClicked: function() {
@@ -110,7 +133,7 @@ define([
                              '&body=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Try to top my score!' +
                              '%0D%0A' +
                              '%0D%0A' +
-                             'https://learntodomore.com/review/2104_shire_pres_club/chariot-racer/dev/index.html' +
+                             'https://shirepharma.sharepoint.com/sites/PresidentsClub/2017/Chariot%2520Racer/index.aspx' +
                              '%0D%0A' +
                              '%0D%0A' +
                              'Will you accept the Emperor\'s challenge?';
