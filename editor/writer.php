@@ -23,6 +23,14 @@ foreach ($input['levels'] as $i=>$level){
     }
     $input['levels'][$i]['tokenCount']=$tokenCount;
 }
-$outputstring = 'var levels = '.json_encode($input['levels']);
-file_put_contents(dirname(__FILE__).'/level-data.js',$outputstring);
+// $outputstring = 'var levels = '.json_encode($input['levels']);
+$outputstring = ''
+.'define([], function () { '
+.'"use strict";'
+.'return '
+.json_encode($input['levels'])
+.';});';
+
+
+file_put_contents(dirname(__DIR__).'/src/level-data.js',$outputstring);
 echo json_encode($input['levels']);

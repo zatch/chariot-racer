@@ -1,7 +1,27 @@
 var app = angular.module('app',['ngMaterial'])
     .controller('mainCtrl',['$scope','$http',function($scope,$http){
         $scope.save = function(){
-            $http.post('writer.php',{levels:$scope.levels});
+            var levels = $scope.levels;
+            // Tally total tokens for each pattern.
+            levels.forEach(function (level) {
+                level.patterns.forEach(function (pattern) {
+                    pattern.tokenCount = 0;
+                    pattern.sets.forEach(function (set) {
+                        var lane,
+                            i;
+                        for (lane = 0; lane < set.lanes.length; lane++) {
+                            for (i = 0; i < set.lanes[lane].length; i++) {
+                                if (set.lanes[lane][i] === 'token' || set.lanes[lane][i] === 'power-up') {
+                                    pattern.tokenCount++;
+                                }
+                            }
+                        }
+                    }, this);
+                }, this);
+            }, this);
+            
+
+            $http.post('writer.php',{levels:levels});
         };
         $scope.levels = levels;
         $scope.isDrawing = false;
