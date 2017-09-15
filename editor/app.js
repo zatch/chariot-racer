@@ -19,7 +19,7 @@ var app = angular.module('app',['ngMaterial'])
                     }, this);
                 }, this);
             }, this);
-            
+            console.log(levels);
 
             $http.post('writer.php',{levels:levels});
         };
@@ -59,22 +59,35 @@ var app = angular.module('app',['ngMaterial'])
             $scope.activeTool = what;
         };
         $scope.add = {
-            set:function(parent_parent){
+            set:function(pattern, index){
                 var lanes = [[],[],[]];
                 for (var lcv = 0; lcv < 20; lcv++) {
                     lanes[0].push(0);
                     lanes[1].push(0);
                     lanes[2].push(0);
                 }
-                $scope.levels[parent_parent].patterns[0].sets.push({lanes:lanes});
+
+                pattern.sets.splice(index, 0, {lanes:lanes});
             },
-            level:function(){
-                $scope.levels.push({maxSpawns:1,patterns:[{sets:[{lanes:[[0][0][0]]}]}]});
+            pattern:function(level, index){
+                level.patterns.splice(index, 0, {sets:[]});
+                $scope.add.set(level.patterns[index], 0);
+            },
+            level:function(levels, index){
+                levels.splice(index, 0, {maxSpawns:1, patterns:[]});
+                $scope.add.pattern(levels[index], 0);
             }
         };
         $scope.delete ={
-            set:function(parent_parent){
-                $scope.levels[parent_parent].patterns[0].sets.pop();
+            set:function(pattern, index){
+                pattern.sets.splice(index, 1);
+            },
+            pattern:function(level, index){
+                level.patterns.splice(index, 1);
+            },
+            level:function(levels, index){
+                console.log(levels);
+                levels.splice(index, 1);
             }
         };
         $scope.update = {
@@ -85,9 +98,9 @@ var app = angular.module('app',['ngMaterial'])
             drawEnd: function() {
                 $scope.isDrawing = false;
             },
-            draw:function(parent_parent_parent,parent_parent,parent, ind){
+            draw:function(lane, index){
                 if ($scope.isDrawing) {
-                console.log('trying to draw');
+                console.log('trying to draw', lane[index]);
                     var setter = 0;
                     switch ($scope.activeTool){
                         case 'eraser': setter = 0;
@@ -104,14 +117,8 @@ var app = angular.module('app',['ngMaterial'])
                         break;
 
                     }
-                    $scope.levels[parent_parent_parent].patterns[0].sets[parent_parent].lanes[parent][ind] = setter;
+                    lane[index] = setter;
                 }
-            },
-            size:function(parent_parent_parent,parent_parent){
-
-                $scope.levels[parent_parent_parent].patterns[0].sets[parent_parent].lanes[0].push(0);
-                $scope.levels[parent_parent_parent].patterns[0].sets[parent_parent].lanes[1].push(0);
-                $scope.levels[parent_parent_parent].patterns[0].sets[parent_parent].lanes[2].push(0);
             }
-        }
+        };
     }]);
