@@ -15,6 +15,7 @@ define([
 
         playBtn,
         challengeBtn,
+        challengeAnchor,
         creditsBtn,
 
         music;
@@ -110,8 +111,7 @@ define([
                          '%0D%0A' +
                          'Will you accept the Emperor\'s challenge?';
 
-
-            var challengeAnchor = document.createElement('a');
+            challengeAnchor = document.createElement('a');
             challengeAnchor.href=mailto;
             challengeAnchor.target='_top';
             challengeAnchor.width=challengeBtn.width;
@@ -122,6 +122,10 @@ define([
             game.scale.onSizeChange.add(function() {
                 challengeAnchor.setAttribute('style','display:block;position:absolute;background-color:rgba(255,255,255,0);top:'+((challengeBtn.y+80)*game.scale.scaleFactorInversed.y)+'px;left:'+((challengeBtn.x-31)*game.scale.scaleFactorInversed.x)+'px;width:'+(challengeBtn.width*game.scale.scaleFactorInversed.x)+'px;height:'+(challengeBtn.height*game.scale.scaleFactorInversed.y)+'px;');
             }, this);
+        },
+
+        shutdown: function () {
+            challengeAnchor.parentNode.removeChild(challengeAnchor);
         },
 
         onChallengeBtnClicked: function() {
