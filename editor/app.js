@@ -11,7 +11,7 @@ var app = angular.module('app',['ngMaterial'])
                             i;
                         for (lane = 0; lane < set.lanes.length; lane++) {
                             for (i = 0; i < set.lanes[lane].length; i++) {
-                                if (set.lanes[lane][i] === 'token' || set.lanes[lane][i] === 'power-up') {
+                                if (set.lanes[lane][i].key === 'token' || set.lanes[lane][i].key === 'power-up') {
                                     pattern.tokenCount++;
                                 }
                             }
@@ -60,7 +60,13 @@ var app = angular.module('app',['ngMaterial'])
         };
         $scope.add = {
             set:function(parent_parent){
-                $scope.levels[parent_parent].patterns[0].sets.push({lanes:[[0],[0],[0]]});
+                var lanes = [[],[],[]];
+                for (var lcv = 0; lcv < 20; lcv++) {
+                    lanes[0].push(0);
+                    lanes[1].push(0);
+                    lanes[2].push(0);
+                }
+                $scope.levels[parent_parent].patterns[0].sets.push({lanes:lanes});
             },
             level:function(){
                 $scope.levels.push({maxSpawns:1,patterns:[{sets:[{lanes:[[0][0][0]]}]}]});
@@ -68,7 +74,7 @@ var app = angular.module('app',['ngMaterial'])
         };
         $scope.delete ={
             set:function(parent_parent){
-                delete $scope.levels[parent_parent].patterns[0].sets[$scope.levels[parent_parent].patterns[0].sets.length-1];
+                $scope.levels[parent_parent].patterns[0].sets.pop();
             }
         };
         $scope.update = {
