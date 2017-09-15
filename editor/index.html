@@ -13,28 +13,7 @@
     <script src="../src/lib/angular-aria/angular-aria.min.js"></script>
     <script src="../src/lib/angular-messages/angular-messages.min.js"></script>
     <script src="../src/lib/angular-material/angular-material.min.js"></script>
-    <script type="text/javascript">
-        var levels = '';
-        function define(junk, data) {
-            levels = data();
-            // Make sure lanes always appear to have 20 fields.
-            levels.forEach(function (level) {
-                level.patterns.forEach(function (pattern) {
-                    pattern.tokenCount = 0;
-                    pattern.sets.forEach(function (set) {
-                        var lane,
-                            i;
-                        for (lane = 0; lane < set.lanes.length; lane++) {
-                            while (set.lanes[lane].length < 20) {
-                                set.lanes[lane].push(0);
-                            }
-                        }
-                    }, this);
-                }, this);
-            }, this);
-        }
-    </script>
-    <script src="../src/level-data.js"></script>
+
     <script src="app.js"></script>
     <div ng-controller="mainCtrl" layout-padding  layout="column" flex ng-mouseup="update.drawEnd()">
         <div layout="row">
@@ -53,60 +32,60 @@
                 <i class="fa fa-plus"></i>
                 add level
             </md-button>
-            <div class="level" ng-repeat="level in levels" >
-                <h3>Level: {{$index}}</h3>
-                <md-input-container>
-                    <label>MaxSpawn</label>
-                    <input type="number" ng-model="level.maxSpawns">
-                </md-input-container>
+            <md-tabs md-dynamic-height="">
+                <md-tab label="Level: {{$index}}" class="level" ng-repeat="level in levels" >
+                    <md-input-container>
+                        <label>MaxSpawn</label>
+                        <input type="number" ng-model="level.maxSpawns">
+                    </md-input-container>
+                    <div class="pattern" md-inset ng-repeat="pattern in level.patterns" >
+                        <md-button
+                                class="md-raised"
+                                ng-init="toggles.pattern['l'+$parent.$index+'p'+$index]=false"
+                                ng-click="toggle('pattern','l'+$parent.$index+'p'+$index)">
+                            Pattern: {{$index+1}}
+                        </md-button>
 
-                <md-button class="md-raised md-accent" ng-click="add.pattern(level, 0)">
-                    <i class="fa fa-plus"></i>
-                    add pattern
-                </md-button>
-                <div class="pattern" md-inset ng-repeat="pattern in level.patterns" >
-                    <h3>Pattern: {{$parent.$index}}.{{$index}}</h3>
+                        <div ng-if="toggles.pattern['l'+$parent.$index+'p'+$index]">
+                            <md-content  class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
+                                <div class="lane" layout="row" ng-repeat="lane in set.lanes track by $index">
+                                    <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
 
-                    <md-button class="md-raised md-accent" ng-click="add.set(pattern, 0)">
-                        <i class="fa fa-plus"></i>
-                        add set
-                    </md-button>
-                    <md-content class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
-                        <div class="lane" layout="row" ng-repeat="lane in set.lanes track by $index">
-                            <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
+                                         ng-mousedown="update.drawStart($event); update.draw(lane,$index);"
+                                         ng-mouseover="update.draw(lane,$index)"></div>
+                                </div>
+                                <div>
+                                    <md-button class="md-warn md-raised" ng-click="delete.set($parent.pattern, $index)">
+                                        <i class="fa fa-minus"></i>
+                                        remove set
+                                    </md-button>
+                                    <md-button class="md-raised md-accent" ng-click="add.set($parent.pattern, $index+1)">
+                                        <i class="fa fa-plus"></i>
+                                        add set
+                                    </md-button>
+                                </div>
 
-                                 ng-mousedown="update.drawStart($event); update.draw(lane,$index);"
-                                 ng-mouseover="update.draw(lane,$index)"></div>
+                            </md-content>
                         </div>
-                        <md-button class="md-warn md-raised" ng-click="delete.set($parent.pattern, $index)">
+
+                        <md-button class="md-warn md-raised" ng-click="delete.pattern($parent.level, $index)">
                             <i class="fa fa-minus"></i>
-                            remove set
+                            remove pattern
                         </md-button>
-                        <md-button class="md-raised md-accent" ng-click="add.set($parent.pattern, $index+1)">
+                        <md-button class="md-raised md-accent" ng-click="add.pattern($parent.level, $index+1)">
                             <i class="fa fa-plus"></i>
-                            add set
+                            add pattern
                         </md-button>
-                    </md-content>
-                    <md-button class="md-warn md-raised" ng-click="delete.pattern($parent.level, $index)">
+                        <md-divider md-inset></md-divider>
+                    </div>
+                    <md-button class="md-raised md-primary" ng-click="delete.level($parent.levels, $index)">
                         <i class="fa fa-minus"></i>
-                        remove pattern
+                        remove level
                     </md-button>
-                    <md-button class="md-raised md-accent" ng-click="add.pattern($parent.level, $index+1)">
-                        <i class="fa fa-plus"></i>
-                        add pattern
-                    </md-button>
-                    <md-divider md-inset></md-divider>
-                </div>
-                <md-button class="md-raised md-primary" ng-click="delete.level($parent.levels, $index)">
-                    <i class="fa fa-minus"></i>
-                    remove level
-                </md-button>
-                <md-button class="md-raised md-primary" ng-click="add.level($parent.levels, $index+1)">
-                    <i class="fa fa-plus"></i>
-                    add level
-                </md-button>
-                <md-divider></md-divider>
-            </div>
+
+                </md-tab>
+            </md-tabs>
+
         </md-content>
 
     </div>

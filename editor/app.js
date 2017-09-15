@@ -1,50 +1,26 @@
 var app = angular.module('app',['ngMaterial'])
     .controller('mainCtrl',['$scope','$http',function($scope,$http){
+
         $scope.save = function(){
-            var levels = $scope.levels;
-            // Tally total tokens for each pattern.
-            levels.forEach(function (level) {
-                level.patterns.forEach(function (pattern) {
-                    pattern.tokenCount = 0;
-                    pattern.sets.forEach(function (set) {
-                        var lane,
-                            i;
-                        for (lane = 0; lane < set.lanes.length; lane++) {
-                            // Trim 0's off end of lanes before saving.
-                            while (set.lanes[lane][set.lanes[lane].length-1] === 0) {
-                                set.lanes[lane].pop();
-                            }
-
-                            for (i = 0; i < set.lanes[lane].length; i++) {
-                                if (set.lanes[lane][i].key === 'token' || set.lanes[lane][i].key === 'power-up') {
-                                    pattern.tokenCount++;
-                                }
-                            }
-                        }
-                    }, this);
-                }, this);
-            }, this);
-
-            $http.post('writer.php',{levels:levels}).then(function() {
-                // Make sure lanes always appear to have 20 fields.
-                levels.forEach(function (level) {
-                    level.patterns.forEach(function (pattern) {
-                        pattern.tokenCount = 0;
-                        pattern.sets.forEach(function (set) {
-                            var lane,
-                                i;
-                            for (lane = 0; lane < set.lanes.length; lane++) {
-                                while (set.lanes[lane].length < 20) {
-                                    set.lanes[lane].push(0);
-                                }
-                            }
-                        }, this);
-                    }, this);
-                }, this);
-            });
+            $http.post('api.php',{function:'write',data:$scope.levels});
         };
-        $scope.levels = levels;
+        $http.post('api.php',{function:'read'}).then(function(res){
+            if(res.data.error){
+                alert(data.error);
+            } else {
+                $scope.levels = res.data.data;
+            }
+
+        });
+
+        $scope.levels = [];
         $scope.isDrawing = false;
+        $scope.toggles = {
+            pattern:{}
+        };
+        $scope.toggle = function(what,ident){
+            $scope.toggles[what][ident] =!$scope.toggles[what][ident];
+        };
         $scope.tools = [
             {name:'eraser',icon:'eraser'},
             {name:'wheel',icon:false},
