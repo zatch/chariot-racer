@@ -57,8 +57,8 @@ class api{
     private static function equalize($direction,$data){
         foreach($data as $l=>$level){
             foreach($level['patterns'] as $p => $pattern){
+                $tokenCount = 0;
                 foreach($pattern['sets'] as $s => $set){
-                    $tokenCount =0;
                     foreach ($set['lanes'] as $la=>$lane){
 
                         switch ($direction){
