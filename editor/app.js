@@ -29,6 +29,7 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
         $scope.tools = [
             {name:'eraser',     icon:'eraser',      hotkey:'e'},
             {name:'grabber',    icon:'hand-rock-o', hotkey:'v'},
+            {name:'random',     icon:'random',      hotkey:'r'},
             {name:'wheel',      icon:false,         hotkey:'1'},
             {name:'scaffolding',icon:false,         hotkey:'2'},
             {name:'rock',       icon:false,         hotkey:'3'},
@@ -66,6 +67,9 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
                         break;
                     case 'v':
                         $scope.setTool('grabber');
+                        break;
+                    case 'r':
+                        $scope.setTool('random');
                         break;
                     case '1':
                         $scope.setTool('wheel');
@@ -181,8 +185,21 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
             },
             draw:function(lane, index, tool, fromHistory){
                 if ($scope.isDrawing) {
-                    tool = !!tool ? tool : $scope.activeTool;
                     fromHistory = !!fromHistory ? fromHistory : false;
+                    tool = !!tool ? tool : $scope.activeTool;
+                    if (tool === 'random') {
+                        switch (Math.floor(Math.random() * 3) + 1) {
+                            case 1:
+                                tool = 'wheel';
+                                break;
+                            case 2:
+                                tool = 'scaffolding';
+                                break;
+                            case 3:
+                                tool = 'rock';
+                                break;
+                        }
+                    }
                     
                     if (!fromHistory) {
                         var historyProps = {
