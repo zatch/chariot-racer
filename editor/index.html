@@ -58,6 +58,10 @@
                             <label>Nickname</label>
                             <input ng-model="pattern.name">
                         </md-input-container>
+                        <md-input-container class="pattern-rating">
+                            <label>Rating</label>
+                            <input type="number" ng-model="pattern.rating">
+                        </md-input-container>
                         <md-switch class="md-primary pattern-enabled-switch" md-no-ink aria-label="Enabled" ng-model="pattern.enabled">
                             Enabled: {{pattern.enabled}}
                         </md-switch>
@@ -120,7 +124,12 @@
         .pattern-name {
             display: inline-flex;
             vertical-align: middle;
-            min-width: 400px;
+            min-width: 300px;
+        }
+        .pattern-rating {
+            display: inline-flex;
+            vertical-align: middle;
+            max-width: 80px;
         }
         .lane{
             padding: 0;
