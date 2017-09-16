@@ -45,8 +45,17 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
                     case 's':
                         e.preventDefault();
                         e.stopPropagation();
-                        console.log('I will try to save.');
                         $scope.save();
+                        break;
+                    case 'z':
+                        e.preventDefault();
+                        e.stopPropagation();
+                        $scope.history.undo();
+                        break;
+                    case 'y':
+                        e.preventDefault();
+                        e.stopPropagation();
+                        $scope.history.redo();
                         break;
                 }
             }
@@ -116,18 +125,83 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
         $scope.sort = {
 
         };
+        $scope.history = {
+            _log: [],
+            index: -1,
+            log: function(action, props) {
+                $scope.history._log.splice($scope.history.index+1, $scope.history._log.length);
+                $scope.history._log.push({
+                    action: action,
+                    props: props
+                });
+                $scope.history.index = $scope.history._log.length-1;
+            },
+            undo: function() {
+                if ($scope.history.index >= 0) {
+                    var change = $scope.history._log[$scope.history.index];
+                    switch(change.action) {
+                        case 'draw':
+                            $scope.update.drawStart();
+                            $scope.update.draw(change.props.lane, 
+                                               change.props.index, 
+                                               change.props.fromTool, 
+                                               true);
+                            $scope.update.drawEnd();
+                            $scope.history.index--;
+                            $scope.$apply(); // hack the UI to update now!
+                            break;
+                    }
+                }
+            },
+            redo: function() {
+                if ($scope.history.index < $scope.history._log.length-1) {
+                    var change = $scope.history._log[$scope.history.index+1];
+                    switch(change.action) {
+                        case 'draw':
+                            $scope.update.drawStart();
+                            $scope.update.draw(change.props.lane, 
+                                               change.props.index, 
+                                               change.props.toTool, 
+                                               true);
+                            $scope.update.drawEnd();
+                            $scope.history.index++;
+                            $scope.$apply(); // hack the UI to update now!
+                            break;
+                    }
+                }
+            }
+        };
         $scope.update = {
             drawStart: function(e) {
-                e.preventDefault();
+                if (!!e) e.preventDefault();
                 $scope.isDrawing = true;
             },
             drawEnd: function() {
                 $scope.isDrawing = false;
             },
-            draw:function(lane, index){
+            draw:function(lane, index, tool, fromHistory){
                 if ($scope.isDrawing) {
+                    tool = !!tool ? tool : $scope.activeTool;
+                    fromHistory = !!fromHistory ? fromHistory : false;
+                    
+                    if (!fromHistory) {
+                        var historyProps = {
+                            lane: lane,
+                            index: index,
+                            fromTool: lane.slice()[index],
+                            toTool: tool
+                        };
+                        if (historyProps.fromTool === 0) {
+                            historyProps.fromTool = 'eraser';
+                        }
+                        else {
+                            historyProps.fromTool = historyProps.fromTool.key;
+                        }
+                        $scope.history.log('draw', historyProps);
+                    }
+
                     var setter = 0;
-                    switch ($scope.activeTool){
+                    switch (tool){
                         case 'eraser': setter = 0;
                         break;
                         case 'token':setter={key:'token',type:'token'};
