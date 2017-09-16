@@ -21,6 +21,7 @@
     <div ng-controller="mainCtrl" layout-padding  layout="column" flex ng-mouseup="update.drawEnd()">
         <div layout="row">
             <div class="tool {{tool.name}}" ng-repeat="tool in tools" ng-class="{selected:activeTool==tool.name}" ng-click="setTool(tool.name)">
+                <div class="tool-label">{{tool.hotkey}}</div>
                 <i class="fa fa-{{tool.icon}} fa-3x" ng-if="tool.icon"></i>
             </div>
             <div flex></div>
@@ -55,7 +56,7 @@
                         </md-button>
 
                         <div  ng-if="toggles.pattern['l'+$parent.$index+'p'+$index]">
-                            <md-content data-drag="true" jqyoui-draggable="{animate:true}"  class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
+                            <md-content data-drag="activeTool=='grabber'" jqyoui-draggable="{animate:true}"  class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
                                 <div class="lane" layout="row" ng-repeat="lane in set.lanes track by $index">
                                     <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
 
