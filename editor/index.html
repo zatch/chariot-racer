@@ -54,6 +54,10 @@
                                 ng-click="toggle('pattern','l'+$parent.$index+'p'+$index)">
                             Pattern: {{$index}}
                         </md-button>
+                        <md-input-container class="pattern-name">
+                            <label>Nickname</label>
+                            <input ng-model="pattern.name">
+                        </md-input-container>
                         <md-switch class="md-primary pattern-enabled-switch" md-no-ink aria-label="Enabled" ng-model="pattern.enabled">
                             Enabled: {{pattern.enabled}}
                         </md-switch>
@@ -112,6 +116,11 @@
             margin-top: 0;
             margin-bottom: 0;
             min-width: 160px;
+        }
+        .pattern-name {
+            display: inline-flex;
+            vertical-align: middle;
+            min-width: 400px;
         }
         .lane{
             padding: 0;
