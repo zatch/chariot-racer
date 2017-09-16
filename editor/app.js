@@ -107,7 +107,7 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
                 pattern.sets.splice(index, 0, {lanes:lanes});
             },
             pattern:function(level, index){
-                level.patterns.splice(index, 0, {sets:[]});
+                level.patterns.splice(index, 0, {sets:[],enabled:true});
                 $scope.add.set(level.patterns[index], 0);
             },
             level:function(levels, index){

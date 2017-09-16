@@ -54,6 +54,9 @@
                                 ng-click="toggle('pattern','l'+$parent.$index+'p'+$index)">
                             Pattern: {{$index}}
                         </md-button>
+                        <md-switch class="md-primary pattern-enabled-switch" md-no-ink aria-label="Enabled" ng-model="pattern.enabled">
+                            Enabled: {{pattern.enabled}}
+                        </md-switch>
 
                         <div  ng-if="toggles.pattern['l'+$parent.$index+'p'+$index]">
                             <md-content data-drag="activeTool=='grabber'" jqyoui-draggable="{animate:true}"  class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
@@ -103,6 +106,13 @@
 
     </div>
     <style>
+        .pattern-enabled-switch {
+            display: inline-flex;
+            vertical-align: middle;
+            margin-top: 0;
+            margin-bottom: 0;
+            min-width: 160px;
+        }
         .lane{
             padding: 0;
         }

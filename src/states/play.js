@@ -199,6 +199,18 @@ define([
             metersTraveled = 0;
             currentLevel = 0;
             currentLevelSpawnCount = 0;
+
+            // Trim away any patterns that aren't enabled in our data.
+            var lvl, ptn;
+            for (var l = 0; l < levelData.length; l++) {
+                lvl = levelData[l];
+                for (var p = 0; p < lvl.patterns.length; p++) {
+                    ptn = lvl.patterns[p];
+                    if (!ptn.enabled) {
+                        lvl.patterns.splice(p,1);
+                    }
+                }
+            }
         },
 
         render: function () {
