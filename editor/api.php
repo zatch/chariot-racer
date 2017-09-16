@@ -37,6 +37,7 @@ class api{
         }
     }
     static function write($input){
+
         $trim = self::equalize('remove',$input);
 
         $outputString = self::amd().json_encode($trim).self::amd('after');
@@ -56,7 +57,7 @@ class api{
     private static function equalize($direction,$data){
         foreach($data as $l=>$level){
             foreach($level['patterns'] as $p => $pattern){
-                foreach($pattern['sets'] as $s => $set){+
+                foreach($pattern['sets'] as $s => $set){
                     $tokenCount =0;
                     foreach ($set['lanes'] as $la=>$lane){
 
@@ -70,13 +71,14 @@ class api{
                                 }
                                 break;
                             case 'remove':
-
+                                $remove = true;
                                 for ($k = count($lane)-1;$k>=0;$k--){
                                     //var_dump($lane);
-                                    if($lane[$k]===0){
+                                    if($lane[$k]===0 && $remove){
                                         unset($data[$l]['patterns'][$p]['sets'][$s]['lanes'][$la][$k]);
                                     } elseif($lane[$k]['type']=='token'||$lane[$k]['type']=='power-up') {
                                         $tokenCount++;
+                                        $remove = false;
                                     }
 
                                 }
