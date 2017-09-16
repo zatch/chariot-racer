@@ -27,14 +27,14 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
             $scope.toggles[what][ident] =!$scope.toggles[what][ident];
         };
         $scope.tools = [
-            {name:'eraser',     icon:'eraser',      hotkey:'e'},
-            {name:'grabber',    icon:'hand-rock-o', hotkey:'v'},
-            {name:'random',     icon:'random',      hotkey:'r'},
+            {name:'eraser',     icon:'eraser',      hotkey:'E'},
+            {name:'grabber',    icon:'hand-rock-o', hotkey:'V'},
+            {name:'random',     icon:'random',      hotkey:'R'},
             {name:'wheel',      icon:false,         hotkey:'1'},
             {name:'scaffolding',icon:false,         hotkey:'2'},
             {name:'rock',       icon:false,         hotkey:'3'},
-            {name:'token',      icon:false,         hotkey:'4'},
-            {name:'power-up',   icon:false,         hotkey:'5'}
+            {name:'token',      icon:false,         hotkey:'T'},
+            {name:'power-up',   icon:false,         hotkey:'G'}
         ];
         $scope.activeTool = '';
         $scope.setTool = function(what){
@@ -80,10 +80,10 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
                     case '3':
                         $scope.setTool('rock');
                         break;
-                    case '4':
+                    case 't':
                         $scope.setTool('token');
                         break;
-                    case '5':
+                    case 'g':
                         $scope.setTool('power-up');
                         break;
                     case 'escape':
