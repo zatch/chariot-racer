@@ -79,6 +79,8 @@ class api{
                                     } elseif($lane[$k]['type']=='token'||$lane[$k]['type']=='power-up') {
                                         $tokenCount++;
                                         $remove = false;
+                                    } else {
+                                        $remove = false;
                                     }
 
                                 }
