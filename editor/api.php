@@ -47,6 +47,8 @@ class api{
     static function read(){
         $file = file_get_contents(datapath);
         $data = json_decode(substr($file,mb_strlen(self::amd())-1,mb_strlen(self::amd('after'))*-1),true);
+
+
         $data = self::equalize('add',$data);
 
         return ['error'=>false,'data'=>$data];
@@ -54,11 +56,13 @@ class api{
     private static function equalize($direction,$data){
         foreach($data as $l=>$level){
             foreach($level['patterns'] as $p => $pattern){
-                foreach($pattern['sets'] as $s => $set){
+                foreach($pattern['sets'] as $s => $set){+
+                    $tokenCount =0;
                     foreach ($set['lanes'] as $la=>$lane){
 
                         switch ($direction){
                             case 'add':
+
                                 if(count($lane)<20){
                                     for($i=20;$i>count($lane);$i--){
                                         array_push($data[$l]['patterns'][$p]['sets'][$s]['lanes'][$la],0);
@@ -68,18 +72,20 @@ class api{
                             case 'remove':
 
                                 for ($k = count($lane)-1;$k>=0;$k--){
+                                    //var_dump($lane);
                                     if($lane[$k]===0){
                                         unset($data[$l]['patterns'][$p]['sets'][$s]['lanes'][$la][$k]);
-                                    } else {
-                                        break;
+                                    } elseif($lane[$k]['type']=='token'||$lane[$k]['type']=='power-up') {
+                                        $tokenCount++;
                                     }
 
                                 }
                                 break;
                         }
-
                     }
+                    $data[$l]['patterns'][$p]['tokenCount'] = $tokenCount;
                 }
+
             }
         }
         return $data;

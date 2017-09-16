@@ -1,4 +1,4 @@
-var app = angular.module('app',['ngMaterial'])
+var app = angular.module('app',['ngMaterial','ngDragDrop'])
     .controller('mainCtrl',['$scope','$http',function($scope,$http){
 
         $scope.save = function(){
@@ -15,6 +15,11 @@ var app = angular.module('app',['ngMaterial'])
 
         $scope.levels = [];
         $scope.isDrawing = false;
+        $scope.dragged = false;
+        $scope.dragging = function(){
+            console.log('start');
+            $scope.dragged =! $scope.dragged;
+        };
         $scope.toggles = {
             pattern:{}
         };
@@ -23,6 +28,7 @@ var app = angular.module('app',['ngMaterial'])
         };
         $scope.tools = [
             {name:'eraser',icon:'eraser'},
+            {name:'grabber',icon:'hand-rock-o'},
             {name:'wheel',icon:false},
             {name:'scaffolding',icon:false},
             {name:'rock',icon:false},
@@ -63,6 +69,9 @@ var app = angular.module('app',['ngMaterial'])
             level:function(levels, index){
                 levels.splice(index, 1);
             }
+        };
+        $scope.sort = {
+
         };
         $scope.update = {
             drawStart: function(e) {

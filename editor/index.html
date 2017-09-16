@@ -9,16 +9,19 @@
 </head>
 <body ng-app="app" layout="column">
     <script src="../src/lib/angular/angular.min.js"></script>
+    <script src="../src/lib/jquery/dist/jquery.min.js"></script>
+    <script src="../src/lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="../src/lib/angular-animate/angular-animate.min.js"></script>
     <script src="../src/lib/angular-aria/angular-aria.min.js"></script>
     <script src="../src/lib/angular-messages/angular-messages.min.js"></script>
     <script src="../src/lib/angular-material/angular-material.min.js"></script>
+    <script src="../src/lib/angular-dragdrop/src/angular-dragdrop.min.js"></script>
 
     <script src="app.js"></script>
     <div ng-controller="mainCtrl" layout-padding  layout="column" flex ng-mouseup="update.drawEnd()">
         <div layout="row">
             <div class="tool {{tool.name}}" ng-repeat="tool in tools" ng-class="{selected:activeTool==tool.name}" ng-click="setTool(tool.name)">
-                <i class="fa fa-{{tool.icon}}" ng-if="tool.icon"></i>
+                <i class="fa fa-{{tool.icon}} fa-3x" ng-if="tool.icon"></i>
             </div>
             <div flex></div>
             <div>
@@ -38,16 +41,21 @@
                         <label>MaxSpawn</label>
                         <input type="number" ng-model="level.maxSpawns">
                     </md-input-container>
-                    <div class="pattern" md-inset ng-repeat="pattern in level.patterns" >
+                    <div  md-inset ng-repeat="pattern in level.patterns" ng-class="{pattern:activeTool=='grabber'}"
+                          data-drag="activeTool=='grabber'&&!toggles.pattern['l'+$parent.$index+'p'+$index]"
+                          jqyoui-draggable="{animate:true,insertInline:true}"
+                          ng-model="levels[$parent.$index].patterns[$index]"
+
+                    >
                         <md-button
                                 class="md-raised"
                                 ng-init="toggles.pattern['l'+$parent.$index+'p'+$index]=false"
                                 ng-click="toggle('pattern','l'+$parent.$index+'p'+$index)">
-                            Pattern: {{$index+1}}
+                            Pattern: {{$index}}
                         </md-button>
 
-                        <div ng-if="toggles.pattern['l'+$parent.$index+'p'+$index]">
-                            <md-content  class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
+                        <div  ng-if="toggles.pattern['l'+$parent.$index+'p'+$index]">
+                            <md-content data-drag="true" jqyoui-draggable="{animate:true}"  class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
                                 <div class="lane" layout="row" ng-repeat="lane in set.lanes track by $index">
                                     <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
 
@@ -63,6 +71,7 @@
                                         <i class="fa fa-plus"></i>
                                         add set
                                     </md-button>
+
                                 </div>
 
                             </md-content>
@@ -77,6 +86,9 @@
                             add pattern
                         </md-button>
                         <md-divider md-inset></md-divider>
+                        <div style="border:1px dotted; height:30px;" ng-if="dragged" data-drop="true"
+                             ng-model="levels[$parent.$index].patterns[$index]"
+                             jqyoui-droppable="{multiple:true,stack:true,onOver:dragging()}"></div>
                     </div>
                     <md-button class="md-raised md-primary" ng-click="delete.level($parent.levels, $index)">
                         <i class="fa fa-minus"></i>
@@ -107,6 +119,27 @@
             height: 80px;
             width: 50px;
             cursor: pointer;
+        }
+        .grab{
+            cursor: move;
+            cursor: grab;
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
+        }
+        .pattern:active {
+            cursor: grabbing;
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
+        }
+        .pattern{
+            border: 1px solid #e852ff;
+            padding: 5px;
+            cursor: grabbing;
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
+        }
+        .set{
+            border: 1px solid turquoise;
         }
         .selected{
             background-color: rgba(0,0,0,.25);

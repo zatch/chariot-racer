@@ -12,7 +12,8 @@
     "javascript-state-machine": "~2.3.5",
     "phaser-swipe": "latest",
     "phaser-state-transition-plugin": "latest",
-    "angular-material": "^1.1.5"
+    "angular-material": "^1.1.5",
+    "angular-dragdrop": "^1.0.13"
   },
   "ignore": [
     "src/lib"
