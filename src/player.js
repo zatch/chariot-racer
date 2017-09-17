@@ -100,7 +100,7 @@ define([
 
     Player.prototype.powerUp = function (percentage) {
         this.powerupDuration = this.maxPowerupDuration * percentage;
-        if (this.powerupDuration > 0) {
+        if (this.powerupDuration > 0 && !this.dying) {
             this.stateMachine.setState('powered-up');
         }
     };
@@ -148,6 +148,10 @@ define([
             this.dying = true;
             this.stopMoving();
             this.animations.getAnimation('dying').onComplete.add(function() {
+                if (this.powerupTimer.duration) {
+                    this.powerupTimer.removeAll();
+                    this.events.onPowerUpEnd.dispatch(this);
+                }
                 this.events.onDeath.dispatch(this);
             }, this);
         }
