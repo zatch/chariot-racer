@@ -60,8 +60,16 @@ define([
                 currentSet: '',
                 maxSets: ''
             };
-            debugText = new Phaser.BitmapText(game, 8, game.height-8, 'boxy_bold', '', 16);
+
+            game.stage.children.forEach( function(child) {
+                if (child.refID && child.refID === 'debug-text') {
+                    debugText = child;
+                }
+            }, this) ;
+
+            debugText = debugText ? debugText : new Phaser.BitmapText(game, 8, game.height-8, 'boxy_bold', '', 16);
             debugText.anchor.set(0, 1);
+            debugText.refID = 'debug-text';
             game.stage.addChild(debugText);
         }
     }
@@ -122,7 +130,7 @@ define([
                               'Pattern: ' + debugProps.patternName + 
                               ' (' + debugProps.currentSet + 
                               '/' + debugProps.maxSets + ')';
-                              
+
             debugText.text = debugString.toUpperCase();
         }
     };
