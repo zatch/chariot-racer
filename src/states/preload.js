@@ -110,13 +110,43 @@ define([
             game.state.add('Play', Play);
             game.state.add('GameOver', GameOver);
 
-            // Now that everything is loaded, show the menu.
-            game.stateTransition.to('Splash', true, false);
+            game.debugMode = false;
+            if (this.getParameterByName('debug') && this.getParameterByName('debug').toLowerCase() === 'true') {
+                game.debugMode = true;
+            }
 
-            // Debug: Skip Menu and go straight to Play (for dev testing)
-            //game.stateTransition.to('Menu', true, false);
-            //game.stateTransition.to('Play',true,false,{color:'chariot-red'});
-            //game.stateTransition.to('GameOver', true, false, {metersTraveled: 12345});
+            var startState = 'splash';
+            if (this.getParameterByName('state')) {
+                startState = this.getParameterByName('state').toLowerCase();
+            }
+
+            switch (startState) {
+                case 'menu':
+                    game.stateTransition.to('Menu', true, false);
+                    break;
+                case 'credits':
+                    game.stateTransition.to('Credits', true, false);
+                    break;
+                case 'play':
+                    game.stateTransition.to('Play',true,false,{color:'chariot-red'});
+                    break;
+                case 'gameover':
+                    game.stateTransition.to('GameOver', true, false, {metersTraveled: 100});
+                    break;
+                default:
+                    game.stateTransition.to('Splash', true, false);
+                    break;
+            }
+        },
+
+        getParameterByName: function(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
         }
     };
 });
