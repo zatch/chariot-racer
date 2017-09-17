@@ -9,13 +9,15 @@
 
 error_reporting(E_ALL);
 ini_set('display_errors',1);
-define('datapath',dirname(__DIR__).'/src/level-data.js');
+
 
 $catch = file_get_contents('php://input');
 $input = json_decode($catch,true);
 $answer = ['error'=>'Configuration error of call'];
-header('Content-Type: application/json');
+
+define('datapath',dirname(__DIR__).'/src/level-data.js');
 if(isset($input['function'])){
+    header('Content-Type: application/json');
     switch ($input['function']){
         case 'write': $answer = api::write($input['data']);
         break;

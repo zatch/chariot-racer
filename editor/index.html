@@ -10,14 +10,12 @@
 <body ng-app="app" layout="column">
     <script src="../src/lib/angular/angular.min.js"></script>
     <script src="../src/lib/jquery/dist/jquery.min.js"></script>
-    <script src="../src/lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="../src/lib/angular-animate/angular-animate.min.js"></script>
     <script src="../src/lib/angular-aria/angular-aria.min.js"></script>
     <script src="../src/lib/angular-messages/angular-messages.min.js"></script>
     <script src="../src/lib/angular-material/angular-material.min.js"></script>
-    <script src="../src/lib/angular-dragdrop/src/angular-dragdrop.min.js"></script>
-
     <script src="app.js"></script>
+    <script src="directives.js"></script>
     <div ng-controller="mainCtrl" layout-padding  layout="column" flex ng-mouseup="update.drawEnd()">
         <div layout="row">
             <div class="tool {{tool.name}}" ng-repeat="tool in tools" ng-class="{selected:activeTool==tool.name}" ng-click="setTool(tool.name)">
@@ -37,15 +35,13 @@
                 add level
             </md-button>
             <md-tabs md-dynamic-height="">
-                <md-tab label="Level: {{$index}}" class="level" ng-repeat="level in levels" >
+                <md-tab label="Level: {{$index}}" class="level" ng-repeat="(l,level) in levels" >
                     <md-input-container>
                         <label>MaxSpawn</label>
                         <input type="number" ng-model="level.maxSpawns">
                     </md-input-container>
-                    <div  md-inset ng-repeat="pattern in level.patterns" ng-class="{pattern:activeTool=='grabber'}"
-                          data-drag="activeTool=='grabber'&&!toggles.pattern['l'+$parent.$index+'p'+$index]"
-                          jqyoui-draggable="{animate:true,insertInline:true}"
-                          ng-model="levels[$parent.$index].patterns[$index]"
+                    <div  md-inset ng-repeat="(p,pattern) in level.patterns" ng-class="{pattern:activeTool=='grabber'}"
+
 
                     >
                         <md-button
@@ -67,7 +63,7 @@
                         </md-switch>
 
                         <div  ng-if="toggles.pattern['l'+$parent.$index+'p'+$index]">
-                            <md-content data-drag="activeTool=='grabber'" jqyoui-draggable="{animate:true}"  class="set" md-inset ng-repeat="set in pattern.sets track by $index" layout-padding>
+                            <md-content class="set" md-inset ng-repeat="(s,set) in pattern.sets track by $index" layout-padding>
                                 <div class="lane" layout="row" ng-repeat="lane in set.lanes track by $index">
                                     <div class="co {{field.key}}" ng-repeat="field in lane track by $index"
 
@@ -83,7 +79,12 @@
                                         <i class="fa fa-plus"></i>
                                         add set
                                     </md-button>
-
+                                    <md-button ng-if="!$first" class="md-fab md-mini" ng-click="update.move(l,p,s,$index-1)">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </md-button>
+                                    <md-button ng-if="!$last" class="md-fab md-mini" ng-click="update.move(l,p,s,$index+1)">
+                                        <i class="fa fa-arrow-down"></i>
+                                    </md-button>
                                 </div>
 
                             </md-content>
@@ -97,10 +98,12 @@
                             <i class="fa fa-plus"></i>
                             add pattern
                         </md-button>
+                        <md-button ng-click="update.copy($event,pattern)">
+                            <i class="fa fa-copy"></i>
+                            copy
+                        </md-button>
                         <md-divider md-inset></md-divider>
-                        <div style="border:1px dotted; height:30px;" ng-if="dragged" data-drop="true"
-                             ng-model="levels[$parent.$index].patterns[$index]"
-                             jqyoui-droppable="{multiple:true,stack:true,onOver:dragging()}"></div>
+
                     </div>
                     <md-button class="md-raised md-primary" ng-click="delete.level($parent.levels, $index)">
                         <i class="fa fa-minus"></i>
