@@ -257,33 +257,30 @@ define([
 
             // Collide player and spawned stuff.
             // Only check against active lane, if applicable.
-            if (!player.dying) {
-                game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
-                game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
-                game.physics.arcade.overlap(player, lanes[player.activeLane].powerups, this.onPlayerCollidesPowerUp, null, this);
-                game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
-                game.physics.arcade.overlap(player, setMarker, spawner.spawnNextInQueue, null, spawner);
+            game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
+            game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
+            game.physics.arcade.overlap(player, lanes[player.activeLane].powerups, this.onPlayerCollidesPowerUp, null, this);
+            game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
+            game.physics.arcade.overlap(player, setMarker, spawner.spawnNextInQueue, null, spawner);
 
-                if (player.body.y-10 > laneYCoords[0] * gameWorld.scale.x + gameWorld.y &&
-                    player.body.y-10 < laneYCoords[1] * gameWorld.scale.x + gameWorld.y) {
-                    lanes[0].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
-                    lanes[0].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
-                    lanes[0].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
-                }
-                else if (player.body.y-10 > laneYCoords[1] * gameWorld.scale.x + gameWorld.y &&
-                         player.body.y-10 < laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
-                    lanes[1].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
-                    lanes[1].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
-                    lanes[1].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
-                }
-                else if (player.body.y-10 > laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
-                    lanes[2].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
-                    lanes[2].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
-                    lanes[2].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
-                }
-
-                //if (finishLine.x < player.body.x + player.body.width) this.onPlayerCollidesFinishLine();
+            if (player.body.y-10 > laneYCoords[0] * gameWorld.scale.x + gameWorld.y &&
+                player.body.y-10 < laneYCoords[1] * gameWorld.scale.x + gameWorld.y) {
+                lanes[0].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                lanes[0].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
+                lanes[0].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
             }
+            else if (player.body.y-10 > laneYCoords[1] * gameWorld.scale.x + gameWorld.y &&
+                     player.body.y-10 < laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
+                lanes[1].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                lanes[1].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
+                lanes[1].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
+            }
+            else if (player.body.y-10 > laneYCoords[2] * gameWorld.scale.x + gameWorld.y) {
+                lanes[2].tokens.forEachAlive(this.checkPlayerOverlapToken, this);
+                lanes[2].powerups.forEachAlive(this.checkPlayerOverlapPowerUp, this);
+                lanes[2].obstacles.forEachAlive(this.checkPlayerOverlapObstacle, this);
+            }
+
         },
 
         checkPlayerOverlapToken: function(token) {
@@ -305,7 +302,7 @@ define([
         },
 
         updateSpawnedSprite: function(sprite) {
-            sprite.x -= player.body.velocity.x;
+            if (sprite.health > 0) sprite.x -= player.body.velocity.x;
 
             // Recycle off-camera sprites.
             // Not using killOffCamera because we want to start sprites off camera.
@@ -360,68 +357,79 @@ define([
             game.camera.unfollow();
         },
 
-        onPlayerCollidesObstacle: function (player, enemy) {
-            sfx.crash.play();
-            player.damage();
+        onPlayerCollidesObstacle: function (player, obstacle) {
+            if (!obstacle.dying) {
+                gameWorld.add(obstacle);
+                gameWorld.bringToTop(foreground);
+                obstacle.damage();
+            }
+            if (!player.dying) {
+                sfx.crash.play();
+                player.damage();
+            }
         },
 
         onPlayerCollidesPowerUp: function (player, powerup) {
-            this.consumeToken();
+            if (!player.dying) {
+                this.consumeToken();
 
-            powerupToken = powerup;
-            //game.add.existing(powerup);
-            player.addChild(powerup);
-            powerup.anchor.set(0, 0.5);
-            powerup.scale.setTo(0.7,0.7);
-            powerup.x = -110;
-            powerup.y = -30;
+                powerupToken = powerup;
+                //game.add.existing(powerup);
+                player.addChild(powerup);
+                powerup.anchor.set(0, 0.5);
+                powerup.scale.setTo(0.7,0.7);
+                powerup.x = -110;
+                powerup.y = -30;
 
-            var targetX = -210,
-                targetY = -65,
-                targetScale = 1.2,
-                tweenDuration = 500,
-                tweenAutoPlay = true;
-            game.add.tween(powerup).
-                to({x: targetX, y:targetY}, tweenDuration, Phaser.Easing.Back.In, tweenAutoPlay);
-            game.add.tween(powerup.scale).
-                to({x: targetScale, y:targetScale}, tweenDuration, Phaser.Easing.Back.Out, tweenAutoPlay);
+                var targetX = -210,
+                    targetY = -65,
+                    targetScale = 1.2,
+                    tweenDuration = 500,
+                    tweenAutoPlay = true;
+                game.add.tween(powerup).
+                    to({x: targetX, y:targetY}, tweenDuration, Phaser.Easing.Back.In, tweenAutoPlay);
+                game.add.tween(powerup.scale).
+                    to({x: targetScale, y:targetScale}, tweenDuration, Phaser.Easing.Back.Out, tweenAutoPlay);
 
-            var boostPercent = currentTokensCollected/currentPatternTokenCount;
-            if (boostPercent > 0) {
-                // Power up!
-                player.powerUp(boostPercent);
+                var boostPercent = currentTokensCollected/currentPatternTokenCount;
+                if (boostPercent > 0) {
+                    // Power up!
+                    player.powerUp(boostPercent);
+                }
+                else {
+                    // Set timer to clean up after bonus text.
+                    game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
+            
+                    // Prepare for next spawn.
+                    this.setSpawnTimer();
+                }
+                hud.showBonusText(boostPercent, player.powerupDuration);
+
+                sfx.tokenCollect.play();
+                sfx.powerupCollect.play();
             }
-            else {
-                // Set timer to clean up after bonus text.
-                game.time.events.add(Phaser.Timer.SECOND, hud.hideBonusText, hud);
-        
-                // Prepare for next spawn.
-                this.setSpawnTimer();
-            }
-            hud.showBonusText(boostPercent, player.powerupDuration);
-
-            sfx.tokenCollect.play();
-            sfx.powerupCollect.play();
         },
 
         onPlayerCollidesToken: function (player, token) {
-            // TO DO: Animate tokens into HUD before killing them.
-            game.add.existing(token);
-            token.animations.stop();
-            token.frame = 13;
+            if (!player.dying) {
+                // TO DO: Animate tokens into HUD before killing them.
+                game.add.existing(token);
+                token.animations.stop();
+                token.frame = 13;
 
-            this.consumeToken();
+                this.consumeToken();
 
-            var targetX = hud.x+10,
-                targetY = hud.y+20,
-                targetScale,
-                tweenDuration = 300,
-                tweenEasing = Phaser.Easing.Cubic.In,
-                tweenAutoPlay = true;
-            game.add.tween(token)
-                .to({x: targetX, y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay)
-                .onComplete.add(function(token) { token.kill(); }, this);
-            sfx.tokenCollect.play();
+                var targetX = hud.x+10,
+                    targetY = hud.y+20,
+                    targetScale,
+                    tweenDuration = 300,
+                    tweenEasing = Phaser.Easing.Cubic.In,
+                    tweenAutoPlay = true;
+                game.add.tween(token)
+                    .to({x: targetX, y:targetY}, tweenDuration, tweenEasing, tweenAutoPlay)
+                    .onComplete.add(function(token) { token.kill(); }, this);
+                sfx.tokenCollect.play();
+            }
         },
 
         consumeToken: function (token) {
