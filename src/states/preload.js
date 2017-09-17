@@ -114,6 +114,7 @@ define([
             game.stateTransition.to('Splash', true, false);
 
             // Debug: Skip Menu and go straight to Play (for dev testing)
+            //game.stateTransition.to('Menu', true, false);
             //game.stateTransition.to('Play',true,false,{color:'chariot-red'});
             //game.stateTransition.to('GameOver', true, false, {metersTraveled: 12345});
         }
