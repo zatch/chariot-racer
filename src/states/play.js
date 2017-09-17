@@ -257,9 +257,6 @@ define([
 
             // Collide player and spawned stuff.
             // Only check against active lane, if applicable.
-            game.physics.arcade.overlap(player, lanes[player.activeLane].obstacles, this.onPlayerCollidesObstacle, null, this);  
-            game.physics.arcade.overlap(player, lanes[player.activeLane].tokens, this.onPlayerCollidesToken, null, this);
-            game.physics.arcade.overlap(player, lanes[player.activeLane].powerups, this.onPlayerCollidesPowerUp, null, this);
             game.physics.arcade.overlap(player, finishLine, this.onPlayerCollidesFinishLine, null, this);
             game.physics.arcade.overlap(player, setMarker, spawner.spawnNextInQueue, null, spawner);
 
