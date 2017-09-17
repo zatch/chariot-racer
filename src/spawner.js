@@ -151,7 +151,7 @@ define([
 
 
         if (this.spawnQueue.length <= 0) {
-            this.finishLine.x = this.lanes[0].x + this.spread * longest + 128;
+            this.finishLine.x = this.lanes[0].x + this.spread * longest + 196;
         }
         else {
             this.setMarker.x = this.lanes[0].x + this.spread * longest;
