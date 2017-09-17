@@ -41,6 +41,12 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
             $scope.activeTool = what;
         };
         angular.element(document).bind('keydown', function (e) {
+            if(e.target.nodeName.toLowerCase() === 'input'){
+                if (_keyCodes[e.which] === 'enter') {
+                    e.target.blur();
+                }
+                return;
+            }
             if (e.ctrlKey || e.metaKey) {
                 switch (String.fromCharCode(e.which).toLowerCase()) {
                     case 's':
@@ -88,6 +94,9 @@ var app = angular.module('app',['ngMaterial','ngDragDrop'])
                         break;
                     case 'escape':
                         $scope.setTool('');
+                        break;
+                    case 'enter':
+                        angular.element($scope).focus();
                         break;
                 }
                 $scope.$apply(); // hack the UI to update now!
