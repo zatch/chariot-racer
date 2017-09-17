@@ -5,11 +5,10 @@ define([
 
     // Shortcuts
     var game,
-        self;
+        currentPattern;
 
     function Spawner (_game, x, y, key, frame, props) {
         game = _game;
-        self = this;
 
         // Initialize sprite
         Phaser.Sprite.call(this, game, x, y, key, frame);
@@ -24,6 +23,7 @@ define([
         this.spawnTimer.start(); 
 
         // Signals
+        this.events.onWarn = new Phaser.Signal();
         this.events.onSpawn = new Phaser.Signal();
         
     }
@@ -37,6 +37,7 @@ define([
     };
 
     Spawner.prototype.queue = function (pattern) {
+        currentPattern = pattern;
         for (var lcv = pattern.sets.length-1; lcv >= 0; lcv--) {
             this.spawnQueue.push(pattern.sets[lcv].lanes);
         }
@@ -90,6 +91,8 @@ define([
             }
             this.spawn(lanesMatrix);
         }, this);
+
+        this.events.onWarn.dispatch(currentPattern.sets.length - this.spawnQueue.length);
     };
 
     Spawner.prototype.spawn = function (lanesMatrix) {

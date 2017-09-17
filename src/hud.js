@@ -14,7 +14,10 @@ define([
         boostMeterSteps = boostMeterMaxWidth / boostMeterStepWidth,
 
         bonusText,
-        boostMsg;
+        boostMsg,
+
+        debugText,
+        debugProps;
 
     function HUD(_game, x, y){
         game = _game;
@@ -47,6 +50,20 @@ define([
 
         this.hideBonusText();
         this.addChild(bonusText);
+
+        if (game.debugMode) {
+            debugProps = {
+                level: '',
+                currentSpawn: '',
+                maxSpawns: '',
+                patternName: '',
+                currentSet: '',
+                maxSets: ''
+            };
+            debugText = new Phaser.BitmapText(game, 8, game.height-8, 'boxy_bold', '', 16);
+            debugText.anchor.set(0, 1);
+            game.stage.addChild(debugText);
+        }
     }
 
     HUD.prototype = Object.create(Phaser.Sprite.prototype);
@@ -88,6 +105,26 @@ define([
 
         // Allow rendering.
         bonusText.renderable = true;
+    };
+    
+    HUD.prototype.hideBonusText = function () {
+        bonusText.animations.stop();
+        bonusText.renderable = false;
+    };
+
+    HUD.prototype.updateDebugText = function (props) {
+        if (game.debugMode) {
+            Phaser.Utils.extend(true, debugProps, props);
+            var debugString = 'Level: ' + debugProps.level + 
+                              ' (' + debugProps.currentSpawn + 
+                              '/' + debugProps.maxSpawns + ')\n' + 
+
+                              'Pattern: ' + debugProps.patternName + 
+                              ' (' + debugProps.currentSet + 
+                              '/' + debugProps.maxSets + ')';
+                              
+            debugText.text = debugString.toUpperCase();
+        }
     };
     
     HUD.prototype.hideBonusText = function () {

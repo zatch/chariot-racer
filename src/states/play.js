@@ -136,6 +136,7 @@ define([
                 setMarker: setMarker,
                 lanes: lanes
             });
+            spawner.events.onWarn.add(this.onSpawnerWarn, this);
             spawner.events.onSpawn.add(this.onSpawnerSpawn, this);
             gameWorld.add(spawner);
 
@@ -211,7 +212,6 @@ define([
                     }
                 }
             }
-            console.log(levelData);
         },
 
         render: function () {
@@ -470,6 +470,12 @@ define([
             }, this);
         },
 
+        onSpawnerWarn: function (setIndex) {
+            hud.updateDebugText({
+                currentSet: setIndex
+            });
+        },
+
         onSpawnerSpawn: function () {
             // Set flag.
             inPattern = true;
@@ -547,6 +553,15 @@ define([
 
             // Increment spawn count for this level.
             currentLevelSpawnCount++;
+
+            hud.updateDebugText({
+                level: currentLevel,
+                currentSpawn: currentLevelSpawnCount,
+                maxSpawns: currentLevelData.maxSpawns,
+                patternName: pattern.name,
+                currentSet: 1,
+                maxSets: pattern.sets.length
+            });
         }
     };
 });
