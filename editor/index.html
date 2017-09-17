@@ -37,6 +37,10 @@
             <md-tabs md-dynamic-height="">
                 <md-tab label="Level: {{$index}}" class="level" ng-repeat="(l,level) in levels" >
                     <md-input-container>
+                        <label>Name</label>
+                        <input ng-model="level.name">
+                    </md-input-container>
+                    <md-input-container>
                         <label>MaxSpawn</label>
                         <input type="number" ng-model="level.maxSpawns">
                     </md-input-container>
