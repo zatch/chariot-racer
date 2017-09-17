@@ -16,6 +16,9 @@ define([
         bonusText,
         boostMsg,
 
+        levelText,
+        levelNumberMsg,
+
         debugText,
         debugProps;
 
@@ -51,6 +54,17 @@ define([
         this.hideBonusText();
         this.addChild(bonusText);
 
+        // Level text
+        levelText = new Phaser.Sprite(game, 0, 128, 'menu-banner-1');
+        levelText.anchor.set(0.5);
+
+        levelNumberMsg = levelText.addChild(new Phaser.BitmapText(game, 0, 0, 'boxy_bold', 'null', 16));
+        levelNumberMsg.anchor.set(0.5);
+
+        this.hideLevelText();
+        this.addChild(levelText);
+
+        // Debug text
         if (game.debugMode) {
             debugProps = {
                 level: '',
@@ -119,6 +133,17 @@ define([
         bonusText.animations.stop();
         bonusText.renderable = false;
     };
+    
+    HUD.prototype.showLevelText = function (level) {
+        // Allow rendering.
+        var msg = 'Level ' + level;
+        levelNumberMsg.text = msg.toUpperCase();
+        levelText.renderable = true;
+    };
+    
+    HUD.prototype.hideLevelText = function () {
+        levelText.renderable = false;
+    };
 
     HUD.prototype.updateDebugText = function (props) {
         if (game.debugMode) {
@@ -133,11 +158,6 @@ define([
 
             debugText.text = debugString.toUpperCase();
         }
-    };
-    
-    HUD.prototype.hideBonusText = function () {
-        bonusText.animations.stop();
-        bonusText.renderable = false;
     };
 
     return HUD;

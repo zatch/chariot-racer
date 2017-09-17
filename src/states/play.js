@@ -104,7 +104,6 @@ define([
 
             spawnTimer = game.time.create(false);
             spawnTimer.start();
-            this.setSpawnTimer();
 
             // Obstacles
             lanes = [];
@@ -196,11 +195,6 @@ define([
                 music.play('loop');
             }, this);
 
-            inPattern = false;
-            metersTraveled = 0;
-            currentLevel = 0;
-            currentLevelSpawnCount = 0;
-
             // Trim away any patterns that aren't enabled in our data.
             var lvl, ptn;
             for (var l = 0; l < levelData.length; l++) {
@@ -212,6 +206,11 @@ define([
                     }
                 }
             }
+
+            inPattern = false;
+            metersTraveled = 0;
+            currentLevel = -1;
+            this.advanceLevel();
         },
 
         render: function () {
@@ -521,8 +520,9 @@ define([
             this.setSpawnTimer();
         },
 
-        setSpawnTimer: function () {
-            spawnTimer.add(restDuration, this.spawnPattern, this);
+        setSpawnTimer: function (customDuration) {
+            var timerDuration = customDuration ? customDuration : restDuration;
+            spawnTimer.add(timerDuration, this.spawnPattern, this);
             spawnTimer.resume();
         },
 
@@ -534,34 +534,45 @@ define([
             //      - We aren't already at max level
             if (currentLevelSpawnCount >= currentLevelData.maxSpawns &&
                 currentLevel < levelData.length - 1) {
-                currentLevel++;
-                currentLevelSpawnCount = 0;
-                currentLevelData = levelData[currentLevel];
+
+                this.advanceLevel();
             }
+            else {
+                // Pick a pattern from the level.
+                var patternIndex = Math.floor(Math.random() * currentLevelData.patterns.length);
+                var pattern = currentLevelData.patterns[patternIndex];
 
-            // Pick a pattern from the level.
-            var patternIndex = Math.floor(Math.random() * currentLevelData.patterns.length);
-            var pattern = currentLevelData.patterns[patternIndex];
+                // Reset power-up counters.
+                currentTokensCollected = 0;
+                currentPatternTokenCount = pattern.tokenCount;
+                
+                // Send the pattern to the spawn queue.
+                spawner.queue(pattern);
+                spawner.spawnNextInQueue();
 
-            // Reset power-up counters.
-            currentTokensCollected = 0;
-            currentPatternTokenCount = pattern.tokenCount;
-            
-            // Send the pattern to the spawn queue.
-            spawner.queue(pattern);
-            spawner.spawnNextInQueue();
+                // Increment spawn count for this level.
+                currentLevelSpawnCount++;
 
-            // Increment spawn count for this level.
-            currentLevelSpawnCount++;
+                hud.updateDebugText({
+                    level: currentLevel,
+                    currentSpawn: currentLevelSpawnCount,
+                    maxSpawns: currentLevelData.maxSpawns,
+                    patternName: pattern.name,
+                    currentSet: 1,
+                    maxSets: pattern.sets.length
+                });
+            }
+        },
 
-            hud.updateDebugText({
-                level: currentLevel,
-                currentSpawn: currentLevelSpawnCount,
-                maxSpawns: currentLevelData.maxSpawns,
-                patternName: pattern.name,
-                currentSet: 1,
-                maxSets: pattern.sets.length
-            });
+        advanceLevel: function () {
+            currentLevel++;
+            currentLevelSpawnCount = 0;
+
+            hud.showLevelText(currentLevel+1);
+            game.time.events.add(Phaser.Timer.SECOND * 2, function () {
+                hud.hideLevelText();
+                this.setSpawnTimer(Phaser.Timer.SECOND);
+            }, this);
         }
     };
 });
