@@ -568,7 +568,7 @@ define([
             currentLevel++;
             currentLevelSpawnCount = 0;
 
-            hud.showLevelText(currentLevel+1);
+            hud.showLevelText(currentLevel+1, levelData[currentLevel].name);
             game.time.events.add(Phaser.Timer.SECOND * 2, function () {
                 hud.hideLevelText();
                 this.setSpawnTimer(Phaser.Timer.SECOND);

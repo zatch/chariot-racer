@@ -18,6 +18,7 @@ define([
 
         levelText,
         levelNumberMsg,
+        levelNameMsg,
 
         debugText,
         debugProps;
@@ -55,12 +56,15 @@ define([
         this.addChild(bonusText);
 
         // Level text
-        levelText = new Phaser.Sprite(game, 0, 128, 'menu-banner-1');
-        levelText.anchor.set(0.5);
+        levelText = new Phaser.Sprite(game, 0, 96, 'menu-banner-1');
+        levelText.anchor.set(0.5, 0);
 
-        levelNumberMsg = levelText.addChild(new Phaser.BitmapText(game, 0, 0, 'boxy_bold', 'null', 16));
-        levelNumberMsg.anchor.set(0.5);
+        levelNumberMsg = levelText.addChild(new Phaser.BitmapText(game, 0, 16, 'boxy_bold', 'null', 24));
+        levelNumberMsg.anchor.set(0.5, 0);
 
+        levelNameMsg = levelText.addChild(new Phaser.BitmapText(game, 0, 48, 'boxy_bold', 'null', 16));
+        levelNameMsg.anchor.set(0.5, 0);
+        
         this.hideLevelText();
         this.addChild(levelText);
 
@@ -134,10 +138,12 @@ define([
         bonusText.renderable = false;
     };
     
-    HUD.prototype.showLevelText = function (level) {
+    HUD.prototype.showLevelText = function (level, name) {
         // Allow rendering.
         var msg = 'Level ' + level;
+        name = name ? name : 'nameless level';
         levelNumberMsg.text = msg.toUpperCase();
+        levelNameMsg.text = name.toUpperCase();
         levelText.renderable = true;
     };
     
