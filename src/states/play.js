@@ -204,13 +204,14 @@ define([
             var lvl, ptn;
             for (var l = 0; l < levelData.length; l++) {
                 lvl = levelData[l];
-                for (var p = 0; p < lvl.patterns.length; p++) {
+                for (var p = lvl.patterns.length-1; p >= 0; p--) {
                     ptn = lvl.patterns[p];
-                    if (!ptn.enabled) {
+                    if (ptn.enabled === false) {
                         lvl.patterns.splice(p,1);
                     }
                 }
             }
+            console.log(levelData);
         },
 
         render: function () {
