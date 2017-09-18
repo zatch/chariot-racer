@@ -39,7 +39,7 @@ define([
                 totalTokens:    {label: 'TOKENS COLLECTED . . . . . ', val: Math.floor(stats.totalTokens),          unit: ''},
                 totalPowerUps:  {label: 'POWER-UP BOOSTS . . . . . ',  val: Math.floor(stats.totalPowerUps),        unit: ''},
                 totalBoostTime: {label: 'TOTAL BOOST TIME . . . . . ', val: Math.floor(stats.totalBoostTime/100)/10,unit: 's'},
-                farthestLevel:  {label: 'LEVEL REACHED . . . . . ',    val: Math.floor(stats.farthestLevel),        unit: ''}
+                farthestLevel:  {label: 'LEVEL REACHED . . . . . ',    val: Math.floor(stats.farthestLevel+1),        unit: ''}
             };
             if (stats.totalBoostTime %1 === 0) stats.totalBoostTime += '.0';
 
