@@ -7,6 +7,7 @@ define([
     // Shortcuts
     var game,
 
+        originalStats,
         stats,
         aStats,
 
@@ -25,14 +26,16 @@ define([
         init: function (data) {
             game = this.game;
 
-            stats = {
+            originalStats = {
                 totalMeters: 0,
                 totalTokens: 0,
                 totalPowerUps: 0,
                 totalBoostTime: 0,
                 farthestLevel: 0
             };
-            Phaser.Utils.extend(true, stats, data);
+            stats = {};
+            Phaser.Utils.extend(true, originalStats, data);
+            Phaser.Utils.extend(true, stats, originalStats);
 
             stats = {
                 totalMeters:    {label: 'DISTANCE TRAVELED . . . . . ',val: Math.floor(stats.totalMeters),          unit: 'm'},
@@ -192,7 +195,7 @@ define([
 
             creditsBtn.animations.play('selected').onComplete.addOnce(function() {
                 music.stop();
-                this.game.stateTransition.to('Credits', true, false, {backState: 'GameOver', backData: stats});
+                this.game.stateTransition.to('Credits', true, false, {backState: 'GameOver', backData: originalStats});
             }, this);
         }
     };
