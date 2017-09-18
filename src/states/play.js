@@ -27,6 +27,8 @@ define([
     var game, 
         gameWorld,
 
+        stats,
+
         player,
         playerKey,
         laneHeight,
@@ -207,6 +209,14 @@ define([
                 }
             }
 
+            stats = {
+                totalMeters: 0,
+                totalTokens: 0,
+                totalPowerUps: 0,
+                totalBoostTime: 0,
+                farthestLevel: 0
+            };
+
             inPattern = false;
             metersTraveled = 0;
             currentLevel = -1;
@@ -234,6 +244,7 @@ define([
             }
             // Update distance travaled.
             metersTraveled += player.body.velocity.x / pixelsPerMeter;
+            stats.totalMeters = metersTraveled;
 
             // Update HUD.
             hud.updateDistanceDisplay(metersTraveled);
@@ -430,6 +441,8 @@ define([
 
         consumeToken: function (token) {
             currentTokensCollected++;
+            stats.totalTokens++;
+
             hud.updateBoostMeter(currentTokensCollected/currentPatternTokenCount);
         },
 
@@ -465,7 +478,7 @@ define([
             sfx.lose.play();
             
             game.time.events.add(Phaser.Timer.SECOND * 2, function () {
-                game.stateTransition.to('GameOver', true, false, {metersTraveled: metersTraveled});
+                game.stateTransition.to('GameOver', true, false, stats);
             }, this);
         },
 
@@ -482,6 +495,8 @@ define([
 
         onPowerUpStart: function (player) {
             spawnTimer.pause();
+            stats.totalPowerUps++;
+            stats.totalBoostTime += player.powerupDuration;
 
             // Zoom in for close-up of player.
             game.add.tween(gameWorld.scale).to({x: 1.5, y: 1.5}, 300, Phaser.Easing.Back.In, true);
@@ -565,7 +580,7 @@ define([
         },
 
         advanceLevel: function () {
-            currentLevel++;
+            stats.farthestLevel = ++currentLevel;
             currentLevelSpawnCount = 0;
 
             hud.showLevelText(currentLevel+1, levelData[currentLevel].name);

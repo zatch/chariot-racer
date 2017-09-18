@@ -7,11 +7,11 @@ define([
     // Shortcuts
     var game,
 
+        stats,
+        aStats,
+
         bg,
         bannerText,
-
-        distanceBanner,
-        metersTraveled,
 
         playBtn,
         challengeBtn,
@@ -24,7 +24,27 @@ define([
         // Intro
         init: function (data) {
             game = this.game;
-            metersTraveled = data.metersTraveled;
+
+            stats = {
+                totalMeters: 0,
+                totalTokens: 0,
+                totalPowerUps: 0,
+                totalBoostTime: 0,
+                farthestLevel: 0
+            };
+            Phaser.Utils.extend(true, stats, data);
+
+            stats = {
+                totalMeters:    {label: 'DISTANCE TRAVELED . . . . . ',val: Math.floor(stats.totalMeters),          unit: 'm'},
+                totalTokens:    {label: 'TOKENS COLLECTED . . . . . ', val: Math.floor(stats.totalTokens),          unit: ''},
+                totalPowerUps:  {label: 'POWER-UP BOOSTS . . . . . ',  val: Math.floor(stats.totalPowerUps),        unit: ''},
+                totalBoostTime: {label: 'TOTAL BOOST TIME . . . . . ', val: Math.floor(stats.totalBoostTime/100)/10,unit: 's'},
+                farthestLevel:  {label: 'LEVEL REACHED . . . . . ',    val: Math.floor(stats.farthestLevel),        unit: ''}
+            };
+            if (stats.totalBoostTime %1 === 0) stats.totalBoostTime += '.0';
+
+            aStats = [stats.totalMeters, stats.totalTokens, stats.totalPowerUps, stats.totalBoostTime, stats.farthestLevel];
+            console.log(aStats);
         },
         
         // Main
@@ -47,19 +67,32 @@ define([
             ));
             bg.label.anchor.set(0.5);
 
-            // Distance traveled message
-            distanceBanner = bg.addChild(new Phaser.Sprite(game, bg.width/2, 160, 'menu-banner-1'));
-            distanceBanner.anchor.set(0.5, 0);
-            distanceBanner.label = distanceBanner.addChild(new Phaser.BitmapText(
-                game, 
-                0,
-                40,
-                'boxy_bold',
-                'DISTANCE TRAVELED: ' + Math.floor(metersTraveled) + 'm',
-                16,
-                'center'
-            ));
-            distanceBanner.label.anchor.set(0.5);
+            var statX = bg.width / 2 + 64,
+                statY = 144,
+                lineHeight = 48;
+            for (var lcv = 0; lcv < aStats.length; lcv++) {
+                aStats[lcv].labelText = bg.addChild(new Phaser.BitmapText(
+                    game, 
+                    statX,
+                    statY,
+                    'boxy_bold',
+                    aStats[lcv].label,
+                    16
+                ));
+                aStats[lcv].labelText.anchor.set(1, 1);
+
+                aStats[lcv].valText = bg.addChild(new Phaser.BitmapText(
+                    game, 
+                    statX,
+                    statY+2,
+                    'boxy_bold',
+                    aStats[lcv].val+aStats[lcv].unit,
+                    32
+                ));
+                aStats[lcv].valText.anchor.set(0, 1);
+
+                statY += lineHeight;
+            }
 
             // Challenge a Friend button
             challengeBtn = bg.addChild(new Phaser.Button(game, 264, 390, 'menu-btn3', this.onChallengeBtnClicked));
@@ -102,8 +135,8 @@ define([
             music.play();
 
             var mailto = 'mailto:' +
-                         '?subject=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Can you beat my score?' +
-                         '&body=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Try to top my score!' +
+                         '?subject=I made it ' + stats.totalMeters.val + ' meters in Chariot Racer. Can you beat my score?' +
+                         '&body=I made it ' + stats.totalMeters.val + ' meters in Chariot Racer. Try to top my score!' +
                          '%0D%0A' +
                          '%0D%0A' +
                          'https://shirepharma.sharepoint.com/sites/PresidentsClub/2017/Chariot%2520Racer/index.aspx' +
@@ -133,8 +166,8 @@ define([
 
             challengeBtn.animations.play('selected').onComplete.addOnce(function() {
                 var mailto = 'mailto:' +
-                             '?subject=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Can you beat my score?' +
-                             '&body=I made it ' + Math.floor(metersTraveled) + ' meters in Chariot Racer. Try to top my score!' +
+                             '?subject=I made it ' + stats.totalMeters.val + ' meters in Chariot Racer. Can you beat my score?' +
+                             '&body=I made it ' + stats.totalMeters.val + ' meters in Chariot Racer. Try to top my score!' +
                              '%0D%0A' +
                              '%0D%0A' +
                              'https://shirepharma.sharepoint.com/sites/PresidentsClub/2017/Chariot%2520Racer/index.aspx' +
@@ -159,7 +192,7 @@ define([
 
             creditsBtn.animations.play('selected').onComplete.addOnce(function() {
                 music.stop();
-                this.game.stateTransition.to('Credits', true, false, {backState: 'GameOver', backData: {metersTraveled: metersTraveled}});
+                this.game.stateTransition.to('Credits', true, false, {backState: 'GameOver', backData: stats});
             }, this);
         }
     };
