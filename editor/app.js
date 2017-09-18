@@ -119,9 +119,9 @@ var app = angular.module('app',['ngMaterial'])
                 level.patterns.splice(index, 0, {sets:[],enabled:true});
                 $scope.add.set(level.patterns[index], 0);
             },
-            level:function(levels, index){
-                levels.splice(index, 0, {maxSpawns:1, patterns:[]});
-                $scope.add.pattern(levels[index], 0);
+            level:function(levels){
+                levels.push({maxSpawns:1, patterns:[]});
+                $scope.add.pattern(levels[levels.length-1], 0);
             }
         };
         $scope.delete ={

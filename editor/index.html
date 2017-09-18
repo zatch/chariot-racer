@@ -30,12 +30,12 @@
             </div>
         </div>
         <md-content flex>
-            <md-button class="md-raised md-primary" ng-click="add.level(levels, 0)">
+            <md-button class="md-raised md-primary" ng-click="add.level(levels)">
                 <i class="fa fa-plus"></i>
                 add level
             </md-button>
             <md-tabs md-dynamic-height="">
-                <md-tab label="Level: {{$index}}" class="level" ng-repeat="(l,level) in levels" >
+                <md-tab label="L{{$index}}" class="level" ng-repeat="(l,level) in levels" >
                     <md-input-container>
                         <label>Name</label>
                         <input ng-model="level.name">
